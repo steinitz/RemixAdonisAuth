@@ -32,6 +32,7 @@ export default function Page() {
               Password
               <input type="password" name="password" />
             </label>
+            <button type="reset">Reset</button>&nbsp;&nbsp;&nbsp;
             <button type="submit">Login</button>
             <p>
               Don't have an account yet? <a href="/register">Register</a>

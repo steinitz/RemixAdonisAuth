@@ -15,6 +15,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
           rel="stylesheet"
           href="https://unpkg.com/mvp.css"
         />
+        <link 
+          rel="stylesheet"
+          href="/resources/remix_app/mvp-css-override.css"
+        />
 
         {/* these are from Remix */}
         <Meta />
