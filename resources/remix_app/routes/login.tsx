@@ -19,23 +19,25 @@ export default function Page() {
   // return <div>New route</div>
   return (
     <main>
-      <article>
-        <h1>Log in</h1>
-        <form method="post">
-          <label>
-            Email
-            <input type="email" name="email" />
-          </label>
-          <label>
-            Password
-            <input type="password" name="password" />
-          </label>
-          <button type="submit">Login</button>
-          <p>
-            Don't have an account yet? <a href="/register">Register</a>
-          </p>
-        </form> 
-      </article>
+        <header>
+          <h2>Log in</h2>
+        </header>  
+        <section >
+          <form method="post">
+            <label>
+              Email
+              <input type="email" name="email" />
+            </label>
+            <label>
+              Password
+              <input type="password" name="password" />
+            </label>
+            <button type="submit">Login</button>
+            <p>
+              Don't have an account yet? <a href="/register">Register</a>
+            </p>
+          </form>
+        </section> 
     </main>
   )
 }
