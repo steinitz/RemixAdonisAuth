@@ -7,11 +7,9 @@ import {
   json 
 } from '@remix-run/node'
 import { 
-  Form,
   // useActionData, 
   // useLoaderData, 
   isRouteErrorResponse, 
-  Link, 
   useRouteError 
 } from '@remix-run/react'
 
@@ -33,28 +31,7 @@ export const action = (/*{ context }: ActionFunctionArgs*/) => {
 export default function Page() {
   // const data = useLoaderData<typeof loader>()
   // const actionData = useActionData<typeof action>()
-  // return <div>New route</div>
-  return (
-    <main>
-         <section > {/* gives it a nice width */}
-          <Form method="post">
-            <h1 style={{textAlign: "center"}}>Log in</h1>
-            <label>
-              Email
-              <input type="text" name="email" />
-            </label>
-            <label>
-              Password
-              <input type="password" name="password"/>
-            </label>
-            <div style={{textAlign: "right"}}><button type="submit">Login</button></div>
-            <p>
-              Don't have an account yet? <Link to="/register">Register</Link>
-            </p>
-          </Form>
-        </section> 
-    </main>
-  )
+  return <div>New route</div>
 }
 
 // https://remix.run/docs/en/main/route/error-boundary
