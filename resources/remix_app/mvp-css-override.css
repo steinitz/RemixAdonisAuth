@@ -4,5 +4,18 @@ button[type="reset"] {
 }
 
 button {
-  padding: 0.8rem 2rem;
+  padding: 0.6rem 1.5rem;
+}
+
+input {min-width: 91%}; /* this might be extreme and mess up certain inputs */
+
+form header {
+  margin: 0;
+  padding: -80px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[color-mode="user"] {
+     --color-bg: #222; /* darker background for better readability */
+  }
 }
