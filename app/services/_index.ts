@@ -4,4 +4,5 @@ import type { LazyService } from '#providers/service_provider';
 export const ServiceProviders = {
   env: () => import('#start/env'),
   hello_service: () => import('./hello_service.js'),
+  user_service: () => import( './user_service.js'),
 } satisfies Record<string, LazyService>

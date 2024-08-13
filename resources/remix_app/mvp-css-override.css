@@ -1,6 +1,6 @@
 button[type="reset"] {
-    background-color: var(--color-accent); /* rgb(110, 152, 178);*/
-    color: var(--color-text-secondary);
+  background-color: var(--color-accent); /* rgb(110, 152, 178);*/
+  color: var(--color-text-secondary);
 }
 
 button {
@@ -16,6 +16,6 @@ form header {
 
 @media (prefers-color-scheme: dark) {
   :root[color-mode="user"] {
-     --color-bg: #222; /* darker background for better readability */
+    --color-bg: #222; /* darker background for better readability */
   }
 }

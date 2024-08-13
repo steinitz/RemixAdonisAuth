@@ -2,9 +2,11 @@
 // warnings commented out by SJS
 
 import { 
+  ActionFunctionArgs,
   // ActionFunctionArgs, 
   LoaderFunctionArgs, 
-  json 
+  json, 
+  redirect
 } from '@remix-run/node'
 import { 
   Form,
@@ -25,34 +27,46 @@ export const loader = ({ context }: LoaderFunctionArgs) => {
   })
 }
 
-export const action = (/*{ context }: ActionFunctionArgs*/) => {
-  // const { http, make } = context
-  return null
+export const action = async ({ context }: ActionFunctionArgs) => {
+  const { http, make } = context
+  // get the form email and password
+  const { email, password } = http.request.only(['email', 'password'])
+
+  const userService = await make('user_service')
+  // look up the user by email
+  const user = await userService.getUser(email)
+
+  // check if the password is correct
+  await userService.verifyPassword(user, password)
+
+  // log in user since they passed the check
+  await http.auth.use('web').login(user)
+
+  return redirect('/')
 }
 
 export default function Page() {
   // const data = useLoaderData<typeof loader>()
   // const actionData = useActionData<typeof action>()
-  // return <div>New route</div>
   return (
     <main>
-         <section > {/* gives it a nice width */}
-          <Form method="post">
-            <h1 style={{textAlign: "center"}}>Log in</h1>
-            <label>
-              Email
-              <input type="text" name="email" />
-            </label>
-            <label>
-              Password
-              <input type="password" name="password"/>
-            </label>
-            <div style={{textAlign: "right"}}><button type="submit">Login</button></div>
-            <p>
-              Don't have an account yet? <Link to="/register">Register</Link>
-            </p>
-          </Form>
-        </section> 
+      <section > {/* gives it a nice width */}
+        <Form method="post">
+          <h1 style={{textAlign: "center"}}>Log in</h1>
+          <label>
+            Email
+            <input type="text" name="email" />
+          </label>
+          <label>
+            Password
+            <input type="password" name="password"/>
+          </label>
+          <div style={{textAlign: "right"}}><button type="submit">Login</button></div>
+          <p>
+            Don't have an account yet? <Link to="/register">Register</Link>
+          </p>
+        </Form>
+      </section> 
     </main>
   )
 }
