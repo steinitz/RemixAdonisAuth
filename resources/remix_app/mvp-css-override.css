@@ -7,7 +7,9 @@ button {
   padding: 0.6rem 1.5rem;
 }
 
-input {min-width: 91%}; /* this might be extreme and mess up certain inputs */
+input {
+  min-width: 91%; /* this might be extreme and mess up certain inputs */
+}
 
 form header {
   margin: 0;

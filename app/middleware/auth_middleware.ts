@@ -12,7 +12,7 @@ export default class AuthMiddleware {
    */
   redirectTo = '/login'
 
-  openRoutes = [this.redirectTo, '/register']
+  openRoutes = [this.redirectTo, '/reset-password', this.redirectTo, '/register']
 
   async handle(
     ctx: HttpContext,

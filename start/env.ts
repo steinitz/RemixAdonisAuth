@@ -25,4 +25,19 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
   SESSION_DRIVER: Env.schema.enum(['cookie', 'memory'] as const),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring the mail package
+  |----------------------------------------------------------
+  */
+  // RESEND_API_KEY: Env.schema.string(),
+  SMTP_HOST: Env.schema.string(),
+  SMTP_PORT: Env.schema.string(),
+  SMTP_USERNAME: Env.schema.string(),
+  SMTP_PASSWORD: Env.schema.string(),
+  SMTP_FROM_ADDRESS: Env.schema.string(),
+  SMTP_FROM_NAME: Env.schema.string(),
+  SMTP_REPLY_TO_ADDRESS: Env.schema.string(),
+  SMTP_REPLY_TO_NAME: Env.schema.string(),
 })

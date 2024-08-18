@@ -1,17 +1,17 @@
-import { 
-  json, 
+import {
+  json,
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
   redirect,
 } from '@remix-run/node'
-import { 
-  useLoaderData, 
-  Form
-} from '@remix-run/react'
+import { useLoaderData, Form } from '@remix-run/react'
 
 export const meta: MetaFunction = () => {
-  return [{ title: 'Weekend Trading System' }, { name: 'weekend-trading-system', content: 'Weekend is Non-Representative Trading System' }]
+  return [
+    { title: 'Weekend Trading System' },
+    { name: 'weekend-trading-system', content: 'Weekend is Non-Representative Trading System' },
+  ]
 }
 
 export const action = async ({ context }: ActionFunctionArgs) => {
@@ -43,16 +43,16 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
 
 export default function Index() {
   const { email } = useLoaderData<typeof loader>()
-  
+
   return (
     <main>
       <nav>
         <h3>Remix & Adonis</h3>
         <span><p>Logged in as: {email}</p></span>
-        <Form style={{border: "none", shadow: "none"}} method="POST">
+        <Form style={{ border: 'none', boxShadow: 'none' }} method="POST">
           <input type="hidden" name="intent" value={'log_out'} />
           <button type={'submit'}>Log out</button>
-        </Form>        
+        </Form>
       </nav>
       <section>
         <ul>
@@ -63,7 +63,7 @@ export default function Index() {
           </li>
           <li>
             <a target="_blank" href="https://remix.run/tutorials/blog" rel="noreferrer">
-              Tutorial: Remix 15m Quickstart Blog 
+              Tutorial: Remix 15m Quickstart Blog
             </a>
           </li>
           <li>
