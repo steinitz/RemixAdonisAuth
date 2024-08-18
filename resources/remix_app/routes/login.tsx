@@ -1,25 +1,24 @@
 // generated via cli: node ace remix:route --action --error-boundary register
 // warnings commented out by SJS
 
-import { 
+import {
   ActionFunctionArgs,
-  // ActionFunctionArgs, 
-  LoaderFunctionArgs, 
-  json, 
+  LoaderFunctionArgs,
+  json,
   redirect
 } from '@remix-run/node'
-import { 
+import {
   Form,
-  // useActionData, 
-  // useLoaderData, 
-  isRouteErrorResponse, 
-  Link, 
-  useRouteError 
+  // useActionData,
+  // useLoaderData,
+  isRouteErrorResponse,
+  Link,
+  useRouteError
 } from '@remix-run/react'
 
 export const loader = ({ context }: LoaderFunctionArgs) => {
-  const { 
-    http, 
+  const {
+    http,
     // make
   } = context
   return json({
@@ -52,21 +51,25 @@ export default function Page() {
     <main>
       <section > {/* gives it a nice width */}
         <Form method="post">
-          <h1 style={{textAlign: "center"}}>Log in</h1>
+          <h1 style={{ textAlign: "center" }}>Log in</h1>
           <label>
             Email
             <input type="text" name="email" />
           </label>
           <label>
             Password
-            <input type="password" name="password"/>
+            <input type="password" name="password" />
           </label>
-          <div style={{textAlign: "right"}}><button type="submit">Login</button></div>
-          <p>
-            Don't have an account yet? <Link to="/register">Register</Link>
-          </p>
+          <div style={{ textAlign: "right" }}>
+            <button type="submit">Login</button>
+          </div>
+          <details>
+            <summary>Can't log in?</summary>
+            <p>Don't yet have an account? <Link to="/register">Register</Link></p>
+            <p>Forgot Password? <Link to="/reset-password">Reset Password</Link></p>
+          </details>
         </Form>
-      </section> 
+      </section>
     </main>
   )
 }

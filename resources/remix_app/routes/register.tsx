@@ -1,25 +1,25 @@
 // generated via cli: node ace remix:route --action --error-boundary register
 // warnings commented out by SJS
 
-import { 
+import {
   type ActionFunctionArgs,
-  type  LoaderFunctionArgs, 
-  json, 
+  type  LoaderFunctionArgs,
+  json,
   redirect
 } from '@remix-run/node'
-import { 
+import {
   Form,
-  // useActionData, 
-  // useLoaderData, 
-  isRouteErrorResponse, 
-  Link, 
-  useRouteError 
+  // useActionData,
+  // useLoaderData,
+  isRouteErrorResponse,
+  Link,
+  useRouteError
 } from '@remix-run/react'
-import { useState } from 'react'
+import {PasswordField} from '../Components/PasswordField'
 
-export const loader = ({ context }: LoaderFunctionArgs) => {
-  const { 
-    http, 
+export const loader = ({context}: LoaderFunctionArgs) => {
+  const {
+    http,
     // make
   } = context
   return json({
@@ -27,16 +27,17 @@ export const loader = ({ context }: LoaderFunctionArgs) => {
   })
 }
 
-
 // resources/remix_app/routes/register.tsx
 export const action = async ({ context }: ActionFunctionArgs) => {
-  console.log('Register - action method')
+  console.log('Reset Password - action method')
   const { http, make } = context
-  // get email and password from form data
-  const { email, password } = http.request.only(['email', 'password'])
+  // get email address form data
+  const { email } = http.request.only(['email'])
 
-  // get the UserService from the app container and create user
+  // get the UserService from the app container
   const userService = await make('user_service')
+
+
   const user = await userService.createUser({
     email,
     password,
@@ -52,38 +53,21 @@ export default function Page() {
   // const data = useLoaderData<typeof loader>()
   // const actionData = useActionData<typeof action>()
 
-  const [shouldShowPassword, setShouldShowPassword] = useState(false);
 
   return (
     <main>
       <section > {/* gives it a nice width */}
         <Form method="post">
           <h1 style={{textAlign: "center"}}>Register</h1>
+          <p>Already have an account? <Link to="/login">Log In</Link></p>
           <label>
             Email
             <input type="text" name="email" />
           </label>
-          <label>
-            <span>
-              Password &nbsp; &nbsp;
-              <button 
-                style={{
-                  fontSize: "0.7rem",
-                  fontWeight: "normal",
-                  padding: "0.1rem 0.3rem",
-                  width: "50px",
-                }}
-                type="button" 
-                onClick={() => setShouldShowPassword(!shouldShowPassword)}
-              >
-                {shouldShowPassword ? "Hide" : "Show"}
-              </button>
-            </span>
-            <input type={shouldShowPassword ? "text" :  "password"} name="password"/>
-          </label>
+          {PasswordField()}
           <div style={{textAlign: "right"}}><button type="submit">Register</button></div>
         </Form>
-      </section> 
+      </section>
     </main>
   )
 }
@@ -128,7 +112,7 @@ export function ErrorBoundary() {
         </div>
       )
     }
-  } 
+  }
   else {
     result = (<h1>Unknown Error</h1>);
   }
