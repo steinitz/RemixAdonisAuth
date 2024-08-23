@@ -7,12 +7,15 @@ import type { Authenticators } from '@adonisjs/auth/types'
  * access to unauthenticated users.
  */
 export default class AuthMiddleware {
-  /**
-   * The URL to redirect to, when authentication fails
-   */
+  // The URL to redirect to, when authentication fails
   redirectTo = '/login'
 
-  openRoutes = [this.redirectTo, '/reset-password', this.redirectTo, '/register']
+  openRoutes = [
+    this.redirectTo, '/',
+    this.redirectTo, '/register',
+    this.redirectTo, '/request-password-reset',
+    this.redirectTo, '/password-reset-email-sent',
+  ]
 
   async handle(
     ctx: HttpContext,

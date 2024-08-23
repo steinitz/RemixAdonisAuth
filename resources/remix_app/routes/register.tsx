@@ -15,7 +15,7 @@ import {
   Link,
   useRouteError
 } from '@remix-run/react'
-import {PasswordField} from '../Components/PasswordField'
+import {PasswordField} from '~/components/PasswordField'
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {
@@ -29,10 +29,10 @@ export const loader = ({context}: LoaderFunctionArgs) => {
 
 // resources/remix_app/routes/register.tsx
 export const action = async ({ context }: ActionFunctionArgs) => {
-  console.log('Reset Password - action method')
+  console.log('Register - action method')
   const { http, make } = context
-  // get email address form data
-  const { email } = http.request.only(['email'])
+  // get email and password from form data
+  const { email, password } = http.request.only(['email', 'password'])
 
   // get the UserService from the app container
   const userService = await make('user_service')

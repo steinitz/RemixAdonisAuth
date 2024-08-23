@@ -1,2 +1,6 @@
-# Ignore Remix Folder
-resources/remix_app
+# Ignore Remix routes Folder
+
+# start by ignorning all of them, gawd I hate prettier
+**
+build
+node_modules

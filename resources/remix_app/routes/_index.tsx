@@ -17,9 +17,12 @@ export const meta: MetaFunction = () => {
 export const action = async ({ context }: ActionFunctionArgs) => {
   const { http } = context
   const { intent } = http.request.only(['intent'])
-
+  console.log({intent})
   if (intent === 'log_out') {
     await http.auth.use('web').logout()
+    return redirect('/login')
+  }
+  if (intent === 'log_in') {
     return redirect('/login')
   }
   return null
@@ -34,7 +37,9 @@ export const action = async ({ context }: ActionFunctionArgs) => {
 // }
 
 export const loader = async ({ context }: LoaderFunctionArgs) => {
-  const email = context.http.auth.user?.email
+  const user = context.http.auth.user
+  const email = user?.email
+  // console.log('loader', {user})
 
   return json({
     email,
@@ -43,18 +48,30 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
 
 export default function Index() {
   const { email } = useLoaderData<typeof loader>()
-
+  // console.log('index page', {email})
   return (
     <main>
       <nav>
         <h3>Remix & Adonis</h3>
-        <span><p>Logged in as: {email}</p></span>
-        <Form style={{ border: 'none', boxShadow: 'none' }} method="POST">
-          <input type="hidden" name="intent" value={'log_out'} />
-          <button type={'submit'}>Log out</button>
-        </Form>
+       {/*{email ? (*/}
+          <>
+            <span><p>Logged in as: {email}</p></span>
+            <Form style={{ border: 'none', boxShadow: 'none' }} method="POST">
+              <input type="hidden" name="intent" value={'log_out'} />
+              <button type={'submit'}>Log out</button>
+            </Form>
+          </>
+        {/*)*/}
+        {/*:*/}
+        {/*  <Form style={{ border: 'none', boxShadow: 'none' }} method="POST">*/}
+        {/*    <input type="hidden" name="intent" value={'log_in'} />*/}
+        {/*    <button type={'submit'}>Login</button>*/}
+        {/*  </Form>*/}
+
+        {/*}*/}
       </nav>
       <section>
+          <button type="submit">Add Accounts and Wallets</button>
         <ul>
           <li>
             <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
@@ -67,7 +84,8 @@ export default function Index() {
             </a>
           </li>
           <li>
-            <a target="_blank" href="https://remix.run/tutorials/jokes" rel="noreferrer">
+            <a target="_blank" href="https://remix
+            .run/tutorials/jokes" rel="noreferrer">
               Tutorial: Remix Deep Dive Jokes App
             </a>
           </li>

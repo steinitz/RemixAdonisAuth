@@ -9,7 +9,7 @@ import {
 } from '@remix-run/node'
 import {
   Form,
-  // useActionData,
+  useActionData,
   // useLoaderData,
   isRouteErrorResponse,
   Link,
@@ -27,6 +27,7 @@ export const loader = ({ context }: LoaderFunctionArgs) => {
 }
 
 export const action = async ({ context }: ActionFunctionArgs) => {
+  console.log('login action', {context})
   const { http, make } = context
   // get the form email and password
   const { email, password } = http.request.only(['email', 'password'])
@@ -35,6 +36,7 @@ export const action = async ({ context }: ActionFunctionArgs) => {
   // look up the user by email
   const user = await userService.getUser(email)
 
+  console.log('login action', {user})
   // check if the password is correct
   await userService.verifyPassword(user, password)
 
@@ -46,7 +48,7 @@ export const action = async ({ context }: ActionFunctionArgs) => {
 
 export default function Page() {
   // const data = useLoaderData<typeof loader>()
-  // const actionData = useActionData<typeof action>()
+  useActionData<typeof action>() // without this, form submission doesn't trigger the action function
   return (
     <main>
       <section > {/* gives it a nice width */}
@@ -66,7 +68,7 @@ export default function Page() {
           <details>
             <summary>Can't log in?</summary>
             <p>Don't yet have an account? <Link to="/register">Register</Link></p>
-            <p>Forgot Password? <Link to="/reset-password">Reset Password</Link></p>
+            <p>Forgot Password? <Link to="/resources/remix_app/routes/reset-password-request">Reset Password</Link></p>
           </details>
         </Form>
       </section>
