@@ -11,6 +11,14 @@ input {
   min-width: 91%; /* this might be extreme and mess up certain inputs */
 }
 
+main {
+  padding-top: 0.5rem;
+}
+
+nav {
+  margin-bottom: 2rem;
+}
+
 form header {
   margin: 0;
   padding: -80px;

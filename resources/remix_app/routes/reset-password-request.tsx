@@ -1,6 +1,6 @@
 // Allows the user to request a password reset email
 
-// import mail from '@adonisjs/mail/services/main'
+import mail from '@adonisjs/mail/services/main'
 import string from '@adonisjs/core/helpers/string'
 
 import {
@@ -48,38 +48,35 @@ export const action = async ({ context }: ActionFunctionArgs) => {
     // make,
   } = context
   const token = string.generateRandom(64);
-  const passwordResetUrl = `${getDomainURL(http.request)}/api/reset-password?token=${token}`
+  const passwordResetUrl = `${getDomainURL(http.request)}/reset-password?token=${token}`
   // get email form data
   const {email} = http.request.only(['email'])
 
-  console.log('reset_password-request - action method', { passwordResetUrl}, { email }, {companyName})
-  /*
-    await mail.send((message) => {
-      message
-        .to(email)
-        // .from('info@example.org')
-        .subject(`Reset Your ${companyName} Password\n\n`)
-        // .htmlView('emails/verify_email', { user })
-        // HTML contents
-        .html(`
-          <p>We understand that you’ve requested to reset your password for your ${companyName} account.</>
+  await mail.send((message) => {
+    message
+      .to(email)
+      // .from('info@example.org')
+      .subject(`Reset Your ${companyName} Password\n\n`)
+      // .htmlView('emails/verify_email', { user })
+      // HTML contents
+      .html(`
+        <p>We understand that you’ve requested to reset your password for your ${companyName} account.</>
 
-          <p>Click this link to reset your password page: ${passwordResetUrl}</p>
+        <p>Click this link to reset your password page: ${passwordResetUrl}</p>
 
-        `)
+      `)
 
-        // Plain text contents
-        .text(`
-          We understand that you’ve requested to reset your password for your ${companyName} account.
+      // Plain text contents
+      .text(`
+        We understand that you’ve requested to reset your password for your ${companyName} account.
 
-          Click this link to reset your password page: ${passwordResetUrl}
+        Click this link to reset your password page: ${passwordResetUrl}
 
-        `)
-      }
-    )
+      `)
+    }
+  )
 
-   */
-  return redirect(`/password-reset-email-sent?email=${email}`)
+  return redirect(`/reset-password-email-sent?email=${email}`)
 }
 
 export default function Page() {

@@ -10,7 +10,7 @@ import {
 import {
   Form,
   useActionData,
-  // useLoaderData,
+  useLoaderData,
   isRouteErrorResponse,
   Link,
   useRouteError
@@ -47,8 +47,12 @@ export const action = async ({ context }: ActionFunctionArgs) => {
 }
 
 export default function Page() {
-  // const data = useLoaderData<typeof loader>()
-  useActionData<typeof action>() // without this, form submission doesn't trigger the action function
+  // const data =
+  useLoaderData<typeof loader>()
+
+  // without the nest line, form submission doesn't trigger the action function
+  useActionData<typeof action>()
+
   return (
     <main>
       <section > {/* gives it a nice width */}
@@ -68,7 +72,7 @@ export default function Page() {
           <details>
             <summary>Can't log in?</summary>
             <p>Don't yet have an account? <Link to="/register">Register</Link></p>
-            <p>Forgot Password? <Link to="/resources/remix_app/routes/reset-password-request">Reset Password</Link></p>
+            <p>Forgot Password? <Link to="/reset-password-request">Reset Password</Link></p>
           </details>
         </Form>
       </section>

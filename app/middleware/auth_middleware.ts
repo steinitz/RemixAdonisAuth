@@ -11,23 +11,31 @@ export default class AuthMiddleware {
   redirectTo = '/login'
 
   openRoutes = [
-    this.redirectTo, '/',
-    this.redirectTo, '/register',
-    this.redirectTo, '/request-password-reset',
-    this.redirectTo, '/password-reset-email-sent',
+    // if we include the following line then the _index page loader function can't
+    // access logged in user email address via context.http.auth.user?.email
+    // '/',
+    this.redirectTo, // login
+    '/register',
+    '/reset-password-request',
+    '/reset-password-email-sent',
+    '/reset-password/$token',
   ]
 
   async handle(
     ctx: HttpContext,
-    next: NextFn,
+    next: NextFn, // promise
     options: {
       guards?: (keyof Authenticators)[]
     } = {}
   ) {
-    if (this.openRoutes.includes(ctx.request.parsedUrl.pathname ?? '')) {
-      return next()
+    // const pathname = ctx.request.parsedUrl.pathname ?? ''
+    // console.log('auth_middleware', {pathname}, ctx.request)
+    // if (!this.openRoutes.includes(pathname ?? '')) {
+    if (ctx.request.matchesRoute(this.openRoutes)) {
+      console.log('didn\'t find the route in openRoutes')
+      await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
     }
-    await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
     return next()
   }
+
 }

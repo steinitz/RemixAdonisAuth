@@ -37,8 +37,10 @@ export const action = async ({ context }: ActionFunctionArgs) => {
 // }
 
 export const loader = async ({ context }: LoaderFunctionArgs) => {
-  const user = context.http.auth.user
-  const email = user?.email
+  const email = context.http.auth.user?.email
+  console.log("index loader", { email })
+  // const user = context.http.auth.user
+  // const email = user?.email
   // console.log('loader', {user})
 
   return json({
@@ -48,30 +50,22 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
 
 export default function Index() {
   const { email } = useLoaderData<typeof loader>()
-  // console.log('index page', {email})
+  console.log('index page', {email})
   return (
     <main>
       <nav>
-        <h3>Remix & Adonis</h3>
-       {/*{email ? (*/}
-          <>
-            <span><p>Logged in as: {email}</p></span>
-            <Form style={{ border: 'none', boxShadow: 'none' }} method="POST">
-              <input type="hidden" name="intent" value={'log_out'} />
-              <button type={'submit'}>Log out</button>
-            </Form>
-          </>
-        {/*)*/}
-        {/*:*/}
-        {/*  <Form style={{ border: 'none', boxShadow: 'none' }} method="POST">*/}
-        {/*    <input type="hidden" name="intent" value={'log_in'} />*/}
-        {/*    <button type={'submit'}>Login</button>*/}
-        {/*  </Form>*/}
-
-        {/*}*/}
+        <h3 style={{float: 'left', width: '70%'}}>Blockchain Portfolio, built with Remix & Adonis</h3>
+        <Form style={{
+          border: 'none',
+          boxShadow: 'none',
+          width: '50%',
+        }} method="POST">
+          <input type="hidden" name="intent" value={'log_in'} />
+          <button style={{float: 'right'}} type={'submit'}>Login</button>
+        </Form>
       </nav>
       <section>
-          <button type="submit">Add Accounts and Wallets</button>
+        {/*<button type="submit">Add Accounts and Wallets</button>*/}
         <ul>
           <li>
             <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
@@ -84,8 +78,11 @@ export default function Index() {
             </a>
           </li>
           <li>
-            <a target="_blank" href="https://remix
-            .run/tutorials/jokes" rel="noreferrer">
+            <a
+              target="_blank"
+              href="https://remix.run/tutorials/jokes"
+              rel="noreferrer"
+            >
               Tutorial: Remix Deep Dive Jokes App
             </a>
           </li>
@@ -95,7 +92,11 @@ export default function Index() {
             </a>
           </li>
           <li>
-            <a target="_blank" href="https://adocasts.com/?utm_source=docs.adonisjs.com" rel="noreferrer">
+            <a
+              target="_blank"
+              href="https://adocasts.com/?utm_source=docs.adonisjs.com"
+              rel="noreferrer"
+            >
               Adonis Screencasts
             </a>
           </li>
