@@ -1,3 +1,7 @@
+import {
+  useLoaderData,
+  // useRouteLoaderData,
+} from "@remix-run/react"
 // The link in the pasword-reset email takes the user here
 
 import {
@@ -14,15 +18,16 @@ import {
 } from "@remix-run/react";
 import { PasswordField } from "~/components/PasswordField";
 
-export const loader = ({ context }: LoaderFunctionArgs) => {
+export const loader = ({ context, params }: LoaderFunctionArgs) => {
   const {
-    http,
+    // http,
     // make
   } = context
-  // console.log('reset-password loader')
-  return json({
-    message: 'Hello from ' + http.request.completeUrl(),
-  })
+  console.log('reset-password loader', { token: params.token})
+  // return json({
+  //   message: 'Hello from ' + http.request.completeUrl(),
+  // })
+  return json({token: params.token})
 }
 
 export const action = (/*{ context }: ActionFunctionArgs*/) => {
@@ -33,8 +38,9 @@ export const action = (/*{ context }: ActionFunctionArgs*/) => {
 
 export default function Page() {
 
-  // const data = useLoaderData<typeof loader>()
+  const {token} = useLoaderData<typeof loader>()
   // const actionData = useActionData<typeof action>()
+  console.log(token)
   return(  <main>
       <section > {/* gives it a nice width */}
         <Form method="post">
