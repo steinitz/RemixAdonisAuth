@@ -1,7 +1,6 @@
 // Allows the user to request a password reset email
-
 import mail from '@adonisjs/mail/services/main'
-import string from '@adonisjs/core/helpers/string'
+// import string from '@adonisjs/core/helpers/string'
 
 import {
   ActionFunctionArgs,
@@ -45,12 +44,21 @@ const getDomainURL = (request: any): string => {
 export const action = async ({ context }: ActionFunctionArgs) => {
   const {
     http,
-    // make,
+    make,
   } = context
-  const token = string.generateRandom(64);
-  const passwordResetUrl = `${getDomainURL(http.request)}/reset-password?token=${token}`
   // get email form data
   const {email} = http.request.only(['email'])
+
+  const userService = await make('user_service')
+  let token
+  try {
+    token = await userService.setPasswordResetTokenFor(email)
+  }
+  catch (error) {
+    console.warn(error)
+  }
+
+  const passwordResetUrl = `${getDomainURL(http.request)}/reset-password?token=${token}`
 
   await mail.send((message) => {
     message

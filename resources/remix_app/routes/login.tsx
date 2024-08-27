@@ -50,7 +50,7 @@ export default function Page() {
   // const data =
   useLoaderData<typeof loader>()
 
-  // without the nest line, form submission doesn't trigger the action function
+  // without the next line, form submission doesn't trigger the action function
   useActionData<typeof action>()
 
   return (

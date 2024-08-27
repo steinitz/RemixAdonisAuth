@@ -37,7 +37,6 @@ export const action = async ({ context }: ActionFunctionArgs) => {
   // get the UserService from the app container
   const userService = await make('user_service')
 
-
   const user = await userService.createUser({
     email,
     password,
