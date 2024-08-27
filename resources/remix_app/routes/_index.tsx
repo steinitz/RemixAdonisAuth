@@ -38,7 +38,7 @@ export const action = async ({ context }: ActionFunctionArgs) => {
 
 export const loader = async ({ context }: LoaderFunctionArgs) => {
   const email = context.http.auth.user?.email
-  console.log("index loader", { email })
+  // console.log("index loader", { email })
   // const user = context.http.auth.user
   // const email = user?.email
   // console.log('loader', {user})
