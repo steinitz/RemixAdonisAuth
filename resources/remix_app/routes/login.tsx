@@ -15,6 +15,7 @@ import {
   Link,
   useRouteError
 } from '@remix-run/react'
+import { noEmailValue } from '~/constants'
 
 export const loader = ({ context }: LoaderFunctionArgs) => {
   const {
@@ -72,7 +73,8 @@ export default function Page() {
           <details>
             <summary>Can't log in?</summary>
             <p>Don't yet have an account? <Link to="/register">Register</Link></p>
-            <p>Forgot Password? <Link to="/reset-password-request">Reset Password</Link></p>
+            <p>Forgot Password? <Link to={`/reset-password-request/${noEmailValue}`}>Reset Password</Link></p>
+            <p>Get Help <Link to="/contact-support">Contact Support</Link></p>
           </details>
         </Form>
       </section>
