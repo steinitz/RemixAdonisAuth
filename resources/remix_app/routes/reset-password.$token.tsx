@@ -1,46 +1,43 @@
 import {
-  useLoaderData,
-  // useRouteLoaderData,
-} from "@remix-run/react"
+  Link,
+} from "@remix-run/react";
 // The link in the pasword-reset email takes the user here
 
 import {
-  // ActionFunctionArgs,
   LoaderFunctionArgs, json
 } from '@remix-run/node'
 import {
   Form,
-  // useActionData,
-  // useLoaderData,
   isRouteErrorResponse,
-  // Link,
   useRouteError
 } from "@remix-run/react";
 import { PasswordField } from "~/components/PasswordField";
 
-export const loader = ({ context, params }: LoaderFunctionArgs) => {
+export const loader = async ({ context, params }: LoaderFunctionArgs) => {
   const {
     // http,
-    // make
+    make
   } = context
-  console.log('reset-password loader', { token: params.token})
-  // return json({
-  //   message: 'Hello from ' + http.request.completeUrl(),
-  // })
-  return json({token: params.token})
+  const token = params.token
+  console.log('reset-password loader', { token})
+
+  const userService = await make('user_service')
+  let user
+  try {
+    user = userService.getUserWithPasswordResetToken(token)
+  }
+  catch (error) {
+    throw error
+  }
+  return json({user})
 }
 
-export const action = (/*{ context }: ActionFunctionArgs*/) => {
-  // const { http, make } = context
+export const action = () => {
   console.log('reset-password action')
   return null
 }
 
 export default function Page() {
-
-  const {token} = useLoaderData<typeof loader>()
-  // const actionData = useActionData<typeof action>()
-  console.log(token)
   return(  <main>
       <section > {/* gives it a nice width */}
         <Form method="post">
@@ -55,7 +52,7 @@ export default function Page() {
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
   const error = useRouteError();
-
+  let result;
   if (isRouteErrorResponse(error)) {
     return (
       <div>
@@ -66,15 +63,35 @@ export function ErrorBoundary() {
       </div>
     );
   } else if (error instanceof Error) {
-    return (
-      <div>
-        <h1>Error</h1>
-        <p>{error.message}</p>
-        <p>The stack trace is:</p>
-        <pre>{error.stack}</pre>
-      </div>
-    );
-  } else {
-    return <h1>Unknown Error</h1>;
+    //// console.log(error)
+    if (error.message.includes('User is not defined')) {
+      result = (
+        <main>
+          <section>
+            <Form>
+              <h1>Error</h1>
+              <p>No valid password reset token found</p>
+              <p>Please initiate a password reset request in the Login page</p>
+              <Link to="/login">Login</Link>
+            </Form>
+          </section>
+        </main>
+
+      )
+    }
+      else {
+        result = (
+        <div>
+          <h1>Error</h1>
+          <p>{error.message}</p>
+          <p>The stack trace is:</p>
+          <pre>{error.stack}</pre>
+        </div>
+      )
+    }
   }
+  else {
+    result = (<h1>Unknown Error</h1>);
+  }
+  return result;
 }

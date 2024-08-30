@@ -17,6 +17,8 @@ export default defineConfig(({ isSsrBuild }) => ({
       ? {
           target: 'ES2022',
         }
-      : {},
+      : {
+        target: 'esnext', // SJS
+      },
   },
 }))
