@@ -74,7 +74,7 @@ export default function Page() {
             <summary>Can't log in?</summary>
             <p>Don't yet have an account? <Link to="/register">Register</Link></p>
             <p>Forgot Password? <Link to={`/reset-password-request/${noEmailValue}`}>Reset Password</Link></p>
-            <p>Get Help <Link to="/contact-support">Contact Support</Link></p>
+            <p>Get Help <Link to="/contact">Contact Support</Link></p>
           </details>
         </Form>
       </section>

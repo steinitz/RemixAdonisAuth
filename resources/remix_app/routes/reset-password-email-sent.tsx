@@ -45,7 +45,7 @@ export default function Page() {
 
           <h3>Didn't receive the mail?</h3><Link to={`/reset-password-request/${email}`}>Resend Email</Link>
           <h3>Wrong Email Address?</h3><Link to="/reset-password-request">Change Email Address</Link>
-          <h3>Need Help?</h3><Link to="/contact-support">Contact Support</Link>
+          <h3>Need Help?</h3><Link to="/contact">Contact Support</Link>
           <div style={{ textAlign: "right" }}>
             <button
               type="submit"
