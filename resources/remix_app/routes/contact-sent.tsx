@@ -1,52 +1,22 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from '@remix-run/node'
-import {
-  // useActionData, useLoaderData,
-  isRouteErrorResponse, useRouteError, Form,
-  // Link
-} from "@remix-run/react"
+import { useActionData, useLoaderData, isRouteErrorResponse, useRouteError } from '@remix-run/react'
 
 export const loader = ({ context }: LoaderFunctionArgs) => {
-  const {
-    http,
-    // make
-  } = context
+  const { http, make } = context
   return json({
     message: 'Hello from ' + http.request.completeUrl(),
   })
 }
 
 export const action = ({ context }: ActionFunctionArgs) => {
-  const {
-    // http, make
-  } = context
+  const { http, make } = context
   return null
 }
 
 export default function Page() {
-  return (
-    <main>
-      <section > {/* gives it a nice width */}
-        <Form method="post">
-          <h1 style={{ textAlign: "center" }}>Contact Support</h1>
-          <label>
-            Name
-            <input type="text" name="email" />
-          </label>
-          <label>
-            Email
-            <input type="text" name="email" />
-          </label>
-          <label>
-            Message
-            <textarea rows={8} name="message" />
-          </label>
-          <div style={{ textAlign: "right" }}>
-            <button type="submit">Login</button>
-          </div>
-        </Form>
-      </section>
-    </main>
-  )
+  const data = useLoaderData<typeof loader>()
+  const actionData = useActionData<typeof action>()
+  return <div>New route</div>
 }
 
 // https://remix.run/docs/en/main/route/error-boundary
