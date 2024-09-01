@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from '@remix-run/node'
+import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from "@remix-run/node";
 import {
   // useActionData, useLoaderData,
   isRouteErrorResponse, useRouteError, Form,
@@ -19,20 +19,17 @@ export const loader = ({ context }: LoaderFunctionArgs) => {
 
 export const action = ({ context }: ActionFunctionArgs) => {
   const {
-    // http, make
+    http,
+    // make
   } = context
-  const testMessage = '*** remember to include user email address here ' +
-    'since SMTP2Go won\'t allow another domain to send. \n\n' +
-    'Well done for using this project idea to create something useful.\n' +
-    'If you want to learn more about the Markdown syntax, which lets you ' +
-    'use text to easily create HTML documents, you can learn more about it ' +
-    'from Mastering markdown 223.'
+  const {name, email, message} = http.request.only(['name', 'email', 'message'])
 
-  const htmlMessage = convertTextMessageToHtml(testMessage)
-  console.log(htmlMessage)
+  const textMessage = `sent from ${name}, ${email}, \n\n${message}`
+  const htmlMessage = `<p>sent from ${name} - ${email}</p> ${convertTextMessageToHtml(message)}`
+  // console.log(htmlMessage)
 
-  sendSupportEmail(testMessage, htmlMessage)
-  return null
+  sendSupportEmail(textMessage, htmlMessage)
+  return redirect('/contact-sent')
 }
 
 export default function Page() {
@@ -43,7 +40,7 @@ export default function Page() {
           <h1 style={{ textAlign: "center" }}>Contact Support</h1>
           <label>
             Name
-            <input type="text" name="email" />
+            <input type="text" name="name" />
           </label>
           <label>
             Email
@@ -88,3 +85,14 @@ export function ErrorBoundary() {
     return <h1>Unknown Error</h1>;
   }
 }
+
+
+// graveyard
+
+  // const testMessage = '*** remember to include user email address here ' +
+  //   'since SMTP2Go won\'t allow another domain to send. \n\n' +
+  //   'Well done for using this project idea to create something useful.\n' +
+  //   'If you want to learn more about the Markdown syntax, which lets you ' +
+  //   'use text to easily create HTML documents, you can learn more about it ' +
+  //   'from Mastering markdown 223.'
+
