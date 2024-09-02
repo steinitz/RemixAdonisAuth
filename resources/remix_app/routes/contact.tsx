@@ -6,6 +6,7 @@ import {
 } from "@remix-run/react"
 import { convertTextMessageToHtml } from '~/utilities/convertTextMessageToHtml'
 import { sendSupportEmail } from '~/utilities/sendSupportEmail'
+import { FormFieldError } from "~/components/FormFieldError";
 
 export const loader = ({ context }: LoaderFunctionArgs) => {
   const {
@@ -32,7 +33,9 @@ export const action = ({ context }: ActionFunctionArgs) => {
   return redirect('/contact-sent')
 }
 
+
 export default function Page() {
+  const isError =  1 // temp awaiting the Vine extravaganze
   return (
     <main>
       <section > {/* gives it a nice width */}
@@ -41,14 +44,17 @@ export default function Page() {
           <label>
             Name
             <input type="text" name="name" />
+            <FormFieldError isError={isError} message="Please type your name." />
           </label>
           <label>
             Email
             <input type="text" name="email" />
+            <FormFieldError isError={isError} message="Please type your email address." />
           </label>
           <label>
             Message
             <textarea rows={8} name="message" />
+            <FormFieldError isError={isError} message="Please include a message." />
           </label>
           <div style={{ textAlign: "right" }}>
             <button type="submit">Send</button>
