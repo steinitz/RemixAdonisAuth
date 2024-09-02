@@ -24,9 +24,23 @@ form header {
   padding: -80px;
 }
 
+/*
+This didn't fix the weird Safari selection behavior when
+the validation errors are hidden and unselectable
+
+form {
+  user-select: 'none',
+}
+*/
+
+:root {
+    --color-error: dark-red;
+}
+
 @media (prefers-color-scheme: dark) {
   :root[color-mode="user"] {
     --color-bg: #222; /* darker background for better readability */
+    --color-error: light-red
   }
 }
 
