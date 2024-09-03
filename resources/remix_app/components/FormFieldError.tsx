@@ -1,7 +1,11 @@
+import { noValue } from "~/constants";
 
+// we expect either an error message or the noValue string - makes it easier to
+// format consistently between the error and no error state
 
-export const FormFieldError = ({isError, message}: {isError: boolean | number, message: string}) => {
+export const FormFieldError = ({message}: {message: string}) => {
   // console.log({ message }, isError);
+  const isError = message !== noValue
   return (
       <p
         style={{

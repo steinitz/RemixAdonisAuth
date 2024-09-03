@@ -6,7 +6,7 @@ import { Form, isRouteErrorResponse, useLoaderData, useRouteError } from "@remix
 import { sendPasswordResetEmail } from "~/utilities/sendPasswordResetEmail";
 import { useState } from "react";
 import { getDomainUrl } from "~/utilities/getDomainUrl";
-import { noEmailValue } from "~/constants";
+import { noValue } from "~/constants";
 // import * as sea from "node:sea";
 
 export const loader = ({params}: LoaderFunctionArgs) => {
@@ -53,7 +53,7 @@ export default function Page() {
           </p>
           <label>
             Email
-            <input type="text" name="email" defaultValue={email !== noEmailValue ? email : ''} />
+            <input type="text" name="email" defaultValue={email !== noValue ? email : ''} />
           </label>
           <div style={{
             display: "flex",
