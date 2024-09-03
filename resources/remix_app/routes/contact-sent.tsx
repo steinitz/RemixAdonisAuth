@@ -1,22 +1,53 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from '@remix-run/node'
-import { useActionData, useLoaderData, isRouteErrorResponse, useRouteError } from '@remix-run/react'
+import {
+  isRouteErrorResponse,
+  useRouteError,
+  useSearchParams,
+  Form, Link
+} from "@remix-run/react";
 
 export const loader = ({ context }: LoaderFunctionArgs) => {
-  const { http, make } = context
+  const {
+    http,
+    // make
+  } = context
   return json({
     message: 'Hello from ' + http.request.completeUrl(),
   })
 }
 
 export const action = ({ context }: ActionFunctionArgs) => {
-  const { http, make } = context
+  const {
+    // http, make
+  } = context
   return null
 }
 
 export default function Page() {
-  const data = useLoaderData<typeof loader>()
-  const actionData = useActionData<typeof action>()
-  return <div>New route</div>
+  const [searchParams] = useSearchParams()
+  const email = searchParams.get('email') || ''
+
+  return (
+    <main>
+      <section>
+        <Form action="/">
+          <h1>We've sent your message to our support team</h1>
+          <p>Our support team will reply to the email you provided: {email}</p>
+
+          <h3>Wrong Email Address?</h3><Link to="/contact">Rewrite your Message</Link>
+          <h3>Need more help?</h3><Link to="/contact">Contact Support</Link>
+          <div style={{ textAlign: "right" }}>
+            <button
+              type="submit"
+            >
+              Done
+            </button>
+          </div>
+        </Form>
+
+      </section>
+    </main>
+  );
 }
 
 // https://remix.run/docs/en/main/route/error-boundary

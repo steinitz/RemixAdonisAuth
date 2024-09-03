@@ -31,7 +31,7 @@ export const action = ({ context }: ActionFunctionArgs) => {
 }
 
 export default function Page() {
-   const [searchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const email = searchParams.get('email') || ''
 
 

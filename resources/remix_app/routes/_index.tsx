@@ -49,7 +49,7 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
 }
 
 export default function Index() {
-  const { email } = useLoaderData<typeof loader>()
+  const {email} = useLoaderData<typeof loader>()
   console.log('index page', {email})
   return (
     <main>

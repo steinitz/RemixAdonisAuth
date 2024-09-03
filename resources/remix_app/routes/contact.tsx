@@ -1,62 +1,122 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from "@remix-run/node";
+import vine from '@vinejs/vine'
+import {ActionFunctionArgs, LoaderFunctionArgs, json, redirect} from "@remix-run/node";
 import {
   // useActionData, useLoaderData,
-  isRouteErrorResponse, useRouteError, Form,
+  isRouteErrorResponse, useRouteError, Form, useActionData, useLoaderData
   // Link
-} from "@remix-run/react"
-import { convertTextMessageToHtml } from '~/utilities/convertTextMessageToHtml'
-import { sendSupportEmail } from '~/utilities/sendSupportEmail'
-import { FormFieldError } from "~/components/FormFieldError";
+} from "@remix-run/react";
+import {convertTextMessageToHtml} from '~/utilities/convertTextMessageToHtml'
+import {sendSupportEmail} from '~/utilities/sendSupportEmail'
+import {FormFieldError} from "~/components/FormFieldError";
+import { noValue } from '~/constants';
+import { useState } from "react";
 
-export const loader = ({ context }: LoaderFunctionArgs) => {
-  const {
-    http,
-    // make
-  } = context
+export const loader = async ({ context }: LoaderFunctionArgs) => {
+  const email = context.http.auth.user?.email
   return json({
-    message: 'Hello from ' + http.request.completeUrl(),
+    email,
   })
 }
 
-export const action = ({ context }: ActionFunctionArgs) => {
+export const action = async ({context}: ActionFunctionArgs) => {
   const {
     http,
     // make
   } = context
+
+  // get the form values
   const {name, email, message} = http.request.only(['name', 'email', 'message'])
 
-  const textMessage = `sent from ${name}, ${email}, \n\n${message}`
-  const htmlMessage = `<p>sent from ${name} - ${email}</p> ${convertTextMessageToHtml(message)}`
-  // console.log(htmlMessage)
+  // validate them
+  let validationErrors
 
-  sendSupportEmail(textMessage, htmlMessage)
-  return redirect('/contact-sent')
+  try {
+    // vine.validate returns sanitized versions of what the user typed
+    // here we just want the errors when vine throws
+    // sanitizedValues =
+    await vine.validate({
+      schema,
+      data: {name, email, message}
+    });
+  }
+  catch (error) {
+    validationErrors = error.messages
+  }
+
+  // if no validation errors send the support email
+
+  if (!validationErrors) {
+    const textMessage = `sent from ${name}, ${email}, \n\n${message}`
+    const htmlMessage = `<p>sent from ${name} - ${email}</p> ${convertTextMessageToHtml(message)}`
+    // console.log(htmlMessage)
+    sendSupportEmail(textMessage, htmlMessage)
+  }
+
+  const returnValue = validationErrors ?
+    json({validationErrors}) :
+    redirect(`/contact-sent?email=${email}`)
+  return returnValue
 }
 
+const schema = vine.object({
+  name: vine.string().minLength(1),
+  email: vine.string().email(),
+  message: vine
+    .string()
+    .minLength(1)
+    .maxLength(512)
+})
+
+const errorMessageFor = (fieldName: string, validationErrors: any[] | undefined) => {
+  const {message} = validationErrors?.find(vError => vError.field === fieldName) ?? {}
+  return message || noValue
+}
 
 export default function Page() {
-  const isError =  1 // temp awaiting the Vine extravaganze
+  const {email = ''} = useLoaderData<typeof loader>()
+  const { validationErrors } = useActionData<typeof action>() ?? []
+
+  // big song and dance to keep the message in case the
+  // user notices she has typed in the wrong email address
+  // when she lands on the contact-sent page
+  const saveMessage = () => {
+    var now = new Date();
+    now.setTime(now.getTime() + 2 * 60 * 1000); // keep for two minutes
+    document.cookie = `message=${message}; expires=${now.toUTCString()}; Secure`;
+  }
+
+  const retrieveSavedMessage = () => {
+    const cookieValue = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("message"))
+      ?.split("=")[1];
+    return cookieValue
+  }
+
+  const [message, setMessage] = useState(retrieveSavedMessage())
+
+
   return (
     <main>
       <section > {/* gives it a nice width */}
-        <Form method="post">
-          <h1 style={{ textAlign: "center" }}>Contact Support</h1>
+        <Form method="post" onSubmit={saveMessage}>
+          <h1 style={{textAlign: "center"}}>Contact Support</h1>
           <label>
             Name
             <input type="text" name="name" />
-            <FormFieldError isError={isError} message="Please type your name." />
+            <FormFieldError message={errorMessageFor('name', validationErrors)} />
           </label>
           <label>
             Email
-            <input type="text" name="email" />
-            <FormFieldError isError={isError} message="Please type your email address." />
+            <input type="text" name="email" defaultValue={email} />
+            <FormFieldError message={errorMessageFor('email', validationErrors)} />
           </label>
           <label>
             Message
-            <textarea rows={8} name="message" />
-            <FormFieldError isError={isError} message="Please include a message." />
+            <textarea rows={8} name="message" value={message} onChange={(e) => setMessage(e.target.value)} />
+            <FormFieldError message={errorMessageFor('message', validationErrors)} />
           </label>
-          <div style={{ textAlign: "right" }}>
+          <div style={{textAlign: "right"}}>
             <button type="submit">Send</button>
           </div>
         </Form>
