@@ -7,35 +7,38 @@ import type { Authenticators } from '@adonisjs/auth/types'
  * access to unauthenticated users.
  */
 export default class AuthMiddleware {
-  // The URL to redirect to, when authentication fails
-  redirectTo = '/login'
+  loginPage = '/login'
 
+  // Note that the Adonis string, ctx.route.pattern, used by matchesRoute(),
+  // is always '/*' when we delegate the routing to Remix.  So we can't use
+  // matchesRoute() here.
   openRoutes = [
-    // if we include the following line then the _index page loader function can't
-    // access logged in user email address via context.http.auth.user?.email
-    // '/',
-    this.redirectTo, // login
+    '/*',
+    this.loginPage,
     '/register',
     '/reset-password-request',
     '/reset-password-email-sent',
-    '/reset-password/$token',
+    '/reset-password/'
   ]
 
   async handle(
     ctx: HttpContext,
-    next: NextFn, // promise
+    next: NextFn,
     options: {
       guards?: (keyof Authenticators)[]
     } = {}
   ) {
-    // const pathname = ctx.request.parsedUrl.pathname ?? ''
-    // console.log('auth_middleware', {pathname}, ctx.request)
-    // if (!this.openRoutes.includes(pathname ?? '')) {
-    if (ctx.request.matchesRoute(this.openRoutes)) {
-      console.log('didn\'t find the route in openRoutes')
-      await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
+    const pathname = ctx.request.parsedUrl.pathname
+    // console.log('AuthMiddleware', {pathname: pathname})
+    const isOpenRoute = this.openRoutes.includes(pathname ?? '')
+    if (isOpenRoute) {
+      console.log(`auth_middleware: found ${pathname} in openRoutes`)
     }
+    else {
+      console.log(`auth_middleware: did not find ${pathname} in openRoutes`)
+      await ctx.auth.authenticateUsing(options.guards, {loginRoute: this.loginPage})
+    }
+
     return next()
   }
-
 }

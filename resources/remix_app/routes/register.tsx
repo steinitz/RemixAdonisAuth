@@ -15,7 +15,7 @@ import {
   Link,
   useRouteError
 } from '@remix-run/react'
-import {PasswordField} from '~/components/PasswordField'
+import {PasswordField} from '#components/PasswordField'
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {
@@ -45,13 +45,12 @@ export const action = async ({ context }: ActionFunctionArgs) => {
   // log in the user after successful registration
   await http.auth.use('web').login(user)
 
-  return redirect('/')
+  return redirect('/home')
 }
 
 export default function Page() {
   // const data = useLoaderData<typeof loader>()
   // const actionData = useActionData<typeof action>()
-
 
   return (
     <main>

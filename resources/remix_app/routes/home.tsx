@@ -1,6 +1,11 @@
-import {type ActionFunctionArgs, json, type LoaderFunctionArgs, type MetaFunction, redirect,} from '@remix-run/node'
-import {Form, useLoaderData} from '@remix-run/react'
-import {hideFormBorder} from "~/components/styles";
+import {
+  json,
+  type LoaderFunctionArgs,
+  type ActionFunctionArgs,
+  type MetaFunction,
+  redirect,
+} from '@remix-run/node'
+import { useLoaderData, Form } from '@remix-run/react'
 import {Logout} from "~/components/logout";
 
 export const meta: MetaFunction = () => {
@@ -16,7 +21,7 @@ export const action = async ({ context }: ActionFunctionArgs) => {
   console.log({intent})
   if (intent === 'log_out') {
     await http.auth.use('web').logout()
-    return redirect('/')
+    return redirect('/login')
   }
   if (intent === 'log_in') {
     return redirect('/login')
@@ -32,51 +37,53 @@ export const action = async ({ context }: ActionFunctionArgs) => {
 //   })
 // }
 
-export const loader = async ({context}: LoaderFunctionArgs) => {
+export const loader = async ({ context }: LoaderFunctionArgs) => {
   const auth = context.http.auth
 
-  // for non-authenticated routes the logged-in user won't
-  // be available until we call auth.check()
+  // The doc says I only have to do this on unauthenticated routes
   await auth.check()
 
-  // now we can get the email of the logged-in user, if any
-  const email = auth.user?.email
+  const user = auth.user
+  const email = user?.email
 
   return json({
     email,
   })
 }
 
-
-export default function Index() {
+export default function Page() {
   const {email} = useLoaderData<typeof loader>()
+  // some nasty tweaks to align the login button and loggedin text
+  const loggedInButtonFormTopMarginTweak = '-21px'
 
   // console.log('index page', {email})
   return (
     <main>
       <nav>
-        <div
-          style={{
-            width: '100%',
+        <div style={{
+           width: '100%',
             display: 'flex',
             justifyContent: 'space-between',
             alignContent: 'center',
           }}
         >
-          <h3>Blockchain Portfolio, built with Remix & Adonis</h3>
-          <div>
-          {
-            email ?
-            // some nasty tweaks to align the login button and loggedin text
-            <Logout email={email}/>
-            :
-            <Form method="POST" style={hideFormBorder} >
-              <input type="hidden" name="intent" value={'log_in'}/>
-              <button style={{}} type={'submit'}>Login</button>
-            </Form>
-          }
+          <h3 style={{}}>Blockchain Portfolio, built with Remix & Adonis</h3>
+          <div style={{}}>
+            {email ?
+              <Logout email={email}/>
+              :
+              <Form style={{
+                border: 'none',
+                boxShadow: 'none',
+                textAlign: 'right',
+                marginTop: loggedInButtonFormTopMarginTweak,
+              }} method="POST">
+                <input type="hidden" name="intent" value={'log_in'} />
+                <button style={{}} type={'submit'}>Login</button>
+              </Form>
+            }
+          </div>
         </div>
-      </div>
       </nav>
       <section>
         {/*<button type="submit">Add Accounts and Wallets</button>*/}

@@ -23,7 +23,7 @@ export default class UserService {
     console.log('getUserWithPasswordResetToken',{emailToken: token}, '\n', {hashToken})
 
     let user
-    let testUser
+    // let testUser
     try{
       user = await User.findByOrFail('password_reset_token', hashToken)
       console.log(
@@ -33,11 +33,11 @@ export default class UserService {
     }
     catch(error){
       console.warn('no user found with specified password_reset_token', { token })
-      testUser = await User.query().orderBy('id').first()
-      console.log ('getUserWithPasswordResetToken', {testUserToken: testUser?.password_reset_token })
+      // testUser = await User.query().orderBy('id').first()
+      console.log ('getUserWithPasswordResetToken', /* {testUserToken: testUser?.password_reset_token }*/)
     }
 
-    return user || testUser || undefined
+    return user /* || testUser */ || undefined
   }
 
   // looks for user, via email, throws if not found

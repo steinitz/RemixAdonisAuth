@@ -39,12 +39,21 @@ export const action = async ({ context }: ActionFunctionArgs) => {
 
   console.log('login action', {user})
   // check if the password is correct
-  await userService.verifyPassword(user, password)
+  const verifyPasswordResult =  await userService.verifyPassword(user, password)
+  if (verifyPasswordResult === false) {
+    throw new Error('Invalid credentials')
+  }
+  // console.log('login action - verifyPasswordResult === false')
+  // return json({ error: 'Invalid credentials' }, { status: 401 }
+  console.log('login action after calling userService.verifyPassword', {verifyPasswordResult})
 
   // log in user since they passed the check
-  await http.auth.use('web').login(user)
+  const auth = http.auth
+  console.log('login action', {auth})
+  const loginResult = await auth.use('web').login(user)
+  console.log("login action after calling http.auth.use('web').login(user)", {loginResult})
 
-  return redirect('/')
+  return redirect('/home')
 }
 
 export default function Page() {
