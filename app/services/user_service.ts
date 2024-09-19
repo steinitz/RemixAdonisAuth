@@ -16,14 +16,23 @@ export default class UserService {
     return await User.findByOrFail('email', email)
   }
 
-  async getUserWithPasswordResetToken(token: string | undefined): Promise<User | undefined> {
-    // eslint-disable-next-line eqeqeq
-    if (!token) return undefined
-    const hashToken = await hash.make(token)
+ // password-reset token expires after 2 hours
+  tokenExpiryHours = 2
+
+  tokenHasExpired(user: User | undefined) {
+    return user ?
+      user.password_reset_token_expiry
+        ? user.password_reset_token_expiry < DateTime.local()
+        : false
+      : true // return true if no user
+  }
+
+  async getUserWithPasswordResetToken(token: string | undefined): Promise< { user: User | undefined, tokenHasExpired: boolean }> {
+    // if (!token) return undefined
+    const hashToken = await hash.make(token || '')
     console.log('getUserWithPasswordResetToken',{emailToken: token}, '\n', {hashToken})
 
     let user
-    // let testUser
     try{
       user = await User.findByOrFail('password_reset_token', hashToken)
       console.log(
@@ -37,8 +46,13 @@ export default class UserService {
       console.log ('getUserWithPasswordResetToken', /* {testUserToken: testUser?.password_reset_token }*/)
     }
 
-    return user /* || testUser */ || undefined
+    const tokenHasExpired = this.tokenHasExpired(user)
+    return {
+      user,
+      tokenHasExpired
+    }
   }
+
 
   // looks for user, via email, throws if not found
   // generates a token
@@ -50,13 +64,14 @@ export default class UserService {
     const token = string.generateRandom(64);
     const hashToken = await hash.make(token)
     user.password_reset_token = hashToken
-    user.password_reset_token_expiry = DateTime.local().plus({ hours: 2 })
+    user.password_reset_token_expiry = DateTime.local().plus({ hours: this.tokenExpiryHours })
     user.save()
 
     // return the unhashed token to use in the reset password link
     // because the hashed token isn't fit for appending to a url
     return token
   }
+
 
   async verifyPassword(user: User, password: string) {
     let userPassword = user.password

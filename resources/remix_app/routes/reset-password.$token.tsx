@@ -1,5 +1,5 @@
 import {
-  Link,
+  Link, useLoaderData, useNavigate
 } from "@remix-run/react";
 // The link in the pasword-reset email takes the user here
 
@@ -23,13 +23,17 @@ export const loader = async ({ context, params }: LoaderFunctionArgs) => {
 
   const userService = await make('user_service')
   let user
+  let tokenHasExpired
   try {
-    user = userService.getUserWithPasswordResetToken(token)
+    ({user, tokenHasExpired} = await userService.getUserWithPasswordResetToken(token))
+    // if (user) {
+    //   tokenHasExpired = userService.tokenHasExpired(user)
+    // }
   }
   catch (error) {
     throw error
   }
-  return json({user})
+  return json({user, tokenHasExpired})
 }
 
 export const action = () => {
@@ -38,16 +42,35 @@ export const action = () => {
 }
 
 export default function Page() {
-  return(  <main>
-      <section > {/* gives it a nice width */}
+  const {tokenHasExpired} = useLoaderData<typeof loader>()
+  const navigate = useNavigate()
+  return(
+    <main>
+      <section> {/* gives it a nice width */}
         <Form method="post">
-          <h1 style={{textAlign: "center"}}>Set new password</h1>
-          {PasswordField()}
-          <div style={{textAlign: "right"}}><button type="submit">Set password</button></div>
-        </Form>
-      </section>
-    </main>
-)}
+          {
+            tokenHasExpired ?
+            (<>
+                <h1 style={{ textAlign: "center" }}>Reset Password link has expired</h1>
+                <p>Please initiate another password reset request in the Login page</p>
+                <div style={{textAlign: "right"}}>
+                  <button onClick={() => navigate(`/login`)}
+                  >Login Page</button>
+                </div>
+            </>) :
+            (<>
+              <h1 style={{ textAlign: "center" }}>Set new password</h1>
+              { PasswordField() }
+              <div style={{ textAlign: "right" }}>
+                <button type="submit">Set password</button>
+              </div>
+            </>)
+          }
+      </Form>
+    </section>
+</main>
+)
+}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
