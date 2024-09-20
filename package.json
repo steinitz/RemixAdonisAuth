@@ -30,7 +30,7 @@
     "#tests/*": "./tests/*.js",
     "#start/*": "./start/*.js",
     "#config/*": "./config/*.js",
-    "#components/*": "./resources/remix_app/components/*.js"
+    "#remix_app/*": "./resources/remix_app/*.js"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^7.7.0",

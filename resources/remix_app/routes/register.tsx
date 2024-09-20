@@ -15,7 +15,7 @@ import {
   Link,
   useRouteError
 } from '@remix-run/react'
-import {PasswordField} from '#components/PasswordField'
+import {PasswordField} from '#remix_app/components/PasswordField'
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {

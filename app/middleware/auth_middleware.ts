@@ -1,11 +1,13 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 import type { Authenticators } from '@adonisjs/auth/types'
-
+import { wildcardCompare } from '#remix_app/utilities/wildcardCompare'
 /**
  * Auth middleware is used authenticate HTTP requests and deny
  * access to unauthenticated users.
  */
+
+
 export default class AuthMiddleware {
   loginPage = '/login'
 
@@ -13,13 +15,22 @@ export default class AuthMiddleware {
   // is always '/*' when we delegate the routing to Remix.  So we can't use
   // matchesRoute() here.
   openRoutes = [
-    '/*',
-    this.loginPage,
+    '/',
+    `${this.loginPage}`,
     '/register',
     '/reset-password-request',
     '/reset-password-email-sent',
-    '/reset-password/'
+    '/reset-password/.*'
   ]
+
+  isOpenRoute (route: string | undefined | null) {
+    if (!route) return false
+
+    const matchedRoutes = this.openRoutes.filter(
+      aRoute => wildcardCompare(route || '', aRoute)
+    )
+    return matchedRoutes.length > 0
+  }
 
   async handle(
     ctx: HttpContext,
@@ -29,8 +40,9 @@ export default class AuthMiddleware {
     } = {}
   ) {
     const pathname = ctx.request.parsedUrl.pathname
-    // console.log('AuthMiddleware', {pathname: pathname})
-    const isOpenRoute = this.openRoutes.includes(pathname ?? '')
+    console.log('AuthMiddleware', {parsedURL: ctx.request.parsedUrl})
+    // const isOpenRoute = this.openRoutes.includes(pathname ?? '')
+    const isOpenRoute = this.isOpenRoute(pathname)
     if (isOpenRoute) {
       console.log(`auth_middleware: found ${pathname} in openRoutes`)
     }
