@@ -1,6 +1,6 @@
 // Allows the user to request a password reset email
 // import string from '@adonisjs/core/helpers/string'
-import Spinner from "#components/Spinner";
+import Spinner from "#remix_app/components/Spinner";
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, isRouteErrorResponse, useLoaderData, useRouteError } from "@remix-run/react";
 import { sendPasswordResetEmail } from "~/utilities/sendPasswordResetEmail";

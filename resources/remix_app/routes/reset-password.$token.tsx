@@ -42,24 +42,29 @@ export const action = () => {
 }
 
 export default function Page() {
-  const {tokenHasExpired} = useLoaderData<typeof loader>()
+  const {tokenHasExpired, user} = useLoaderData<typeof loader>()
   const navigate = useNavigate()
   return(
     <main>
       <section> {/* gives it a nice width */}
         <Form method="post">
           {
-            tokenHasExpired ?
+            tokenHasExpired || !user ?
             (<>
-                <h1 style={{ textAlign: "center" }}>Reset Password link has expired</h1>
+                <h1 style={{ textAlign: "center" }}>
+                  { !user ?
+                    "Something went wrong, can't reset password" :
+                    'Reset Password link has expired'
+                  }
+                </h1>
                 <p>Please initiate another password reset request in the Login page</p>
-                <div style={{textAlign: "right"}}>
-                  <button onClick={() => navigate(`/login`)}
-                  >Login Page</button>
-                </div>
+              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                <button onClick={() => navigate(`/contact`)}>Contact Support</button>
+                <button onClick={() => navigate(`/login`)}>Login Page</button>
+              </div>
             </>) :
-            (<>
-              <h1 style={{ textAlign: "center" }}>Set new password</h1>
+              (<>
+                <h1 style={{ textAlign: "center" }}>Set new password</h1>
               { PasswordField() }
               <div style={{ textAlign: "right" }}>
                 <button type="submit">Set password</button>
