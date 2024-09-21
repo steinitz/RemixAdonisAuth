@@ -1,6 +1,17 @@
+:root {
+    --color-error: darkred;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[color-mode="user"] {
+    --color-bg: #222; /* darker background for better readability */
+    --color-error: hotpink
+  }
+}
+
 button[type="reset"] {
   background-color: var(--color-accent); /* rgb(110, 152, 178);*/
-  color: var(--color-text-secondary);
+  /*color: var(--color-text-secondary);*/
 }
 
 button {
@@ -33,16 +44,6 @@ form {
 }
 */
 
-:root {
-    --color-error: dark-red;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root[color-mode="user"] {
-    --color-bg: #222; /* darker background for better readability */
-    --color-error: light-red
-  }
-}
 
 /*
 not actually an override -- a loading spinner class, for div
