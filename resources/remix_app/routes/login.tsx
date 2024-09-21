@@ -1,71 +1,44 @@
-// generated via cli: node ace remix:route --action --error-boundary register
-// warnings commented out by SJS
+// initial version generated via cli: node ace remix:route --action --error-boundary login
 
 import {
   ActionFunctionArgs,
-  LoaderFunctionArgs,
-  json,
   redirect
 } from '@remix-run/node'
 import {
   Form,
-  useActionData,
-  useLoaderData,
   isRouteErrorResponse,
   Link,
   useRouteError
 } from '@remix-run/react'
 import { noValue } from '~/constants'
 
-export const loader = ({ context }: LoaderFunctionArgs) => {
-  const {
-    http,
-    // make
-  } = context
-  return json({
-    message: 'Hello from ' + http.request.completeUrl(),
-  })
-}
-
+// called on form submission
 export const action = async ({ context }: ActionFunctionArgs) => {
-  console.log('login action', {context})
   const { http, make } = context
-  // get the form email and password
+
+  // get email and password from the form submission
   const { email, password } = http.request.only(['email', 'password'])
 
-  const userService = await make('user_service')
   // look up the user by email
+  const userService = await make('user_service')
   const user = await userService.getUser(email)
 
-  console.log('login action', {user})
   // check if the password is correct
   const verifyPasswordResult =  await userService.verifyPassword(user, password)
   if (verifyPasswordResult === false) {
     throw new Error('Invalid credentials')
   }
-  // console.log('login action - verifyPasswordResult === false')
-  // return json({ error: 'Invalid credentials' }, { status: 401 }
-  console.log('login action after calling userService.verifyPassword', {verifyPasswordResult})
 
   // log in user since they passed the check
-  const auth = http.auth
-  console.log('login action', {auth})
-  const loginResult = await auth.use('web').login(user)
-  console.log("login action after calling http.auth.use('web').login(user)", {loginResult})
+  await http.auth.use('web').login(user)
 
   return redirect('/home')
 }
 
 export default function Page() {
-  // const data =
-  useLoaderData<typeof loader>()
-
-  // without the next line, form submission doesn't trigger the action function
-  useActionData<typeof action>()
-
   return (
     <main>
-      <section > {/* gives it a nice width */}
+      <section> {/* gives it a nice width */}
         <Form method="post">
           <h1 style={{ textAlign: "center" }}>Log in</h1>
           <label>
