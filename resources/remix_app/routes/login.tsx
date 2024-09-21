@@ -1,13 +1,15 @@
-// initial version generated via cli: node ace remix:route --action --error-boundary login
+// initial version generated via cli with:
+// node ace remix:route --action --error-boundary login
 
 import {
-  ActionFunctionArgs,
+  ActionFunctionArgs, json,
   redirect
-} from '@remix-run/node'
+} from "@remix-run/node";
 import {
   Form,
   isRouteErrorResponse,
   Link,
+  useActionData,
   useRouteError
 } from '@remix-run/react'
 import { noValue } from '~/constants'
@@ -20,25 +22,41 @@ export const action = async ({ context }: ActionFunctionArgs) => {
   const { email, password } = http.request.only(['email', 'password'])
 
   // look up the user by email
+  // return an error message if not found
+  let user
   const userService = await make('user_service')
-  const user = await userService.getUser(email)
-
-  // check if the password is correct
-  const verifyPasswordResult =  await userService.verifyPassword(user, password)
-  if (verifyPasswordResult === false) {
-    throw new Error('Invalid credentials')
+  try {
+    user = await userService.getUser(email);
+  }
+  catch (error) {
+    return json({
+      error: "email not found",
+    })
   }
 
-  // log in user since they passed the check
+  // check if the password is correct
+  // if not, return an error message
+  const verifyPasswordResult =  await userService.verifyPassword(user, password)
+  if (verifyPasswordResult === false) {
+    // throw new Error('Invalid credentials')
+    return json({
+      error: 'incorrect password'
+    })
+  }
+
+  // credentials ok so log in user
   await http.auth.use('web').login(user)
 
   return redirect('/home')
 }
 
 export default function Page() {
+  const actionData = useActionData<typeof action>()
+  console.log({actionData})
   return (
     <main>
       <section> {/* gives it a nice width */}
+
         <Form method="post">
           <h1 style={{ textAlign: "center" }}>Log in</h1>
           <label>
@@ -49,7 +67,8 @@ export default function Page() {
             Password
             <input type="password" name="password" />
           </label>
-          <div style={{ textAlign: "right" }}>
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+            <p style={{color: "var(--color-error)"}}>{actionData?.error ? actionData?.error : ' '}</p>
             <button type="submit">Login</button>
           </div>
           <details>
