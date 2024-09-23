@@ -1,6 +1,6 @@
 // Confirms to the user that the app has sent a reset-password email
 
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import {LoaderFunctionArgs } from "@remix-run/node";
 import {
   Form,
   isRouteErrorResponse,
@@ -16,18 +16,6 @@ export const loader = ({ context }: LoaderFunctionArgs) => {
   } = context
 
   return null
-}
-
-export const action = ({ context }: ActionFunctionArgs) => {
-  // this function doesn't run
-  // probably because action methods are only triggered when the Form has method="post"
-  const {
-    // http, make
-  } = context
-
-  // this function doesn't run so the following does nothing
-  // return redirect('/')
-  // instead, used the action method of Form, which does redirect
 }
 
 export default function Page() {

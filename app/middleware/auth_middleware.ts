@@ -18,7 +18,7 @@ export default class AuthMiddleware {
     '/',
     `${this.loginPage}`,
     '/register',
-    '/reset-password-request',
+    '/reset-password-request/*',
     '/reset-password-email-sent',
     '/reset-password/.*'
   ]
@@ -40,8 +40,6 @@ export default class AuthMiddleware {
     } = {}
   ) {
     const pathname = ctx.request.parsedUrl.pathname
-    console.log('AuthMiddleware', {parsedURL: ctx.request.parsedUrl})
-    // const isOpenRoute = this.openRoutes.includes(pathname ?? '')
     const isOpenRoute = this.isOpenRoute(pathname)
     if (isOpenRoute) {
       console.log(`auth_middleware: found ${pathname} in openRoutes`)
