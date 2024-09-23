@@ -27,7 +27,6 @@ export const loader = ({context}: LoaderFunctionArgs) => {
   })
 }
 
-// resources/remix_app/routes/register.tsx
 export const action = async ({ context }: ActionFunctionArgs) => {
   console.log('Register - action method')
   const { http, make } = context

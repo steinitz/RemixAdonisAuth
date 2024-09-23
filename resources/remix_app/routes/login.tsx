@@ -13,6 +13,7 @@ import {
   useRouteError
 } from '@remix-run/react'
 import { noValue } from '~/constants'
+import { PasswordField } from "~/components/PasswordField";
 
 // called on form submission
 export const action = async ({ context }: ActionFunctionArgs) => {
@@ -63,10 +64,7 @@ export default function Page() {
             Email
             <input type="text" name="email" />
           </label>
-          <label>
-            Password
-            <input type="password" name="password" />
-          </label>
+          { PasswordField() }
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
             <p style={{color: "var(--color-error)"}}>{actionData?.error ? actionData?.error : ' '}</p>
             <button type="submit">Login</button>

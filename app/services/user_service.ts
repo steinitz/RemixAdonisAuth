@@ -16,8 +16,23 @@ export default class UserService {
     return await User.findByOrFail('email', email)
   }
 
- // password-reset token expires after 2 hours
+  // password-reset token expires after 2 hours
   tokenExpiryHours = 2
+
+  // looks for user, via email, throws if not found
+  // generates a token
+  // sets the token field and expiry field
+  // returns a token
+  async setPasswordResetTokenFor(email: string) {
+    const user = await this.getUser(email)
+    if (!user) {throw new Error('user not found')}
+    const token = string.generateRandom(64)
+    user.password_reset_token = token
+    user.password_reset_token_expiry = DateTime.local().plus({ hours: this.tokenExpiryHours })
+    user.save()
+
+    return token
+  }
 
   tokenHasExpired(user: User | undefined) {
     return user ?
@@ -27,23 +42,16 @@ export default class UserService {
       : true // return true if no user
   }
 
-  async getUserWithPasswordResetToken(token: string | undefined): Promise< { user: User | undefined, tokenHasExpired: boolean }> {
-    // if (!token) return undefined
-    const hashToken = await hash.make(token || '')
-    console.log('getUserWithPasswordResetToken',{emailToken: token}, '\n', {hashToken})
-
+  async getUserWithPasswordResetToken(
+    token: string):
+    Promise< { user: User | undefined, tokenHasExpired: boolean }>
+  {
     let user
     try{
-      user = await User.findByOrFail('password_reset_token', hashToken)
-      console.log(
-        'getUserWithPasswordResetToken',
-        {emailToken: hashToken}, {userToken: user?.password_reset_token}
-      )
-    }
+      user = await User.findByOrFail('password_reset_token', token)
+     }
     catch(error){
       console.warn('no user found with specified password_reset_token', { token })
-      // testUser = await User.query().orderBy('id').first()
-      console.log ('getUserWithPasswordResetToken', /* {testUserToken: testUser?.password_reset_token }*/)
     }
 
     const tokenHasExpired = this.tokenHasExpired(user)
@@ -53,23 +61,21 @@ export default class UserService {
     }
   }
 
+  async updatePassword(user: User, password: string)
+  {
+    // Note - hashing the password isn't necessary because
+    // according to the Adonis Authentication docs, in the
+    // Verifying User Credentials section:
 
-  // looks for user, via email, throws if not found
-  // generates a token
-  // sets the token field and expiry field
-  // returns a token
-  async setPasswordResetTokenFor(email: string) {
-    const user = await this.getUser(email)
-    if (!user) {throw new Error('user not found')}
-    const token = string.generateRandom(64);
-    const hashToken = await hash.make(token)
-    user.password_reset_token = hashToken
-    user.password_reset_token_expiry = DateTime.local().plus({ hours: this.tokenExpiryHours })
+    // "The AuthFinder mixin registers a beforeSave hook to
+    // automatically hash the user passwords during INSERT and
+    // UPDATE calls. Therefore, you do not have to manually
+    // perform password hashing in your models."
+
+    // Nice.  And it seems to work.
+
+    user.password = password
     user.save()
-
-    // return the unhashed token to use in the reset password link
-    // because the hashed token isn't fit for appending to a url
-    return token
   }
 
 
