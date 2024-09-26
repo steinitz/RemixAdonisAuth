@@ -9,18 +9,18 @@ import { wildcardCompare } from '#remix_app/utilities/wildcardCompare'
 
 
 export default class AuthMiddleware {
-  loginPage = '/login'
+  loginRoute = '/login'
 
   // Note that the Adonis string, ctx.route.pattern, used by matchesRoute(),
   // is always '/*' when we delegate the routing to Remix.  So we can't use
   // matchesRoute() here.
   openRoutes = [
     '/',
-    `${this.loginPage}`,
+    `${this.loginRoute}`,
     '/register',
     '/reset-password-request/*',
     '/reset-password-email-sent',
-    '/reset-password/.*'
+    '/reset-password/*'
   ]
 
   isOpenRoute (route: string | undefined | null) {
@@ -42,11 +42,11 @@ export default class AuthMiddleware {
     const pathname = ctx.request.parsedUrl.pathname
     const isOpenRoute = this.isOpenRoute(pathname)
     if (isOpenRoute) {
-      console.log(`auth_middleware: found ${pathname} in openRoutes`)
+      // console.log(`auth_middleware: found ${pathname} in openRoutes`)
     }
     else {
-      console.log(`auth_middleware: did not find ${pathname} in openRoutes`)
-      await ctx.auth.authenticateUsing(options.guards, {loginRoute: this.loginPage})
+      // console.log(`auth_middleware: did not find ${pathname} in openRoutes`)
+      await ctx.auth.authenticateUsing(options.guards, {loginRoute: this.loginRoute})
     }
 
     return next()

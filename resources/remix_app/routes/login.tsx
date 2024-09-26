@@ -14,6 +14,10 @@ import {
 } from '@remix-run/react'
 import { noValue } from '~/constants'
 import { PasswordField } from "~/components/PasswordField";
+import { createLoginValidationSchema } from "#validators/authenticationValidation";
+import { ValidatedInput } from "#remix_app/components/ValidatedInput";
+
+const validationSchema = createLoginValidationSchema()
 
 // called on form submission
 export const action = async ({ context }: ActionFunctionArgs) => {
@@ -22,6 +26,18 @@ export const action = async ({ context }: ActionFunctionArgs) => {
   // get email and password from the form submission
   const { email, password } = http.request.only(['email', 'password'])
 
+  let validationErrors
+  try {
+    // vine can sanitize what the user typed
+    // here we just want the errors when vine throws
+    await validationSchema.validate ({email, password});
+  }
+  catch (error) {
+    validationErrors = error.messages
+    console.log({ validationErrors })
+  }
+
+  let loginError
   // look up the user by email
   // return an error message if not found
   let user
@@ -30,30 +46,44 @@ export const action = async ({ context }: ActionFunctionArgs) => {
     user = await userService.getUser(email);
   }
   catch (error) {
-    return json({
-      error: "email not found",
-    })
+    // return json({
+    //   error: "email not found",
+    // })
+    loginError = 'email not found'
   }
 
   // check if the password is correct
   // if not, return an error message
-  const verifyPasswordResult =  await userService.verifyPassword(user, password)
-  if (verifyPasswordResult === false) {
-    // throw new Error('Invalid credentials')
-    return json({
-      error: 'incorrect password'
-    })
+
+  let verifyPasswordResult
+  if (!loginError && user) {
+    verifyPasswordResult = await userService.verifyPassword(user, password);
+
+    if (verifyPasswordResult === false) {
+      // throw new Error('Invalid credentials')
+      loginError = "invalid credentials";
+    }
   }
 
-  // credentials ok so log in user
-  await http.auth.use('web').login(user)
+  const returnValue = validationErrors || loginError ?
+    json({
+      validationErrors,
+      loginError
+    }) :
+    redirect(`/home`)
 
-  return redirect('/home')
+  return returnValue
 }
 
 export default function Page() {
   const actionData = useActionData<typeof action>()
-  console.log({actionData})
+  const {
+    // @ts-ignore
+    loginError,
+    // @ts-ignore
+    validationErrors
+  } = actionData ?? {}
+
   return (
     <main>
       <section> {/* gives it a nice width */}
@@ -62,11 +92,16 @@ export default function Page() {
           <h1 style={{ textAlign: "center" }}>Log in</h1>
           <label>
             Email
-            <input type="text" name="email" />
+            <ValidatedInput
+              fieldName='email'
+              validationErrors={validationErrors}
+            />
           </label>
-          { PasswordField() }
+          { PasswordField({}) }
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-            <p style={{color: "var(--color-error)"}}>{actionData?.error ? actionData?.error : ' '}</p>
+            <p style={{color: "var(--color-error)"}}>
+              {loginError ?? ' '}
+            </p>
             <button type="submit">Login</button>
           </div>
           <details>

@@ -12,10 +12,12 @@ import {
   // useActionData,
   // useLoaderData,
   isRouteErrorResponse,
-  Link,
+  Link, useActionData,
   useRouteError
-} from '@remix-run/react'
+} from "@remix-run/react";
 import {PasswordField} from '#remix_app/components/PasswordField'
+import { ValidatedInput } from "#remix_app/components/ValidatedInput";
+import { createRegistrationValidationSchema } from "#validators/authenticationValidation";
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {
@@ -27,30 +29,50 @@ export const loader = ({context}: LoaderFunctionArgs) => {
   })
 }
 
+const validationSchema = createRegistrationValidationSchema()
+
 export const action = async ({ context }: ActionFunctionArgs) => {
-  console.log('Register - action method')
   const { http, make } = context
+
   // get email and password from form data
   const { email, password } = http.request.only(['email', 'password'])
 
-  // get the UserService from the app container
-  const userService = await make('user_service')
+  let validationErrors
+  try {
+    // vine can sanitize what the user typed
+    // here we just want the errors when vine throws
+    await validationSchema.validate ({email, password});
+  }
+  catch (error) {
+    validationErrors = error.messages
+    console.log({ validationErrors })
+  }
 
-  const user = await userService.createUser({
-    email,
-    password,
-  })
+  // if no validation errors send the support email
 
-  // log in the user after successful registration
-  await http.auth.use('web').login(user)
+  if (!validationErrors) {
+    // get the UserService from the app container
+    const userService = await make('user_service')
 
-  return redirect('/home')
+    const user = await userService.createUser({
+      email,
+      password,
+    })
+
+    // log in the user after successful registration
+    await http.auth.use('web').login(user)
+  }
+
+  const returnValue = validationErrors ?
+    json({validationErrors}) :
+    redirect(`/home`)
+
+  return returnValue
 }
 
 export default function Page() {
-  // const data = useLoaderData<typeof loader>()
-  // const actionData = useActionData<typeof action>()
-
+  const {validationErrors} = useActionData<typeof action>() ?? []
+  console.log('register page', {validationErrors})
   return (
     <main>
       <section > {/* gives it a nice width */}
@@ -59,9 +81,10 @@ export default function Page() {
           <p>Already have an account? <Link to="/login">Log In</Link></p>
           <label>
             Email
-            <input type="text" name="email" />
+            <ValidatedInput fieldName='email' validationErrors
+              ={ validationErrors} />
           </label>
-          {PasswordField()}
+          {PasswordField({validationErrors})}
           <div style={{textAlign: "right"}}><button type="submit">Register</button></div>
         </Form>
       </section>
@@ -83,7 +106,8 @@ export function ErrorBoundary() {
       </div>
     );
   } else if (error instanceof Error) {
-    console.log(error)
+    // This shouldn't happen given our email unique check, above
+    // but just in case...
     if (error.message.includes('UNIQUE constraint failed: users.email')) {
       result = (
         <main>
@@ -96,11 +120,10 @@ export function ErrorBoundary() {
             </Form>
           </section>
         </main>
-
       )
     }
-      else {
-        result = (
+    else {
+      result = (
         <div>
           <h1>Error</h1>
           <p>{error.message}</p>

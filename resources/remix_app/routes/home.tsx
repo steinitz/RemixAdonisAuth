@@ -1,3 +1,4 @@
+import Spinner from '#remix_app/components/Spinner';
 import {
   json,
   type LoaderFunctionArgs,
@@ -132,6 +133,7 @@ export default function Page() {
             </a>
           </li>
         </ul>
+        <Spinner />
       </section>
     </main>
   )

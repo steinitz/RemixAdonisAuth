@@ -2,7 +2,7 @@
     --color-error: darkred;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root[color-mode="user"] {
     --color-bg: #222; /* darker background for better readability */
     --color-error: hotpink
@@ -61,18 +61,19 @@ probably should be in its own file
 
 /*linear-gradient(white, white) padding-box, linear-gradient(to right, darkblue, darkorchid) border-box;*/
 .spinner {
+  filter: brightness(200%);
   display: flex;
   justify-content: flex-end;
   margin: 0 auto;
   background-color: var(--color-accent);
   /*border: 10px solid var(--color-text-secondary);*/
 
-  border-top: 3px solid var(--color-link);
+  border-top: 8px solid var(--color-link);
   /*border: 10px solid var(--color-text-secondary);*/
   /*border-top: 10px solid var(--color-link);*/
   border-radius: 50%;
   height: 31px;
-  width: 34px; /* height + border width */
+  width: 39px; /* height + border top */
   animation: spin 1s linear infinite;
-  animation-duration: 5s;
+  animation-duration: 8s;
 }

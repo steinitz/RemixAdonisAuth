@@ -1,15 +1,11 @@
-import vine from '@vinejs/vine'
-import {ActionFunctionArgs, LoaderFunctionArgs, json, redirect} from "@remix-run/node";
-import {
-  // useActionData, useLoaderData,
-  isRouteErrorResponse, useRouteError, Form, useActionData, useLoaderData
-  // Link
-} from "@remix-run/react";
-import {convertTextMessageToHtml} from '~/utilities/convertTextMessageToHtml'
-import {sendSupportEmail} from '~/utilities/sendSupportEmail'
-import {FormFieldError} from "~/components/FormFieldError";
-import { noValue } from '~/constants';
+import vine from "@vinejs/vine";
+import { ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { Form, isRouteErrorResponse, useActionData, useLoaderData, useRouteError } from "@remix-run/react";
+import { convertTextMessageToHtml } from "~/utilities/convertTextMessageToHtml";
+import { sendSupportEmail } from "~/utilities/sendSupportEmail";
+import { FormFieldError } from "~/components/FormFieldError";
 import { useState } from "react";
+import { errorMessageFor, ValidatedInput } from "~/components/ValidatedInput";
 
 export const loader = async ({ context }: LoaderFunctionArgs) => {
   const email = context.http.auth.user?.email
@@ -17,6 +13,14 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
     email,
   })
 }
+
+const validationSchema = vine.object({
+  email: vine.string().email(),
+  message: vine
+    .string()
+    .minLength(1)
+    .maxLength(512)
+})
 
 export const action = async ({context}: ActionFunctionArgs) => {
   const {
@@ -35,7 +39,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
     // here we just want the errors when vine throws
     // sanitizedValues =
     await vine.validate({
-      schema,
+      schema: validationSchema,
       data: {name, email, message}
     });
   }
@@ -56,20 +60,6 @@ export const action = async ({context}: ActionFunctionArgs) => {
     json({validationErrors}) :
     redirect(`/contact-sent?email=${email}`)
   return returnValue
-}
-
-const schema = vine.object({
-  name: vine.string().minLength(1),
-  email: vine.string().email(),
-  message: vine
-    .string()
-    .minLength(1)
-    .maxLength(512)
-})
-
-const errorMessageFor = (fieldName: string, validationErrors: any[] | undefined) => {
-  const {message} = validationErrors?.find(vError => vError.field === fieldName) ?? {}
-  return message || noValue
 }
 
 export default function Page() {
@@ -98,25 +88,41 @@ export default function Page() {
 
   return (
     <main>
-      <section > {/* gives it a nice width */}
+      <section> {/* gives it a nice width */}
         <Form method="post" onSubmit={saveMessage}>
-          <h1 style={{textAlign: "center"}}>Contact Support</h1>
+          <h1 style={{ textAlign: "center" }}>Contact Support</h1>
           <label>
             Name
-            <input type="text" name="name" />
-            <FormFieldError message={errorMessageFor('name', validationErrors)} />
+            <ValidatedInput
+              fieldName='name'
+              validationErrors={ validationErrors}
+            />
           </label>
           <label>
             Email
             <input type="text" name="email" defaultValue={email} />
-            <FormFieldError message={errorMessageFor('email', validationErrors)} />
+            <FormFieldError
+              message={
+                errorMessageFor(
+                  'email',
+                  validationErrors
+                )
+              }
+            />
           </label>
           <label>
             Message
             <textarea rows={8} name="message" value={message} onChange={(e) => setMessage(e.target.value)} />
-            <FormFieldError message={errorMessageFor('message', validationErrors)} />
+            <FormFieldError
+              message={
+                errorMessageFor(
+                  'message',
+                  validationErrors
+                )
+              }
+            />
           </label>
-          <div style={{textAlign: "right"}}>
+          <div style={{ textAlign: "right" }}>
             <button type="submit">Send</button>
           </div>
         </Form>
