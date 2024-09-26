@@ -1,12 +1,12 @@
 export const wildcardCompare = (aString: string, wildcardPattern: string) =>{
-	// Convert wildcard pattern to a regular expression pattern
+	// first, convert wildcard pattern to a regex pattern
 	const regexPattern = new RegExp("^" +
 		wildcardPattern
 			.replace(/\?/g, ".")
 			.replace(/\*/g, ".*") +
 		"$"
 	);
-  // do the compare
+  // then check for a match
 	return regexPattern.test(aString);
 }
 
