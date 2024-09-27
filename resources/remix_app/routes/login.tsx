@@ -59,7 +59,11 @@ export const action = async ({ context }: ActionFunctionArgs) => {
   if (!loginError && user) {
     verifyPasswordResult = await userService.verifyPassword(user, password);
 
-    if (verifyPasswordResult === false) {
+    if (verifyPasswordResult === true) {
+     // credentials ok so log in user
+      await http.auth.use('web').login(user)
+    }
+    else {
       // throw new Error('Invalid credentials')
       loginError = "invalid credentials";
     }
