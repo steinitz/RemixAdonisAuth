@@ -28,7 +28,7 @@ export const createLoginValidationSchema = () => vine.compile(
     email: vine
       .string()
       .email(),
-    ...passwordValidationRule,
+    password: vine.string(), // don't reveal the minimum length here
   })
 )
 
