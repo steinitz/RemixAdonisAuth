@@ -20,7 +20,6 @@ export default function Page() {
   const [searchParams] = useSearchParams()
   const email = searchParams.get('email') || ''
 
-
   return (
     <main>
       <section>

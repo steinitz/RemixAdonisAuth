@@ -3,8 +3,8 @@ import {
   LoaderFunctionArgs,
   json} from '@remix-run/node'
 import {
-  // useActionData,
-  useLoaderData, isRouteErrorResponse, useRouteError, Form} from "@remix-run/react";
+  useLoaderData, isRouteErrorResponse, useRouteError, Form
+} from "@remix-run/react";
 
 export const loader = async ({context}: LoaderFunctionArgs) => {
   const email = context.http.auth.user?.email

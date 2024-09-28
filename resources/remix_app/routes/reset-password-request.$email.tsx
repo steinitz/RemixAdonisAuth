@@ -1,12 +1,17 @@
 // Allows the user to request a password reset email
-// import string from '@adonisjs/core/helpers/string'
-import Spinner from "#remix_app/components/Spinner";
-import {ActionFunctionArgs, json, LoaderFunctionArgs} from "@remix-run/node";
-import {Form, isRouteErrorResponse, useLoaderData, useRouteError} from "@remix-run/react";
+import {ActionFunctionArgs, json, LoaderFunctionArgs, redirect} from "@remix-run/node";
+import {
+  Form,
+  isRouteErrorResponse,
+  useActionData,
+  useLoaderData,
+  useRouteError
+} from "@remix-run/react";
 import {sendPasswordResetEmail} from "~/utilities/sendPasswordResetEmail";
-import {useState} from "react";
 import {getDomainUrl} from "~/utilities/getDomainUrl";
 import {noValue} from "~/constants";
+import {createPasswordResetValidationSchema} from "#validators/authenticationValidation";
+import {ValidatedInput} from "~/components/ValidatedInput";
 // import * as sea from "node:sea";
 
 export const loader = ({params}: LoaderFunctionArgs) => {
@@ -15,6 +20,7 @@ export const loader = ({params}: LoaderFunctionArgs) => {
     email,
   })}
 
+const validationSchema = createPasswordResetValidationSchema()
 export const action = async ({context}: ActionFunctionArgs) => {
   const {
     http,
@@ -23,21 +29,34 @@ export const action = async ({context}: ActionFunctionArgs) => {
   // get email from form data
   const {email} = http.request.only(['email'])
 
-  return await sendPasswordResetEmail(
+  // validate the email
+  let validationErrors
+  try {
+    // vine can sanitize what the user typed
+    // here we just want the errors when vine throws
+    await validationSchema.validate ({email});
+  }
+  catch (error) {
+    validationErrors = error.messages
+    console.log({validationErrors})
+    // early return if validation errors
+    return json({
+      validationErrors,
+    })
+  }
+
+  // send the password reset email
+  sendPasswordResetEmail(
     email,
     getDomainUrl(http.request),
     await make("user_service")
-  )}
+  )
+  return redirect(`/reset-password-email-sent?email=${email}`)
+}
 
 export default function Page() {
   const {email} = useLoaderData<typeof loader>()
-
-  // hack to show the spinner as soon as the user hits the submit button
-  const [didSubmit, setDidSubmit] = useState<boolean>(false)
-  const onSubmit = () => {
-    // console.log('onSubmit running')
-    setDidSubmit(true)
-  }
+  const {validationErrors} = useActionData<typeof action>() ?? []
 
   return (
     <main>
@@ -51,26 +70,28 @@ export default function Page() {
           </p>
           <label>
             Email
-            <input type="text" name="email" defaultValue={email !== noValue ? email : ''} />
+            <ValidatedInput
+              fieldName='email'
+              validationErrors={validationErrors}
+              defaultValue={email !== noValue ? email : ''}
+            />
           </label>
           <div style={{
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
           }}>
-          {
-            didSubmit ?
-            <div style={{paddingTop: '13px'}}><Spinner/></div> :
+            {/* this first div was a spinner but it was too hard to make it */}
+            {/* appear/disappear reactively and avoiding infinite renders */}
             <div />
-          }
-          <div style={{textAlign: "right"}}>
-            <button
-              type="submit"
-              onClick={onSubmit}
-            >
-              Send me a reset email
-            </button>
-          </div>
+            <div style={{textAlign: "right"}}>
+              <button
+                type="submit"
+                // onClick={onSubmit}
+              >
+                Send me a reset email
+              </button>
+            </div>
           </div>
           <br />
         </Form>

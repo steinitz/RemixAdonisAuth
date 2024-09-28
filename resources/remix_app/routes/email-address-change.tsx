@@ -1,7 +1,7 @@
 import {ActionFunctionArgs, LoaderFunctionArgs, json} from '@remix-run/node'
 import {
-  // useActionData, useLoaderData,
-  isRouteErrorResponse, useRouteError} from '@remix-run/react'
+  isRouteErrorResponse, useRouteError
+} from '@remix-run/react'
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {
@@ -19,8 +19,6 @@ export const action = ({context}: ActionFunctionArgs) => {
   return null}
 
 export default function Page() {
-  // const data = useLoaderData<typeof loader>()
-  // const actionData = useActionData<typeof action>()
   return <div>New route</div>}
 
 // https://remix.run/docs/en/main/route/error-boundary
