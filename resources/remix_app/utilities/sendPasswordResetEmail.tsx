@@ -24,7 +24,7 @@ export async function sendPasswordResetEmail(
         .to(email)
         // .from('info@example.org')
         .subject(`Reset Your ${companyName} Password\n\n`)
-        // .htmlView('emails/verify_email', { user })
+        // .htmlView('emails/verify_email', {user})
         // HTML contents
         .html(`
         <p>We understand that you’ve requested to reset your password for your ${companyName} account.</>
@@ -43,5 +43,4 @@ export async function sendPasswordResetEmail(
     }
   );
 
-  return redirect(`/reset-password-email-sent?email=${email}`);
-}
+  return redirect(`/reset-password-email-sent?email=${email}`);}

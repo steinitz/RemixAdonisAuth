@@ -1,26 +1,24 @@
 import vine from "@vinejs/vine";
-import { ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
-import { Form, isRouteErrorResponse, useActionData, useLoaderData, useRouteError } from "@remix-run/react";
-import { convertTextMessageToHtml } from "~/utilities/convertTextMessageToHtml";
-import { sendSupportEmail } from "~/utilities/sendSupportEmail";
-import { FormFieldError } from "~/components/FormFieldError";
-import { useState } from "react";
-import { errorMessageFor, ValidatedInput } from "~/components/ValidatedInput";
+import {ActionFunctionArgs, json, LoaderFunctionArgs, redirect} from "@remix-run/node";
+import {Form, isRouteErrorResponse, useActionData, useLoaderData, useRouteError} from "@remix-run/react";
+import {convertTextMessageToHtml} from "~/utilities/convertTextMessageToHtml";
+import {sendSupportEmail} from "~/utilities/sendSupportEmail";
+import {FormFieldError} from "~/components/FormFieldError";
+import {useState} from "react";
+import {errorMessageFor, ValidatedInput} from "~/components/ValidatedInput";
 
-export const loader = async ({ context }: LoaderFunctionArgs) => {
+export const loader = async ({context}: LoaderFunctionArgs) => {
   const email = context.http.auth.user?.email
   return json({
     email,
-  })
-}
+  })}
 
 const validationSchema = vine.object({
   email: vine.string().email(),
   message: vine
     .string()
     .minLength(1)
-    .maxLength(512)
-})
+    .maxLength(512)})
 
 export const action = async ({context}: ActionFunctionArgs) => {
   const {
@@ -59,12 +57,11 @@ export const action = async ({context}: ActionFunctionArgs) => {
   const returnValue = validationErrors ?
     json({validationErrors}) :
     redirect(`/contact-sent?email=${email}`)
-  return returnValue
-}
+  return returnValue}
 
 export default function Page() {
   const {email = ''} = useLoaderData<typeof loader>()
-  const { validationErrors } = useActionData<typeof action>() ?? []
+  const {validationErrors} = useActionData<typeof action>() ?? []
 
   // big song and dance to keep the message in case the
   // user notices she has typed in the wrong email address
@@ -90,12 +87,12 @@ export default function Page() {
     <main>
       <section> {/* gives it a nice width */}
         <Form method="post" onSubmit={saveMessage}>
-          <h1 style={{ textAlign: "center" }}>Contact Support</h1>
+          <h1 style={{textAlign: "center"}}>Contact Support</h1>
           <label>
             Name
             <ValidatedInput
               fieldName='name'
-              validationErrors={ validationErrors}
+              validationErrors={validationErrors}
             />
           </label>
           <label>
@@ -122,14 +119,13 @@ export default function Page() {
               }
             />
           </label>
-          <div style={{ textAlign: "right" }}>
+          <div style={{textAlign: "right"}}>
             <button type="submit">Send</button>
           </div>
         </Form>
       </section>
     </main>
-  )
-}
+  )}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
@@ -155,8 +151,7 @@ export function ErrorBoundary() {
     );
   } else {
     return <h1>Unknown Error</h1>;
-  }
-}
+  }}
 
 
 // graveyard

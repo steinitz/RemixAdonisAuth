@@ -3,21 +3,19 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
-  redirect,
-} from '@remix-run/node'
-import { useLoaderData, Form } from '@remix-run/react'
+  redirect,} from '@remix-run/node'
+import {useLoaderData, Form} from '@remix-run/react'
 import {Logout} from "~/components/logout";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: 'Weekend Trading System' },
-    { name: 'weekend-trading-system', content: 'Weekend is Non-Representative Trading System' },
-  ]
-}
+    {title: 'Weekend Trading System'},
+    {name: 'weekend-trading-system', content: 'Weekend is Non-Representative Trading System'},
+  ]}
 
-export const action = async ({ context }: ActionFunctionArgs) => {
-  const { http } = context
-  const { intent } = http.request.only(['intent'])
+export const action = async ({context}: ActionFunctionArgs) => {
+  const {http} = context
+  const {intent} = http.request.only(['intent'])
   console.log({intent})
   if (intent === 'log_out') {
     await http.auth.use('web').logout()
@@ -26,18 +24,9 @@ export const action = async ({ context }: ActionFunctionArgs) => {
   if (intent === 'log_in') {
     return redirect('/login')
   }
-  return null
-}
+  return null}
 
-// export const loader = async ({ context }: LoaderFunctionArgs) => {
-//   const service = await context.make('hello_service')
-
-//   return json({
-//     message: service.getMessage(),
-//   })
-// }
-
-export const loader = async ({ context }: LoaderFunctionArgs) => {
+export const loader = async ({context}: LoaderFunctionArgs) => {
   const auth = context.http.auth
 
   // The doc says I only have to do this on unauthenticated routes
@@ -48,12 +37,11 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
 
   return json({
     email,
-  })
-}
+  })}
 
 export default function Page() {
   const {email} = useLoaderData<typeof loader>()
-  // some nasty tweaks to align the login button and loggedin text
+  // dubious tweak to align the login button and loggedin text
   const loggedInButtonFormTopMarginTweak = '-21px'
 
   // console.log('index page', {email})
@@ -134,7 +122,6 @@ export default function Page() {
         </ul>
       </section>
     </main>
-  )
-}
+  )}
 
 

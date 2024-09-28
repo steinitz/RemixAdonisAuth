@@ -1,22 +1,20 @@
 // Confirms to the user that the app has sent a reset-password email
 
-import {LoaderFunctionArgs } from "@remix-run/node";
+import {LoaderFunctionArgs} from "@remix-run/node";
 import {
   Form,
   isRouteErrorResponse,
   Link,
   useRouteError,
-  useSearchParams
-} from "@remix-run/react";
+  useSearchParams} from "@remix-run/react";
 
-export const loader = ({ context }: LoaderFunctionArgs) => {
+export const loader = ({context}: LoaderFunctionArgs) => {
   const {
     // http,
     // make
   } = context
 
-  return null
-}
+  return null}
 
 export default function Page() {
   const [searchParams] = useSearchParams()
@@ -34,7 +32,7 @@ export default function Page() {
           <h3>Didn't receive the mail?</h3><Link to={`/reset-password-request/${email}`}>Resend Email</Link>
           <h3>Wrong Email Address?</h3><Link to="/reset-password-request">Change Email Address</Link>
           <h3>Need Help?</h3><Link to="/contact">Contact Support</Link>
-          <div style={{ textAlign: "right" }}>
+          <div style={{textAlign: "right"}}>
             <button
               type="submit"
             >
@@ -45,8 +43,7 @@ export default function Page() {
 
       </section>
     </main>
-  );
-}
+  );}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
@@ -72,5 +69,4 @@ export function ErrorBoundary() {
     );
   } else {
     return <h1>Unknown Error</h1>;
-  }
-}
+  }}

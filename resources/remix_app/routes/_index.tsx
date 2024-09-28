@@ -5,14 +5,13 @@ import {Logout} from "~/components/logout";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: 'Weekend Trading System' },
-    { name: 'weekend-trading-system', content: 'Weekend is Non-Representative Trading System' },
-  ]
-}
+    {title: 'Weekend Trading System'},
+    {name: 'weekend-trading-system', content: 'Weekend is Non-Representative Trading System'},
+  ]}
 
-export const action = async ({ context }: ActionFunctionArgs) => {
-  const { http } = context
-  const { intent } = http.request.only(['intent'])
+export const action = async ({context}: ActionFunctionArgs) => {
+  const {http} = context
+  const {intent} = http.request.only(['intent'])
   console.log({intent})
   if (intent === 'log_out') {
     await http.auth.use('web').logout()
@@ -21,16 +20,13 @@ export const action = async ({ context }: ActionFunctionArgs) => {
   if (intent === 'log_in') {
     return redirect('/login')
   }
-  return null
-}
+  return null}
 
-// export const loader = async ({ context }: LoaderFunctionArgs) => {
-//   const service = await context.make('hello_service')
+// export const loader = async ({context}: LoaderFunctionArgs) => {//   const service = await context.make('hello_service')
 
-//   return json({
-//     message: service.getMessage(),
+//   return json({//     message: service.getMessage(),
 //   })
-// }
+//}
 
 export const loader = async ({context}: LoaderFunctionArgs) => {
   const auth = context.http.auth
@@ -44,8 +40,7 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
 
   return json({
     email,
-  })
-}
+  })}
 
 
 export default function Index() {
@@ -127,7 +122,6 @@ export default function Index() {
         </ul>
       </section>
     </main>
-  )
-}
+  )}
 
 

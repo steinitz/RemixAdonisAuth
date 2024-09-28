@@ -14,7 +14,7 @@ export async function sendSupportEmail(
         .to(supportEmail)
         // .from('info@example.org')
         .subject(`Contact Form`)
-        // .htmlView('emails/verify_email', { user })
+        // .htmlView('emails/verify_email', {user})
 
         // HTML contents
         .html(userMessageHtml)
@@ -24,5 +24,4 @@ export async function sendSupportEmail(
     }
   );
 
-  return redirect(`/contact-sent`);
-}
+  return redirect(`/contact-sent`);}

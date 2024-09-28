@@ -1,10 +1,10 @@
-import { noValue } from "~/constants";
+import {noValue} from "~/constants";
 
 // we expect either an error message or the noValue string - makes it easier to
 // format consistently between the error and no error state
 
 export const FormFieldError = ({message}: {message: string}) => {
-  // console.log({ message }, isError);
+  // console.log({message}, isError);
   const isError = message !== noValue
   return (
       <p
@@ -31,5 +31,4 @@ export const FormFieldError = ({message}: {message: string}) => {
       >
         {message}
       </p>
-  )
-}
+  )}

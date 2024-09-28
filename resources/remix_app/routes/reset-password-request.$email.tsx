@@ -1,22 +1,21 @@
 // Allows the user to request a password reset email
 // import string from '@adonisjs/core/helpers/string'
 import Spinner from "#remix_app/components/Spinner";
-import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, isRouteErrorResponse, useLoaderData, useRouteError } from "@remix-run/react";
-import { sendPasswordResetEmail } from "~/utilities/sendPasswordResetEmail";
-import { useState } from "react";
-import { getDomainUrl } from "~/utilities/getDomainUrl";
-import { noValue } from "~/constants";
+import {ActionFunctionArgs, json, LoaderFunctionArgs} from "@remix-run/node";
+import {Form, isRouteErrorResponse, useLoaderData, useRouteError} from "@remix-run/react";
+import {sendPasswordResetEmail} from "~/utilities/sendPasswordResetEmail";
+import {useState} from "react";
+import {getDomainUrl} from "~/utilities/getDomainUrl";
+import {noValue} from "~/constants";
 // import * as sea from "node:sea";
 
 export const loader = ({params}: LoaderFunctionArgs) => {
   const email = params.email
   return json({
     email,
-  })
-}
+  })}
 
-export const action = async ({ context }: ActionFunctionArgs) => {
+export const action = async ({context}: ActionFunctionArgs) => {
   const {
     http,
     make,
@@ -28,11 +27,10 @@ export const action = async ({ context }: ActionFunctionArgs) => {
     email,
     getDomainUrl(http.request),
     await make("user_service")
-  )
-}
+  )}
 
 export default function Page() {
-  const { email } = useLoaderData<typeof loader>()
+  const {email} = useLoaderData<typeof loader>()
 
   // hack to show the spinner as soon as the user hits the submit button
   const [didSubmit, setDidSubmit] = useState<boolean>(false)
@@ -45,7 +43,7 @@ export default function Page() {
     <main>
       <section> {/* gives a nice width */}
         <Form method="post">
-          <h1 style={{ textAlign: "center" }}>Forgot Password</h1>
+          <h1 style={{textAlign: "center"}}>Forgot Password</h1>
           <p>
             Enter the email address associated with your account.
             <br />
@@ -65,7 +63,7 @@ export default function Page() {
             <div style={{paddingTop: '13px'}}><Spinner/></div> :
             <div />
           }
-          <div style={{ textAlign: "right" }}>
+          <div style={{textAlign: "right"}}>
             <button
               type="submit"
               onClick={onSubmit}
@@ -78,8 +76,7 @@ export default function Page() {
         </Form>
       </section>
     </main>
-  )
-}
+  )}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
@@ -105,5 +102,4 @@ export function ErrorBoundary() {
     );
   } else {
     return <h1>Unknown Error</h1>;
-  }
-}
+  }}

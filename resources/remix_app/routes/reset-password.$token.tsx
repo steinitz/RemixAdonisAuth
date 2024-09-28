@@ -1,21 +1,18 @@
 import {
-  Link, useActionData, useLoaderData, useNavigate
-} from "@remix-run/react";
+  Link, useActionData, useLoaderData, useNavigate} from "@remix-run/react";
 // The link in the pasword-reset email takes the user here
 
 import {
-  LoaderFunctionArgs, json, ActionFunctionArgs, redirect
-} from "@remix-run/node";
+  LoaderFunctionArgs, json, ActionFunctionArgs, redirect} from "@remix-run/node";
 import {
   Form,
   isRouteErrorResponse,
-  useRouteError
-} from "@remix-run/react";
-import { PasswordField } from "~/components/PasswordField";
-import { createNewPasswordValidationSchema } from "#validators/authenticationValidation";
+  useRouteError} from "@remix-run/react";
+import {PasswordField} from "~/components/PasswordField";
+import {createNewPasswordValidationSchema} from "#validators/authenticationValidation";
 
 const getUser =  async (token: any, make: (arg0: string) => any) => {
-  console.log('reset-password loader', { token})
+  console.log('reset-password loader', {token})
   if (!token) {
     throw new Error(errorStringUserNotDefined)
   }
@@ -27,41 +24,38 @@ const getUser =  async (token: any, make: (arg0: string) => any) => {
     ({user, tokenHasExpired} = await userService.getUserWithPasswordResetToken(token || ''))
     // if (user) {
     //   tokenHasExpired = userService.tokenHasExpired(user)
-    // }
+    //}
   }
   catch (error) {
     throw error
   }
-  return {user, tokenHasExpired}
-}
+  return {user, tokenHasExpired}}
 
-export const loader = async ({ context, params }: LoaderFunctionArgs) => {
+export const loader = async ({context, params}: LoaderFunctionArgs) => {
   const {
     // http,
     make
   } = context
   const token = params.token
   const {user, tokenHasExpired} = await getUser(token, make)
-  return json({user, tokenHasExpired})
-}
+  return json({user, tokenHasExpired})}
 
 const validationSchema = createNewPasswordValidationSchema()
 export const action = async ({context, params}: ActionFunctionArgs) => {
   const {make, http} = context
   const token = params.token
-  const {password } = http.request.only(['password'])
+  const {password} = http.request.only(['password'])
 
   let validationErrors
   try {
     // vine.validate returns sanitized versions of what the user typed
     // here we just want the errors when vine throws
-    // sanitizedValues =
     await validationSchema.validate ({password});
   }
   catch (error) {
     console.log({error})
     validationErrors = error.messages
-    console.log({ validationErrors })
+    console.log({validationErrors})
   }
 
   // if no validation errors update the password
@@ -79,13 +73,11 @@ export const action = async ({context, params}: ActionFunctionArgs) => {
     json({validationErrors}) :
     redirect(`/login`)
 
-  return returnValue
-}
+  return returnValue}
 
 export default function Page() {
   const {tokenHasExpired, user} = useLoaderData<typeof loader>()
   const {validationErrors} = useActionData<typeof action>() ?? []
-  console.log('reset-password page', {validationErrors})
   const navigate = useNavigate()
 
   return(
@@ -95,33 +87,32 @@ export default function Page() {
           {
             tokenHasExpired || !user ?
             (<>
-              <h1 style={{ textAlign: "center" }}>
-                { !user ?
+              <h1 style={{textAlign: "center"}}>
+                {!user ?
                   "Something went wrong, can't reset password" :
                   'Reset-password link has expired'
                 }
               </h1>
               <p>You can request another password-reset from the Login page</p>
-              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+              <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                 <button onClick={() => navigate(`/contact`)}>Contact Support</button>
                 <button onClick={() => navigate(`/login`)}>Login Page</button>
               </div>
             </>) :
             (<>
-              <h1 style={{ textAlign: "center" }}>
+              <h1 style={{textAlign: "center"}}>
                 Set new password
               </h1>
               {PasswordField({validationErrors})}
-              <div style={{ textAlign: "right" }}>
+              <div style={{textAlign: "right"}}>
                 <button type="submit">Set password</button>
               </div>
             </>)
           }
       </Form>
     </section>
-</main>
-)
-}
+  </main>
+  )}
 
 const errorStringUserNotDefined = 'User is not defined'
 
@@ -168,5 +159,4 @@ export function ErrorBoundary() {
   else {
     result = (<h1>Unknown Error</h1>);
   }
-  return result;
-}
+  return result;}
