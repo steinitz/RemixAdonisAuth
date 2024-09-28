@@ -1,27 +1,24 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from '@remix-run/node'
+import {ActionFunctionArgs, LoaderFunctionArgs, json} from '@remix-run/node'
 import {
   isRouteErrorResponse,
   useRouteError,
   useSearchParams,
-  Form, Link
-} from "@remix-run/react";
+  Form, Link} from "@remix-run/react";
 
-export const loader = ({ context }: LoaderFunctionArgs) => {
+export const loader = ({context}: LoaderFunctionArgs) => {
   const {
     http,
     // make
   } = context
   return json({
     message: 'Hello from ' + http.request.completeUrl(),
-  })
-}
+  })}
 
-export const action = ({ context }: ActionFunctionArgs) => {
+export const action = ({context}: ActionFunctionArgs) => {
   const {
     // http, make
   } = context
-  return null
-}
+  return null}
 
 export default function Page() {
   const [searchParams] = useSearchParams()
@@ -36,7 +33,7 @@ export default function Page() {
 
           <h3>Wrong Email Address?</h3><Link to="/contact">Rewrite your Message</Link>
           <h3>Need more help?</h3><Link to="/contact">Contact Support</Link>
-          <div style={{ textAlign: "right" }}>
+          <div style={{textAlign: "right"}}>
             <button
               type="submit"
             >
@@ -47,8 +44,7 @@ export default function Page() {
 
       </section>
     </main>
-  );
-}
+  );}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
@@ -74,5 +70,4 @@ export function ErrorBoundary() {
     );
   } else {
     return <h1>Unknown Error</h1>;
-  }
-}
+  }}

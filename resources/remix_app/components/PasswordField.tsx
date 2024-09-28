@@ -1,7 +1,7 @@
 // eslint-disable-next-line unicorn/filename-case
-import { useState } from 'react'
-import { FormFieldError } from "~/components/FormFieldError";
-import { errorMessageFor } from "~/components/ValidatedInput";
+import {useState} from 'react'
+import {FormFieldError} from "~/components/FormFieldError";
+import {errorMessageFor} from "~/components/ValidatedInput";
 
 export function PasswordField({validationErrors = []}: {validationErrors?: any[]}) {
   const [shouldShowPassword, setShouldShowPassword] = useState(false)
@@ -19,7 +19,7 @@ export function PasswordField({validationErrors = []}: {validationErrors?: any[]
           onClick={() => setShouldShowPassword(!shouldShowPassword)}
         >
           <span
-            style={{ float: 'right', marginTop: '8px' }}
+            style={{float: 'right', marginTop: '8px'}}
             className={shouldShowPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}
           />
         </span>
@@ -27,5 +27,4 @@ export function PasswordField({validationErrors = []}: {validationErrors?: any[]
       <input type={shouldShowPassword ? 'text' : 'password'} name="password" />
       <FormFieldError message={errorMessageFor('password', validationErrors)} />
     </label>
-  )
-}
+  )}

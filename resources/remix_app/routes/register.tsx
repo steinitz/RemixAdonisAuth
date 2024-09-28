@@ -5,19 +5,17 @@ import {
   type ActionFunctionArgs,
   type  LoaderFunctionArgs,
   json,
-  redirect
-} from '@remix-run/node'
+  redirect} from '@remix-run/node'
 import {
   Form,
   // useActionData,
   // useLoaderData,
   isRouteErrorResponse,
   Link, useActionData,
-  useRouteError
-} from "@remix-run/react";
+  useRouteError} from "@remix-run/react";
 import {PasswordField} from '#remix_app/components/PasswordField'
-import { ValidatedInput } from "#remix_app/components/ValidatedInput";
-import { createRegistrationValidationSchema } from "#validators/authenticationValidation";
+import {ValidatedInput} from "#remix_app/components/ValidatedInput";
+import {createRegistrationValidationSchema} from "#validators/authenticationValidation";
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {
@@ -26,16 +24,15 @@ export const loader = ({context}: LoaderFunctionArgs) => {
   } = context
   return json({
     message: 'Hello from ' + http.request.completeUrl(),
-  })
-}
+  })}
 
 const validationSchema = createRegistrationValidationSchema()
 
-export const action = async ({ context }: ActionFunctionArgs) => {
-  const { http, make } = context
+export const action = async ({context}: ActionFunctionArgs) => {
+  const {http, make} = context
 
   // get email and password from form data
-  const { email, password } = http.request.only(['email', 'password'])
+  const {email, password} = http.request.only(['email', 'password'])
 
   let validationErrors
   try {
@@ -45,7 +42,7 @@ export const action = async ({ context }: ActionFunctionArgs) => {
   }
   catch (error) {
     validationErrors = error.messages
-    console.log({ validationErrors })
+    console.log({validationErrors})
   }
 
   // if no validation errors send the support email
@@ -67,8 +64,7 @@ export const action = async ({ context }: ActionFunctionArgs) => {
     json({validationErrors}) :
     redirect(`/home`)
 
-  return returnValue
-}
+  return returnValue}
 
 export default function Page() {
   const {validationErrors} = useActionData<typeof action>() ?? []
@@ -82,15 +78,14 @@ export default function Page() {
           <label>
             Email
             <ValidatedInput fieldName='email' validationErrors
-              ={ validationErrors} />
+              ={validationErrors} />
           </label>
           {PasswordField({validationErrors})}
           <div style={{textAlign: "right"}}><button type="submit">Register</button></div>
         </Form>
       </section>
     </main>
-  )
-}
+  )}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
@@ -136,5 +131,4 @@ export function ErrorBoundary() {
   else {
     result = (<h1>Unknown Error</h1>);
   }
-  return result;
-}
+  return result;}

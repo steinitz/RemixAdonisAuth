@@ -59,5 +59,4 @@ export const convertTextMessageToHtml = (textMessage: string)  => {
 		}
 		if (needClosingPTag) htmlMessage+="</p>" // finish by closing paragraph, if needed
 	}
-	return htmlMessage
-}
+	return htmlMessage}

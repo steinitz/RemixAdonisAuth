@@ -3,28 +3,26 @@
 
 import {
   ActionFunctionArgs, json,
-  redirect
-} from "@remix-run/node";
+  redirect} from "@remix-run/node";
 import {
   Form,
   isRouteErrorResponse,
   Link,
   useActionData,
-  useRouteError
-} from '@remix-run/react'
-import { noValue } from '~/constants'
-import { PasswordField } from "~/components/PasswordField";
-import { createLoginValidationSchema } from "#validators/authenticationValidation";
-import { ValidatedInput } from "#remix_app/components/ValidatedInput";
+  useRouteError} from '@remix-run/react'
+import {noValue} from '~/constants'
+import {PasswordField} from "~/components/PasswordField";
+import {createLoginValidationSchema} from "#validators/authenticationValidation";
+import {ValidatedInput} from "#remix_app/components/ValidatedInput";
 
 const validationSchema = createLoginValidationSchema()
 
 // called on form submission
-export const action = async ({ context }: ActionFunctionArgs) => {
-  const { http, make } = context
+export const action = async ({context}: ActionFunctionArgs) => {
+  const {http, make} = context
 
   // get email and password from the form submission
-  const { email, password } = http.request.only(['email', 'password'])
+  const {email, password} = http.request.only(['email', 'password'])
 
   let validationErrors
   try {
@@ -34,7 +32,7 @@ export const action = async ({ context }: ActionFunctionArgs) => {
   }
   catch (error) {
     validationErrors = error.messages
-    console.log({ validationErrors })
+    console.log({validationErrors})
   }
 
   let loginError
@@ -48,7 +46,7 @@ export const action = async ({ context }: ActionFunctionArgs) => {
   catch (error) {
     // return json({
     //   error: "email not found",
-    // })
+    //})
     loginError = 'email not found'
   }
 
@@ -76,8 +74,7 @@ export const action = async ({ context }: ActionFunctionArgs) => {
     }) :
     redirect(`/home`)
 
-  return returnValue
-}
+  return returnValue}
 
 export default function Page() {
   const actionData = useActionData<typeof action>()
@@ -93,7 +90,7 @@ export default function Page() {
       <section> {/* gives it a nice width */}
 
         <Form method="post">
-          <h1 style={{ textAlign: "center" }}>Log in</h1>
+          <h1 style={{textAlign: "center"}}>Log in</h1>
           <label>
             Email
             <ValidatedInput
@@ -101,8 +98,8 @@ export default function Page() {
               validationErrors={validationErrors}
             />
           </label>
-          { PasswordField({}) }
-          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+          {PasswordField({})}
+          <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
             <p style={{color: "var(--color-error)"}}>
               {loginError ?? ' '}
             </p>
@@ -117,8 +114,7 @@ export default function Page() {
         </Form>
       </section>
     </main>
-  )
-}
+  )}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
@@ -144,5 +140,4 @@ export function ErrorBoundary() {
     );
   } else {
     return <h1>Unknown Error</h1>;
-  }
-}
+  }}

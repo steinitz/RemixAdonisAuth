@@ -1,7 +1,7 @@
 import {Form} from "@remix-run/react";
 import {hideFormBorder} from "./styles";
 
-export function Logout(props: { email: string }) {
+export function Logout(props: {email: string}) {
   const loggedInTextTopMarginTweak = 21
 
   return (
@@ -24,5 +24,4 @@ export function Logout(props: { email: string }) {
         <button type={"submit"}>Log out</button>
       </Form>
     </div>
-  )
-}
+  )}
