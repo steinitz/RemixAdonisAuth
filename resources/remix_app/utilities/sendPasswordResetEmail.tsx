@@ -1,6 +1,4 @@
 import mail from "@adonisjs/mail/services/main"
-import {redirect} from "@remix-run/node"
-// import {getDomainUrl} from './getDomainUrl'
 import {companyName} from '../constants'
 
 export async function sendPasswordResetEmail(
@@ -43,4 +41,5 @@ export async function sendPasswordResetEmail(
     }
   );
 
-  return redirect(`/reset-password-email-sent?email=${email}`);}
+  // return redirect(`/reset-password-email-sent?email=${email}`)
+}

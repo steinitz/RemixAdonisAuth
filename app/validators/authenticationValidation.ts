@@ -32,9 +32,18 @@ export const createLoginValidationSchema = () => vine.compile(
   })
 )
 
-
 export const createNewPasswordValidationSchema = () => vine.compile(
  vine.object({
      ...passwordValidationRule,
   })
 )
+
+export const createPasswordResetValidationSchema = () => vine.compile(
+ vine.object({
+    email: vine
+      .string()
+      .email(),
+   // we don't check for exists - no information to hackers
+  })
+)
+
