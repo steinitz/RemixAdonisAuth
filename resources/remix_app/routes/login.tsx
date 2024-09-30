@@ -3,13 +3,15 @@
 
 import {
   ActionFunctionArgs, json,
-  redirect} from "@remix-run/node";
+  redirect
+} from "@remix-run/node";
 import {
   Form,
   isRouteErrorResponse,
   Link,
   useActionData,
-  useRouteError} from '@remix-run/react'
+  useRouteError
+} from '@remix-run/react'
 import {noValue} from '~/constants'
 import {PasswordField} from "~/components/PasswordField";
 import {createLoginValidationSchema} from "#validators/authenticationValidation";
@@ -108,13 +110,17 @@ export default function Page() {
           <details>
             <summary>Can't log in?</summary>
             <p>Don't yet have an account? <Link to="/register">Register</Link></p>
-            <p>Forgot Password? <Link to={`/reset-password-request/${noValue}`}>Reset Password</Link></p>
+            <p>Forgot Password?
+              <Link to={`/reset-password-request/${noValue}`}>
+                Reset Password
+              </Link></p>
             <p>Get Help <Link to="/contact">Contact Support</Link></p>
           </details>
         </Form>
       </section>
     </main>
-  )}
+  )
+}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {

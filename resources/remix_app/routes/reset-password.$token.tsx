@@ -1,13 +1,16 @@
-import {
-  Link, useActionData, useLoaderData, useNavigate} from "@remix-run/react";
 // The link in the pasword-reset email takes the user here
+
+import {
+  Link, useActionData, useLoaderData, useNavigate
+} from "@remix-run/react";
 
 import {
   LoaderFunctionArgs, json, ActionFunctionArgs, redirect} from "@remix-run/node";
 import {
   Form,
   isRouteErrorResponse,
-  useRouteError} from "@remix-run/react";
+  useRouteError
+} from "@remix-run/react";
 import {PasswordField} from "~/components/PasswordField";
 import {createNewPasswordValidationSchema} from "#validators/authenticationValidation";
 
@@ -38,7 +41,8 @@ export const loader = async ({context, params}: LoaderFunctionArgs) => {
   } = context
   const token = params.token
   const {user, tokenHasExpired} = await getUser(token, make)
-  return json({user, tokenHasExpired})}
+  return json({user, tokenHasExpired})
+}
 
 const validationSchema = createNewPasswordValidationSchema()
 export const action = async ({context, params}: ActionFunctionArgs) => {
@@ -59,7 +63,6 @@ export const action = async ({context, params}: ActionFunctionArgs) => {
   }
 
   // if no validation errors update the password
-
   const userService = await make('user_service')
   try {
     const {user} = await getUser(token, make)
@@ -112,7 +115,8 @@ export default function Page() {
       </Form>
     </section>
   </main>
-  )}
+  )
+}
 
 const errorStringUserNotDefined = 'User is not defined'
 
@@ -159,4 +163,5 @@ export function ErrorBoundary() {
   else {
     result = (<h1>Unknown Error</h1>);
   }
-  return result;}
+  return result;
+}

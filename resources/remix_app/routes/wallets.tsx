@@ -1,7 +1,7 @@
 import {
-  // ActionFunctionArgs,
   LoaderFunctionArgs,
-  json} from '@remix-run/node'
+  json
+} from '@remix-run/node'
 import {
   useLoaderData, isRouteErrorResponse, useRouteError, Form
 } from "@remix-run/react";
@@ -12,7 +12,8 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
 
   return json({
     email,
-  })}
+  })
+}
 
 export const action = (/*{context}: ActionFunctionArgs*/) => {
   // const {http, make} = context
@@ -33,7 +34,8 @@ export default function Page() {
       </nav>
 
     </main>
-  )}
+  )
+}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
@@ -59,4 +61,5 @@ export function ErrorBoundary() {
     );
   } else {
     return <h1>Unknown Error</h1>;
-  }}
+  }
+}

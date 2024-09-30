@@ -10,4 +10,5 @@ export const getDomainUrl = (request: any): string => {
     host.includes("localhost") || host.includes("127.0.0.1")
       ? "http"
       : "https";
-  return `${protocol}://${host}`;};
+  return `${protocol}://${host}`;
+};

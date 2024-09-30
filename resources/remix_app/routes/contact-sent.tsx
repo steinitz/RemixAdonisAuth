@@ -3,7 +3,8 @@ import {
   isRouteErrorResponse,
   useRouteError,
   useSearchParams,
-  Form, Link} from "@remix-run/react";
+  Form, Link
+} from "@remix-run/react";
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {
@@ -12,13 +13,15 @@ export const loader = ({context}: LoaderFunctionArgs) => {
   } = context
   return json({
     message: 'Hello from ' + http.request.completeUrl(),
-  })}
+  })
+}
 
 export const action = ({context}: ActionFunctionArgs) => {
   const {
     // http, make
   } = context
-  return null}
+  return null
+}
 
 export default function Page() {
   const [searchParams] = useSearchParams()
@@ -44,7 +47,8 @@ export default function Page() {
 
       </section>
     </main>
-  );}
+  )
+}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
@@ -70,4 +74,5 @@ export function ErrorBoundary() {
     );
   } else {
     return <h1>Unknown Error</h1>;
-  }}
+  }
+}

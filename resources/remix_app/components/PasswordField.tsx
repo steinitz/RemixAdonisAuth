@@ -7,24 +7,31 @@ export function PasswordField({validationErrors = []}: {validationErrors?: any[]
   const [shouldShowPassword, setShouldShowPassword] = useState(false)
   return (
     <label>
-      <span>
+      <div>
         Password
-        <span
-          style={{
-            fontSize: '0.7rem',
-            fontWeight: 'normal',
-            padding: '0.1rem 0.3rem',
-            width: '50px',
-          }}
-          onClick={() => setShouldShowPassword(!shouldShowPassword)}
-        >
-          <span
-            style={{float: 'right', marginTop: '8px'}}
+        {/*<span*/}
+        {/*  style={{*/}
+        {/*    fontSize: '0.7rem',*/}
+        {/*    fontWeight: 'normal',*/}
+        {/*    padding: '0.1rem 0.3rem',*/}
+        {/*    width: '50px',*/}
+        {/*  }}*/}
+        {/*  onClick={() => setShouldShowPassword(!shouldShowPassword)}*/}
+        {/*>*/}
+          <div
+            style={{float: 'right', marginTop: '3px'}}
             className={shouldShowPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}
+            onClick={
+              () => {
+                console.log('shouldShowPassword', shouldShowPassword)
+                setShouldShowPassword(!shouldShowPassword);
+              }
+            }
           />
-        </span>
-      </span>
+        {/*</span>*/}
+      </div>
       <input type={shouldShowPassword ? 'text' : 'password'} name="password" />
       <FormFieldError message={errorMessageFor('password', validationErrors)} />
     </label>
-  )}
+  )
+}

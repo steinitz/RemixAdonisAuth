@@ -8,7 +8,6 @@ export async function sendSupportEmail(
   userMessageText: string,
   userMessageHtml: string
 ) {
-
   await mail.send((message) => {
       message
         .to(supportEmail)
@@ -23,5 +22,5 @@ export async function sendSupportEmail(
         .text(userMessageText);
     }
   );
-
-  return redirect(`/contact-sent`);}
+  return redirect(`/contact-sent`);
+}
