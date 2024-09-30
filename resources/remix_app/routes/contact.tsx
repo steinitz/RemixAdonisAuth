@@ -1,24 +1,22 @@
 import vine from "@vinejs/vine";
 import {ActionFunctionArgs, json, LoaderFunctionArgs, redirect} from "@remix-run/node";
-import {Form, isRouteErrorResponse, useActionData, useLoaderData, useRouteError} from "@remix-run/react";
+import {
+  Form, isRouteErrorResponse, useActionData, useLoaderData, useRouteError
+} from "@remix-run/react";
 import {convertTextMessageToHtml} from "~/utilities/convertTextMessageToHtml";
 import {sendSupportEmail} from "~/utilities/sendSupportEmail";
 import {FormFieldError} from "~/components/FormFieldError";
-import {useState} from "react";
 import {errorMessageFor, ValidatedInput} from "~/components/ValidatedInput";
-
-export const loader = async ({context}: LoaderFunctionArgs) => {
-  const email = context.http.auth.user?.email
-  return json({
-    email,
-  })}
+import {contactFormCookie} from "~/cookies.server";
 
 const validationSchema = vine.object({
   email: vine.string().email(),
   message: vine
     .string()
     .minLength(1)
-    .maxLength(512)})
+    .maxLength(512)
+  }
+)
 
 export const action = async ({context}: ActionFunctionArgs) => {
   const {
@@ -43,50 +41,61 @@ export const action = async ({context}: ActionFunctionArgs) => {
   }
   catch (error) {
     validationErrors = error.messages
+    // early return if validation errors
+    return json({validationErrors})
   }
 
-  // if no validation errors send the support email
+  // if no validation errors do two things:
 
-  if (!validationErrors) {
-    const textMessage = `sent from ${name}, ${email}, \n\n${message}`
-    const htmlMessage = `<p>sent from ${name} - ${email}</p> ${convertTextMessageToHtml(message)}`
-    // console.log(htmlMessage)
-    sendSupportEmail(textMessage, htmlMessage)
-  }
+  // 1. save the message, for two minutes, in case the user wants to
+  //    send it again, for example, with a corrected email address
+  const cookieHeader = context.http.request.request.headers.cookie;
+  const cookie =
+    (await contactFormCookie.parse(cookieHeader ?? '' )) || {};
+  cookie.message = message
 
-  const returnValue = validationErrors ?
-    json({validationErrors}) :
-    redirect(`/contact-sent?email=${email}`)
-  return returnValue}
+  // 2. send the support emai
+  const textMessage = `sent from ${name}, ${email}, \n\n${message}`
+  const htmlMessage = `<p>sent from ${name} - ${email}</p> ${convertTextMessageToHtml(message)}`
+  // console.log(htmlMessage)
+  sendSupportEmail(textMessage, htmlMessage)
+
+  return redirect(
+    `/contact-sent?email=${email}`,
+    {
+      headers: {
+        'Set-Cookie': await contactFormCookie.serialize(cookie)
+      }
+    }
+  )
+}
+
+export const loader = async ({context}: LoaderFunctionArgs) => {
+  const email = context.http.auth.user?.email
+
+  // we save the user's message in the action function and retrieve
+  // it here, from the cookie
+  const cookieHeader = context.http.request.request.headers.cookie;
+  const cookie =
+    (await contactFormCookie.parse(cookieHeader ?? '' )) || {};
+
+  return json({
+    email,
+    message: cookie.message,
+  })
+}
 
 export default function Page() {
-  const {email = ''} = useLoaderData<typeof loader>()
+  const {
+    email = '',
+    message // the saved previous message for user convenience
+  } = useLoaderData<typeof loader>()
   const {validationErrors} = useActionData<typeof action>() ?? []
-
-  // big song and dance to keep the message in case the
-  // user notices she has typed in the wrong email address
-  // when she lands on the contact-sent page
-  const saveMessage = () => {
-    var now = new Date();
-    now.setTime(now.getTime() + 2 * 60 * 1000); // keep for two minutes
-    document.cookie = `message=${message}; expires=${now.toUTCString()}; Secure`;
-  }
-
-  const retrieveSavedMessage = () => {
-    const cookieValue = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("message"))
-      ?.split("=")[1];
-    return cookieValue
-  }
-
-  const [message, setMessage] = useState(retrieveSavedMessage())
-
 
   return (
     <main>
       <section> {/* gives it a nice width */}
-        <Form method="post" onSubmit={saveMessage}>
+        <Form method="post">
           <h1 style={{textAlign: "center"}}>Contact Support</h1>
           <label>
             Name
@@ -109,7 +118,7 @@ export default function Page() {
           </label>
           <label>
             Message
-            <textarea rows={8} name="message" value={message} onChange={(e) => setMessage(e.target.value)} />
+            <textarea rows={8} name="message" defaultValue={message}/>
             <FormFieldError
               message={
                 errorMessageFor(
@@ -120,12 +129,17 @@ export default function Page() {
             />
           </label>
           <div style={{textAlign: "right"}}>
-            <button type="submit">Send</button>
+            <button
+              type="submit"
+            >
+              Send
+            </button>
           </div>
         </Form>
       </section>
     </main>
-  )}
+  )
+}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
@@ -151,8 +165,8 @@ export function ErrorBoundary() {
     );
   } else {
     return <h1>Unknown Error</h1>;
-  }}
-
+  }
+}
 
 // graveyard
 

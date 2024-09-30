@@ -1,4 +1,6 @@
-import {type ActionFunctionArgs, json, type LoaderFunctionArgs, type MetaFunction, redirect,} from '@remix-run/node'
+import {
+  type ActionFunctionArgs, json, type LoaderFunctionArgs, type MetaFunction, redirect,
+} from '@remix-run/node'
 import {Form, useLoaderData} from '@remix-run/react'
 import {hideFormBorder} from "~/components/styles";
 import {Logout} from "~/components/logout";
@@ -7,7 +9,8 @@ export const meta: MetaFunction = () => {
   return [
     {title: 'Weekend Trading System'},
     {name: 'weekend-trading-system', content: 'Weekend is Non-Representative Trading System'},
-  ]}
+  ]
+}
 
 export const action = async ({context}: ActionFunctionArgs) => {
   const {http} = context
@@ -20,7 +23,8 @@ export const action = async ({context}: ActionFunctionArgs) => {
   if (intent === 'log_in') {
     return redirect('/login')
   }
-  return null}
+  return null
+}
 
 // export const loader = async ({context}: LoaderFunctionArgs) => {//   const service = await context.make('hello_service')
 
@@ -40,7 +44,8 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
 
   return json({
     email,
-  })}
+  })
+}
 
 
 export default function Index() {
@@ -122,6 +127,7 @@ export default function Index() {
         </ul>
       </section>
     </main>
-  )}
+  )
+}
 
 

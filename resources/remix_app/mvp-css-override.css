@@ -1,31 +1,39 @@
 :root {
-    --color-error: darkred;}
+    --color-error: darkred;
+}
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root[color-mode="user"] {
     --color-bg: #222; /* darker background for better readability */
     --color-error: hotpink
-  }}
+  }
+}
 
 button[type="reset"] {
   background-color: var(--color-accent); /* rgb(110, 152, 178);*/
-  /*color: var(--color-text-secondary);*/}
+  /*color: var(--color-text-secondary);*/
+}
 
 button {
-  padding: 0.6rem 1.5rem;}
+  padding: 0.6rem 1.5rem;
+}
 
 input {
-  min-width: 91%; /* this might be extreme and mess up certain inputs */}
+  min-width: 91%; /* this might be extreme and mess up certain inputs */
+}
 
 main {
-  padding-top: 0.5rem;}
+  padding-top: 0.5rem;
+}
 
 nav {
-  margin-bottom: 2rem;}
+  margin-bottom: 2rem;
+}
 
 form header {
   margin: 0;
-  padding: -80px;}
+  padding: -80px;
+}
 
 /*
 This didn't fix the weird Safari selection behavior when
@@ -47,7 +55,8 @@ probably should be in its own file
   }
   100% {
     transform: rotate(360deg);
-  }}
+  }
+}
 
 /*linear-gradient(white, white) padding-box, linear-gradient(to right, darkblue, darkorchid) border-box;*/
 .spinner {
@@ -65,4 +74,5 @@ probably should be in its own file
   height: 31px;
   width: 39px; /* height + border top */
   animation: spin 1s linear infinite;
-  animation-duration: 8s;}
+  animation-duration: 8s;
+}

@@ -7,7 +7,8 @@ export const wildcardCompare = (aString: string, wildcardPattern: string) =>{
 		"$"
 	);
   // then check for a match
-	return regexPattern.test(aString);}
+	return regexPattern.test(aString);
+}
 
 // Test case
 // const text = "this is super useful";

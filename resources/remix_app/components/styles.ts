@@ -5,4 +5,5 @@ export const hideFormBorder: React.CSSProperties = {
   border: "none",
   boxShadow: "none",
   textAlign: "right",
-  marginTop: loggedInButtonFormTopMarginTweak,}
+  marginTop: loggedInButtonFormTopMarginTweak,
+}

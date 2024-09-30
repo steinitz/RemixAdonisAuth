@@ -40,6 +40,7 @@ export async function sendPasswordResetEmail(
       `);
     }
   );
-
+  // we no longer do this because it was too hard to reliably
+  // show a loading spinner while the email is being sent
   // return redirect(`/reset-password-email-sent?email=${email}`)
 }

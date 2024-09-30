@@ -5,12 +5,14 @@ import {
   type ActionFunctionArgs,
   type  LoaderFunctionArgs,
   json,
-  redirect} from '@remix-run/node'
+  redirect
+} from '@remix-run/node'
 import {
   Form,
   isRouteErrorResponse,
   Link, useActionData,
-  useRouteError} from "@remix-run/react";
+  useRouteError
+} from "@remix-run/react";
 import {PasswordField} from '#remix_app/components/PasswordField'
 import {ValidatedInput} from "#remix_app/components/ValidatedInput";
 import {createRegistrationValidationSchema} from "#validators/authenticationValidation";
@@ -22,7 +24,8 @@ export const loader = ({context}: LoaderFunctionArgs) => {
   } = context
   return json({
     message: 'Hello from ' + http.request.completeUrl(),
-  })}
+  })
+}
 
 const validationSchema = createRegistrationValidationSchema()
 
@@ -41,28 +44,24 @@ export const action = async ({context}: ActionFunctionArgs) => {
   catch (error) {
     validationErrors = error.messages
     console.log({validationErrors})
+    return json({validationErrors})
   }
 
-  // if no validation errors send the support email
+  // if no validation errors create the user
 
-  if (!validationErrors) {
-    // get the UserService from the app container
-    const userService = await make('user_service')
+  // get the UserService from the app container
+  const userService = await make('user_service')
 
-    const user = await userService.createUser({
-      email,
-      password,
-    })
+  const user = await userService.createUser({
+    email,
+    password,
+  })
 
-    // log in the user after successful registration
-    await http.auth.use('web').login(user)
-  }
+  // log in the user after successful registration
+  await http.auth.use('web').login(user)
 
-  const returnValue = validationErrors ?
-    json({validationErrors}) :
-    redirect(`/home`)
-
-  return returnValue}
+  return redirect(`/home`)
+}
 
 export default function Page() {
   const {validationErrors} = useActionData<typeof action>() ?? []
@@ -83,7 +82,8 @@ export default function Page() {
         </Form>
       </section>
     </main>
-  )}
+  )
+}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
@@ -129,4 +129,5 @@ export function ErrorBoundary() {
   else {
     result = (<h1>Unknown Error</h1>);
   }
-  return result;}
+  return result;
+}

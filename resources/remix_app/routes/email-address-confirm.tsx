@@ -10,7 +10,8 @@ export const loader = ({context}: LoaderFunctionArgs) => {
   } = context
   return json({
     message: 'Hello from ' + http.request.completeUrl(),
-  })}
+  })
+}
 
 export const action = ({context}: ActionFunctionArgs) => {
   const {
@@ -46,4 +47,5 @@ export function ErrorBoundary() {
     );
   } else {
     return <h1>Unknown Error</h1>;
-  }}
+  }
+}

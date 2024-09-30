@@ -24,4 +24,5 @@ export function Logout(props: {email: string}) {
         <button type={"submit"}>Log out</button>
       </Form>
     </div>
-  )}
+  )
+}

@@ -18,7 +18,8 @@ export const loader = ({params}: LoaderFunctionArgs) => {
   const email = params.email
   return json({
     email,
-  })}
+  })
+}
 
 const validationSchema = createPasswordResetValidationSchema()
 export const action = async ({context}: ActionFunctionArgs) => {
@@ -73,7 +74,7 @@ export default function Page() {
             <ValidatedInput
               fieldName='email'
               validationErrors={validationErrors}
-              defaultValue={email !== noValue ? email : ''}
+              defaultValue={ email !== noValue ? email : '' }
             />
           </label>
           <div style={{
@@ -97,7 +98,8 @@ export default function Page() {
         </Form>
       </section>
     </main>
-  )}
+  )
+}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
@@ -123,4 +125,5 @@ export function ErrorBoundary() {
     );
   } else {
     return <h1>Unknown Error</h1>;
-  }}
+  }
+}

@@ -6,7 +6,9 @@ import {
   isRouteErrorResponse,
   Link,
   useRouteError,
-  useSearchParams} from "@remix-run/react";
+  useSearchParams
+} from "@remix-run/react";
+import {noValue} from "~/constants";
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {
@@ -14,7 +16,8 @@ export const loader = ({context}: LoaderFunctionArgs) => {
     // make
   } = context
 
-  return null}
+  return null
+}
 
 export default function Page() {
   const [searchParams] = useSearchParams()
@@ -28,13 +31,17 @@ export default function Page() {
           <p>We have sent you an email at {email}.</p>
           <p>Check your inbox and follow the instructions to reset password</p>
 
-          <h3>Didn't receive the mail?</h3><Link to={`/reset-password-request/${email}`}>Resend Email</Link>
-          <h3>Wrong Email Address?</h3><Link to="/reset-password-request">Change Email Address</Link>
+          <h3>Didn't receive the mail?</h3>
+          <Link to={`/reset-password-request/${email || noValue}`}>
+            Resend Email
+          </Link>
+          <h3>Wrong Email Address?</h3>
+          <Link to={`/reset-password-request/${email || noValue}`}>
+            Enter the correct Email Address
+          </Link>
           <h3>Need Help?</h3><Link to="/contact">Contact Support</Link>
           <div style={{textAlign: "right"}}>
-            <button
-              type="submit"
-            >
+            <button type="submit">
               Done
             </button>
           </div>
@@ -42,7 +49,8 @@ export default function Page() {
 
       </section>
     </main>
-  );}
+  );
+}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
@@ -68,4 +76,5 @@ export function ErrorBoundary() {
     );
   } else {
     return <h1>Unknown Error</h1>;
-  }}
+  }
+}

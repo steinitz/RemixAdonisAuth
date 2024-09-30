@@ -10,16 +10,19 @@ export const loader = ({context}: LoaderFunctionArgs) => {
   } = context
   return json({
     message: 'Hello from ' + http.request.completeUrl(),
-  })}
+  })
+}
 
 export const action = ({context}: ActionFunctionArgs) => {
   const {
     // http, make
   } = context
-  return null}
+  return null
+}
 
 export default function Page() {
-  return <div>New route</div>}
+  return <div>New route</div>
+}
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
@@ -45,4 +48,5 @@ export function ErrorBoundary() {
     );
   } else {
     return <h1>Unknown Error</h1>;
-  }}
+  }
+}

@@ -17,6 +17,8 @@ export default class AuthMiddleware {
   openRoutes = [
     '/',
     `${this.loginRoute}`,
+    '/contact',
+    '/contact-sent',
     '/register',
     '/reset-password-request/*',
     '/reset-password-email-sent',
