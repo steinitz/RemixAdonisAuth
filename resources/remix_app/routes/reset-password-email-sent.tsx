@@ -28,7 +28,7 @@ export default function Page() {
       <section>
         <Form action="/">
           <h1>Email Sent</h1>
-          <p>We have sent you an email at {email}.</p>
+          <p>We have sent you an email at <strong>{email}</strong>.</p>
           <p>Check your inbox and follow the instructions to reset password</p>
 
           <h3>Didn't receive the mail?</h3>
