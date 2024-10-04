@@ -32,8 +32,10 @@ const validationSchema = createRegistrationValidationSchema()
 export const action = async ({context}: ActionFunctionArgs) => {
   const {http, make} = context
 
-  // get email and password from form data
-  const {email, password} = http.request.only(['email', 'password'])
+  // get form data
+  const {email, username, preferredName, password} = http.request.only(
+    ['email', 'username', 'preferredName', 'password']
+  )
 
   let validationErrors
   try {
@@ -54,6 +56,8 @@ export const action = async ({context}: ActionFunctionArgs) => {
 
   const user = await userService.createUser({
     email,
+    username,
+    preferredName,
     password,
   })
 
@@ -66,19 +70,49 @@ export const action = async ({context}: ActionFunctionArgs) => {
 export default function Page() {
   const {validationErrors} = useActionData<typeof action>() ?? []
   console.log('register page', {validationErrors})
+
   return (
     <main>
       <section > {/* gives it a nice width */}
-        <Form method="post">
-          <h1 style={{textAlign: "center"}}>Register</h1>
-          <p>Already have an account? <Link to="/login">Log In</Link></p>
+        <Form
+          method="post">
+          <h1
+            style={{textAlign: "center"}}>Register</h1>
+          <p>Already
+            have
+            an
+            account? <Link to="/login">Log In</Link>
+          </p>
           <label>
             Email
-            <ValidatedInput fieldName='email' validationErrors
-              ={validationErrors} />
+            <ValidatedInput
+              fieldName="email"
+              validationErrors={validationErrors}
+            />
+          </label>
+          <label>
+            Login
+            Name
+            <ValidatedInput
+              fieldName="username"
+              validationErrors={validationErrors}
+            />
+          </label>
+          <label>
+            Preferred Name
+            Name
+            <ValidatedInput
+              fieldName="preferredName"
+              validationErrors={validationErrors}
+            />
           </label>
           {PasswordField({validationErrors})}
-          <div style={{textAlign: "right"}}><button type="submit">Register</button></div>
+          <div
+            style={{textAlign: "right"}}>
+            <button
+              type="submit">Register
+            </button>
+          </div>
         </Form>
       </section>
     </main>

@@ -4,7 +4,7 @@ import {
   Form, isRouteErrorResponse, useActionData, useLoaderData, useRouteError
 } from "@remix-run/react";
 import {convertTextMessageToHtml} from "~/utilities/convertTextMessageToHtml";
-import {sendSupportEmail} from "~/utilities/sendSupportEmail";
+import {sendSupportEmail} from "~/emails/sendSupportEmail";
 import {FormFieldError} from "~/components/FormFieldError";
 import {errorMessageFor, ValidatedInput} from "~/components/ValidatedInput";
 import {contactFormCookie} from "~/cookies.server";

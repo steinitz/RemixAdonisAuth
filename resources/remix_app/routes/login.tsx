@@ -14,16 +14,25 @@ import {
 } from '@remix-run/react'
 import {noValue} from '~/constants'
 import {PasswordField} from "~/components/PasswordField";
-import {createLoginValidationSchema} from "#validators/authenticationValidation";
+import {
+  createIsEmailValidationSchema,
+  createLoginValidationSchema
+} from "#validators/authenticationValidation";
 import {ValidatedInput} from "#remix_app/components/ValidatedInput";
 
 const validationSchema = createLoginValidationSchema()
+
+// Used to determine whether the user is logging
+// in with an email or a username.
+// That way we don't have to write fresh code to
+// check if an email address - we use Adonis.
+const isEmailValidationSchema = createIsEmailValidationSchema()
 
 // called on form submission
 export const action = async ({context}: ActionFunctionArgs) => {
   const {http, make} = context
 
-  // get email and password from the form submission
+  // get email (or username) and password from the form submission
   const {email, password} = http.request.only(['email', 'password'])
 
   let validationErrors
@@ -37,19 +46,27 @@ export const action = async ({context}: ActionFunctionArgs) => {
     console.log({validationErrors})
   }
 
+  let isEmail = true // logging in with email or username?
+  // determine whether the user is logging in with an email or a username
+  try {
+    await isEmailValidationSchema.validate ({email});
+  }
+  catch (error) {
+    isEmail = false
+  }
+
   let loginError
   // look up the user by email
   // return an error message if not found
   let user
   const userService = await make('user_service')
   try {
-    user = await userService.getUser(email);
+    user = isEmail ?
+      await userService.getUserForEmail(email) :
+      await userService.getUserForUsername(email)
   }
   catch (error) {
-    // return json({
-    //   error: "email not found",
-    //})
-    loginError = 'email not found'
+    loginError = 'email or username not found'
   }
 
   // check if the password is correct
@@ -76,14 +93,13 @@ export const action = async ({context}: ActionFunctionArgs) => {
     }) :
     redirect(`/home`)
 
-  return returnValue}
+  return returnValue
+}
 
 export default function Page() {
   const actionData = useActionData<typeof action>()
   const {
-    // @ts-ignore
     loginError,
-    // @ts-ignore
     validationErrors
   } = actionData ?? {}
 
@@ -94,7 +110,7 @@ export default function Page() {
         <Form method="post">
           <h1 style={{textAlign: "center"}}>Log in</h1>
           <label>
-            Email
+            Email or Username
             <ValidatedInput
               fieldName='email'
               validationErrors={validationErrors}

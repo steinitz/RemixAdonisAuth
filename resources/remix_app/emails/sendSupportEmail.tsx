@@ -1,8 +1,6 @@
 import mail from "@adonisjs/mail/services/main"
 import {redirect} from "@remix-run/node"
-// import {getDomainUrl} from './getDomainUrl'
-// import {companyName} from '../constants'
-import {supportEmail} from "../constants";
+import {supportEmail} from "#remix_app/constants";
 
 export async function sendSupportEmail(
   userMessageText: string,

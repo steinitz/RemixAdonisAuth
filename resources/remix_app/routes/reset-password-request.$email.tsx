@@ -7,7 +7,7 @@ import {
   useLoaderData,
   useRouteError
 } from "@remix-run/react";
-import {sendPasswordResetEmail} from "~/utilities/sendPasswordResetEmail";
+import {sendPasswordResetEmail} from "~/emails/sendPasswordResetEmail";
 import {getDomainUrl} from "~/utilities/getDomainUrl";
 import {noValue} from "~/constants";
 import {createPasswordResetValidationSchema} from "#validators/authenticationValidation";

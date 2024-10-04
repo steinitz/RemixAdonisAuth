@@ -1,5 +1,5 @@
 import mail from "@adonisjs/mail/services/main"
-import {companyName} from '../constants'
+import {companyName} from '#remix_app/constants'
 
 export async function sendPasswordResetEmail(
   email: string,

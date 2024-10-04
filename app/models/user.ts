@@ -15,11 +15,17 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   // not yet used
   @column()
-  declare fullName: string | null
+  declare full_name: string | null
+
+  @column()
+  declare preferred_name: string | null
 
   // login credentials
   @column()
   declare email: string
+  @column()
+  declare username: string
+
   @column({serializeAs: null})
   declare password: string | null
 
