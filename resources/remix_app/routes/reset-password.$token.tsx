@@ -25,14 +25,12 @@ const getUser =  async (token: any, make: (arg0: string) => any) => {
   let tokenHasExpired
   try {
     ({user, tokenHasExpired} = await userService.getUserWithPasswordResetToken(token || ''))
-    // if (user) {
-    //   tokenHasExpired = userService.tokenHasExpired(user)
-    //}
   }
   catch (error) {
     throw error
   }
-  return {user, tokenHasExpired}}
+  return {user, tokenHasExpired}
+}
 
 export const loader = async ({context, params}: LoaderFunctionArgs) => {
   const {
@@ -76,7 +74,8 @@ export const action = async ({context, params}: ActionFunctionArgs) => {
     json({validationErrors}) :
     redirect(`/login`)
 
-  return returnValue}
+  return returnValue
+}
 
 export default function Page() {
   const {tokenHasExpired, user} = useLoaderData<typeof loader>()

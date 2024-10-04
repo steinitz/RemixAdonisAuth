@@ -12,15 +12,37 @@ export default class UserService {
 
   // User
 
-  async createUser(props: {email: string; password: string}) {
-    return await User.create({
+  async createUser(props: {
+    email: string
+    username?: string
+    preferredName?: string
+    password: string
+  }): Promise<User> {
+    const user = await User.create({
       email: props.email,
       password: props.password,
     })
+
+    if (props.username) {
+      user.username = props.username
+    }
+
+    if (props.preferredName) {
+      user.preferred_name = props.preferredName
+    }
+
+    user.is_email_confirmed = false // do I need this?  The AI suggested it.
+    user.save()
+
+    return user
   }
 
-  async getUser(email: string) {
+  async getUserForEmail(email: string) {
     return await User.findByOrFail('email', email)
+  }
+
+  async getUserForUsername(username: string) {
+    return await User.findByOrFail('username', username)
   }
 
   // Password Reset
@@ -35,7 +57,7 @@ export default class UserService {
     return this.getUserWithToken(token, 'password_reset_token')
   }
 
- // Email Confirmation
+  // Email Confirmation
 
   async setEmailConfirmationTokenFor(email: string) {
     return await this.setTokenFor(email, 'email_confirmation_token')
@@ -85,7 +107,7 @@ export default class UserService {
   // sets the relevant field and expiry field on the user
   // returns the token
   async setTokenFor(email: string, tokenType: TokenType) {
-    const user = await this.getUser(email)
+    const user = await this.getUserForEmail(email)
     if (!user) {throw new Error('user not found')}
     const token = string.generateRandom(64)
     user[tokenType] = token
