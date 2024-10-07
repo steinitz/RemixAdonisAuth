@@ -11,7 +11,7 @@ import {
   isRouteErrorResponse,
   useRouteError
 } from "@remix-run/react";
-import {PasswordField} from "~/components/PasswordField";
+import {PasswordInput} from "~/components/PasswordInput";
 import {createNewPasswordValidationSchema} from "#validators/authenticationValidation";
 
 const getUser =  async (token: any, make: (arg0: string) => any) => {
@@ -105,7 +105,7 @@ export default function Page() {
               <h1 style={{textAlign: "center"}}>
                 Set new password
               </h1>
-              {PasswordField({validationErrors})}
+              <PasswordInput validationErrors={validationErrors} />
               <div style={{textAlign: "right"}}>
                 <button type="submit">Set password</button>
               </div>
