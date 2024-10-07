@@ -1,18 +1,27 @@
 import {
   type ActionFunctionArgs,
-  type  LoaderFunctionArgs,
   json,
+  type  LoaderFunctionArgs,
   redirect
-} from '@remix-run/node'
+} from "@remix-run/node";
 import {
   Form,
   isRouteErrorResponse,
-  Link, useActionData,
+  Link,
+  useActionData,
   useRouteError
 } from "@remix-run/react";
-import {PasswordField} from '#remix_app/components/PasswordField'
-import {ValidatedInput} from "#remix_app/components/ValidatedInput";
-import {createRegistrationValidationSchema} from "#validators/authenticationValidation";
+import {
+  PasswordInput
+} from "~/components/PasswordInput";
+import {
+  LoginNameInput,
+  PreferredNameInput,
+  ValidatedInput
+} from "#remix_app/components/ValidatedInput";
+import {
+  createRegistrationValidationSchema
+} from "#validators/authenticationValidation";
 import {
   fieldLabelSubtext
 } from "~/components/styles";
@@ -74,7 +83,7 @@ export default function Page() {
 
   return (
     <main>
-      <section > {/* gives it a nice width */}
+      <section> {/* gives it a nice width */}
         <Form
           method="post">
           <h1
@@ -88,24 +97,9 @@ export default function Page() {
               validationErrors={validationErrors}
             />
           </label>
-          {PasswordField({validationErrors})}
-          <label>
-            Login Name <span style={fieldLabelSubtext}>(recommended)</span>
-            <ValidatedInput
-              fieldName="username"
-              validationErrors={validationErrors}
-            />
-          </label>
-          <div className="tooltip">
-            <label>
-              Preferred Name <span style={fieldLabelSubtext}>(optional)</span>
-              <ValidatedInput
-                fieldName="preferredName"
-                validationErrors={validationErrors}
-              />
-            </label>
-            <span className="tooltiptext">examples: Dr. Smith, Grace, Bob</span>
-          </div>
+          <PasswordInput validationErrors={validationErrors} />
+          <LoginNameInput validationErrors={validationErrors} />
+          <PreferredNameInput validationErrors={validationErrors} />
           <label>
             Full Name <span style={fieldLabelSubtext}>(optional)</span>
             <ValidatedInput

@@ -2,7 +2,6 @@ import { Database } from '@adonisjs/lucid/database'
 import vine from '@vinejs/vine'
 import { FieldContext } from '@vinejs/vine/types'
 
-
 // Two shared validation rules: password and email
 
 export const passwordValidationRule = {
@@ -38,7 +37,6 @@ export const createRegistrationValidationSchema = () => vine.compile(
   vine.object({
     email: isEmailValidationRule
       .email
-      // we only check uniqueness on registration
       .unique(isEmailUnique),
     ...passwordValidationRule,
     username: vine.string().maxLength(64).optional(),
@@ -51,7 +49,6 @@ export const createProfileValidationSchema = () => vine.compile(
   vine.object({
     email: isEmailValidationRule
       .email
-      // we only check uniqueness on registration
       .unique(isEmailUnique),
     ...passwordValidationRule,
     username: vine.string().maxLength(64).optional(),
@@ -62,7 +59,7 @@ export const createProfileValidationSchema = () => vine.compile(
 
 export const createLoginValidationSchema = () => vine.compile(
   vine.object({
-    email: vine.string(), // might be a username
+    email: vine.string(), // 1.might be a username, 2.no need to check uniqueness
     password: vine.string(), // don't reveal the minimum length here
   })
 )

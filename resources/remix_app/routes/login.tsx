@@ -10,7 +10,7 @@ import {
   useRouteError
 } from '@remix-run/react'
 import {noValue} from '~/constants'
-import {PasswordField} from "~/components/PasswordField";
+import {PasswordInput} from "~/components/PasswordInput";
 import {
   createIsEmailValidationSchema,
   createLoginValidationSchema
@@ -113,7 +113,7 @@ export default function Page() {
               validationErrors={validationErrors}
             />
           </label>
-          {PasswordField({})}
+          <PasswordInput />
           <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
             <p style={{color: "var(--color-error)"}}>
               {loginError ?? ' '}

@@ -10,9 +10,11 @@ import {
   Link, useActionData,
   useRouteError
 } from "@remix-run/react";
-import {PasswordField} from '#remix_app/components/PasswordField'
+import {PasswordInput} from '~/components/PasswordInput'
 import {ValidatedInput} from "#remix_app/components/ValidatedInput";
-import {createRegistrationValidationSchema} from "#validators/authenticationValidation";
+import {
+  createProfileValidationSchema,
+} from "#validators/authenticationValidation";
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {
@@ -24,14 +26,14 @@ export const loader = ({context}: LoaderFunctionArgs) => {
   })
 }
 
-const validationSchema = createRegistrationValidationSchema()
+const validationSchema = createProfileValidationSchema()
 
 export const action = async ({context}: ActionFunctionArgs) => {
   const {http, make} = context
 
   // get form data
-  const {email, username, preferredName, password} = http.request.only(
-    ['email', 'username', 'preferredName', 'password']
+  const {email, username, preferredName, fullName, password} = http.request.only(
+    ['email', 'username', 'preferredName', 'fullName', 'password']
   )
 
   let validationErrors
@@ -55,6 +57,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
     email,
     username,
     preferredName,
+    fullName,
     password,
   })
 
@@ -92,7 +95,7 @@ export default function Page() {
               validationErrors={validationErrors}
             />
           </label>
-          {PasswordField({validationErrors})}
+          <PasswordInput validationErrors={validationErrors} />
           <label>
             Preferred Name (optional)
             <ValidatedInput
