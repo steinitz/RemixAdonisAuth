@@ -1,6 +1,3 @@
-// initial version generated via cli with:
-// node ace remix:route --action --error-boundary login
-
 import {
   ActionFunctionArgs, json,
   redirect

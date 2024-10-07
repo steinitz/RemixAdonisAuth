@@ -15,6 +15,7 @@ export default class UserService {
   async createUser(props: {
     email: string
     username?: string
+    fullName?: string
     preferredName?: string
     password: string
   }): Promise<User> {
@@ -29,6 +30,10 @@ export default class UserService {
 
     if (props.preferredName) {
       user.preferred_name = props.preferredName
+    }
+
+     if (props.fullName) {
+      user.full_name = props.fullName
     }
 
     user.is_email_confirmed = false // do I need this?  The AI suggested it.

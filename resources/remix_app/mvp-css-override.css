@@ -42,37 +42,3 @@ the validation errors are hidden and unselectable
 form {
   user-select: 'none',}
 */
-
-
-/*
-not actually an override -- a loading spinner class, for div
-probably should be in its own file
-*/
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/*linear-gradient(white, white) padding-box, linear-gradient(to right, darkblue, darkorchid) border-box;*/
-.spinner {
-  filter: brightness(200%);
-  display: flex;
-  justify-content: flex-end;
-  margin: 0 auto;
-  background-color: var(--color-accent);
-  /*border: 10px solid var(--color-text-secondary);*/
-
-  border-top: 8px solid var(--color-link);
-  /*border: 10px solid var(--color-text-secondary);*/
-  /*border-top: 10px solid var(--color-link);*/
-  border-radius: 50%;
-  height: 31px;
-  width: 39px; /* height + border top */
-  animation: spin 1s linear infinite;
-  animation-duration: 8s;
-}
