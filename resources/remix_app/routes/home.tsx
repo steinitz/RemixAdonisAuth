@@ -5,8 +5,11 @@ import {
   type MetaFunction,
   redirect,
 } from '@remix-run/node'
-import {useLoaderData, Form} from '@remix-run/react'
-import {Logout} from "~/components/logout";
+import {
+  useLoaderData,
+  Form,
+} from "@remix-run/react";
+import {UserBlock} from "~/components/userBlock";
 
 export const meta: MetaFunction = () => {
   return [
@@ -53,7 +56,7 @@ export default function Page() {
     <main>
       <nav>
         <div style={{
-           width: '100%',
+            width: '100%',
             display: 'flex',
             justifyContent: 'space-between',
             alignContent: 'center',
@@ -62,7 +65,7 @@ export default function Page() {
           <h3 style={{}}>Blockchain Portfolio, built with Remix & Adonis</h3>
           <div style={{}}>
             {email ?
-              <Logout email={email}/>
+              <UserBlock email={email}/>
               :
               <Form style={{
                 border: 'none',

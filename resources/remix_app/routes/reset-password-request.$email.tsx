@@ -86,12 +86,7 @@ export default function Page() {
             {/* appear/disappear reactively and avoiding infinite renders */}
             <div />
             <div style={{textAlign: "right"}}>
-              <button
-                type="submit"
-                // onClick={onSubmit}
-              >
-                Send me a reset email
-              </button>
+              <button type="submit">Send me a reset email</button>
             </div>
           </div>
           <br />

@@ -3,7 +3,7 @@ import {
 } from '@remix-run/node'
 import {Form, useLoaderData} from '@remix-run/react'
 import {hideFormBorder} from "~/components/styles";
-import {Logout} from "~/components/logout";
+import {UserBlock} from "~/components/userBlock";
 
 export const meta: MetaFunction = () => {
   return [
@@ -68,7 +68,7 @@ export default function Index() {
           {
             email ?
             // some nasty tweaks to align the login button and loggedin text
-            <Logout email={email}/>
+            <UserBlock email={email}/>
             :
             <Form method="POST" style={hideFormBorder} >
               <input type="hidden" name="intent" value={'log_in'}/>

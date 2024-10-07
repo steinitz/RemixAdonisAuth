@@ -1,17 +1,35 @@
+import { Database } from '@adonisjs/lucid/database'
 import vine from '@vinejs/vine'
+import { FieldContext } from '@vinejs/vine/types'
 
 
 // Two shared validation rules: password and email
 
 export const passwordValidationRule = {
-  password: vine.string().minLength(8)
+  password: vine.string().minLength(8).maxLength(255)
 }
 
 // login also uses this to determine whether the
 // user is logging in with an email or a username
 // Also see createIsEmailValidationSchema, below
 export const isEmailValidationRule = {
-  email: vine.string().email()
+  email: vine.string().email().maxLength(254)
+}
+
+const isEmailUnique = async (
+  db: Database,
+  value: string,
+  field: FieldContext
+) => {
+  const user = await db
+    .from('users')
+    // Neither of these had 'like' in the original
+    // but the query fails with out them.
+    // They seem fraught, especially the whereNot
+    .whereNot('id', 'like', field.meta.userId)
+    .where('email', 'like', value)
+    .first()
+  return !user
 }
 
 // Validation functions
@@ -21,18 +39,24 @@ export const createRegistrationValidationSchema = () => vine.compile(
     email: isEmailValidationRule
       .email
       // we only check uniqueness on registration
-      .unique(async (db, value, field) => {
-        const user = await db
-          .from('users')
-          // Neither of these had 'like' in the original
-          // but the query fails with out them.
-          // Regardless, they seem fraught, especially the whereNot
-          .whereNot('id', 'like', field.meta.userId)
-          .where('email', 'like', value)
-          .first()
-        return !user
-      }),
+      .unique(isEmailUnique),
     ...passwordValidationRule,
+    username: vine.string().maxLength(64).optional(),
+    fullName: vine.string().maxLength(255).optional(),
+    preferredName: vine.string().maxLength(64).optional(),
+  })
+)
+
+export const createProfileValidationSchema = () => vine.compile(
+  vine.object({
+    email: isEmailValidationRule
+      .email
+      // we only check uniqueness on registration
+      .unique(isEmailUnique),
+    ...passwordValidationRule,
+    username: vine.string().maxLength(64).optional(),
+    fullName: vine.string().maxLength(255).optional(),
+    preferredName: vine.string().maxLength(64).optional(),
   })
 )
 

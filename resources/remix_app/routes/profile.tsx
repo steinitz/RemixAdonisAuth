@@ -13,9 +13,6 @@ import {
 import {PasswordField} from '#remix_app/components/PasswordField'
 import {ValidatedInput} from "#remix_app/components/ValidatedInput";
 import {createRegistrationValidationSchema} from "#validators/authenticationValidation";
-import {
-  fieldLabelSubtext
-} from "~/components/styles";
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {
@@ -33,15 +30,15 @@ export const action = async ({context}: ActionFunctionArgs) => {
   const {http, make} = context
 
   // get form data
-  const {email, username, fullName, preferredName, password} = http.request.only(
-    ['email', 'username', 'fullName', 'preferredName', 'password']
+  const {email, username, preferredName, password} = http.request.only(
+    ['email', 'username', 'preferredName', 'password']
   )
 
   let validationErrors
   try {
     // vine can sanitize what the user typed
     // here we just want the errors when vine throws
-    await validationSchema.validate ({email, password, username, fullName, preferredName});
+    await validationSchema.validate ({email, password});
   }
   catch (error) {
     validationErrors = error.messages
@@ -57,7 +54,6 @@ export const action = async ({context}: ActionFunctionArgs) => {
   const user = await userService.createUser({
     email,
     username,
-    fullName,
     preferredName,
     password,
   })
@@ -70,7 +66,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
 
 export default function Page() {
   const {validationErrors} = useActionData<typeof action>() ?? []
-  validationErrors && console.log('register page', {validationErrors})
+  console.log('register page', {validationErrors})
 
   return (
     <main>
@@ -78,9 +74,10 @@ export default function Page() {
         <Form
           method="post">
           <h1
-            style={{textAlign: "center"}}>Register</h1>
-          <p>Already have an account? <Link to="/login">Log In</Link>
-          </p>
+            style={{textAlign: "center"}}
+          >
+            Profile
+          </h1>
           <label>
             Email
             <ValidatedInput
@@ -88,35 +85,33 @@ export default function Page() {
               validationErrors={validationErrors}
             />
           </label>
-          {PasswordField({validationErrors})}
           <label>
-            Login Name <span style={fieldLabelSubtext}>(recommended)</span>
+            Login Name (optional)
             <ValidatedInput
               fieldName="username"
               validationErrors={validationErrors}
             />
           </label>
-          <div className="tooltip">
-            <label>
-              Preferred Name <span style={fieldLabelSubtext}>(optional)</span>
-              <ValidatedInput
-                fieldName="preferredName"
-                validationErrors={validationErrors}
-              />
-            </label>
-            <span className="tooltiptext">examples: Dr. Smith, Grace, Bob</span>
-          </div>
+          {PasswordField({validationErrors})}
           <label>
-            Full Name <span style={fieldLabelSubtext}>(optional)</span>
+            Preferred Name (optional)
             <ValidatedInput
-              fieldName="fullName"
+              fieldName="preferredName"
+              validationErrors={validationErrors}
+            />
+          </label>
+          <label>
+            Full Name (optional)
+            <ValidatedInput
+              fieldName="fullname"
               validationErrors={validationErrors}
             />
           </label>
           <div
             style={{textAlign: "right"}}>
             <button
-              type="submit">Register
+              type="submit">Save
+              Changes
             </button>
           </div>
         </Form>

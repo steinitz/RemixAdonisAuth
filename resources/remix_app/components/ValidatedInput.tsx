@@ -11,7 +11,11 @@ export function ValidatedInput(props: {
   defaultValue?: string
 }) {
   return <>
-    <input type="text" name={props.fieldName} defaultValue={props.defaultValue}/>
+    <input
+      type="text"
+      name={props.fieldName}
+      defaultValue={props.defaultValue}
+    />
     <FormFieldError message={errorMessageFor(props.fieldName, props.validationErrors)} />
   </>
 }
