@@ -11,7 +11,7 @@ import {
   isRouteErrorResponse,
   useRouteError
 } from "@remix-run/react";
-import {PasswordInput} from "~/components/PasswordInput";
+import {PasswordInput} from "~/components/InputFields";
 import {createNewPasswordValidationSchema} from "#validators/authenticationValidation";
 
 const getUser =  async (token: any, make: (arg0: string) => any) => {

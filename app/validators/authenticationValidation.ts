@@ -15,18 +15,23 @@ export const isEmailValidationRule = {
   email: vine.string().email().maxLength(254)
 }
 
-const isEmailUnique = async (
+// Unique test, shared by username and email. Kinda cool
+const isUnique = async (
   db: Database,
   value: string,
-  field: FieldContext
+  field: FieldContext,
 ) => {
+  // Neither whereNot nor where clauses had 'like' in the
+  // Adocast example, but the query fails without 'like'.
+  // The 'like' seems fraught, especially the whereNot
+
   const user = await db
     .from('users')
-    // Neither of these had 'like' in the original
-    // but the query fails with out them.
-    // They seem fraught, especially the whereNot
     .whereNot('id', 'like', field.meta.userId)
-    .where('email', 'like', value)
+
+    // field.name gives a type error, but field.wildCardPath
+    // seems odd and maybe fragile.  What is it?
+    .where(field.wildCardPath, 'like', value)
     .first()
   return !user
 }
@@ -37,9 +42,9 @@ export const createRegistrationValidationSchema = () => vine.compile(
   vine.object({
     email: isEmailValidationRule
       .email
-      .unique(isEmailUnique),
+      .unique(isUnique),
     ...passwordValidationRule,
-    username: vine.string().maxLength(64).optional(),
+    username: vine.string().unique(isUnique).maxLength(64).optional(),
     fullName: vine.string().maxLength(255).optional(),
     preferredName: vine.string().maxLength(64).optional(),
   })
@@ -49,9 +54,9 @@ export const createProfileValidationSchema = () => vine.compile(
   vine.object({
     email: isEmailValidationRule
       .email
-      .unique(isEmailUnique),
+      .unique(isUnique),
     ...passwordValidationRule,
-    username: vine.string().maxLength(64).optional(),
+    username: vine.string().unique(isUnique).maxLength(64).optional(),
     fullName: vine.string().maxLength(255).optional(),
     preferredName: vine.string().maxLength(64).optional(),
   })

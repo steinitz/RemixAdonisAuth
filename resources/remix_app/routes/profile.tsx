@@ -10,8 +10,13 @@ import {
   Link, useActionData,
   useRouteError
 } from "@remix-run/react";
-import {PasswordInput} from '~/components/PasswordInput'
-import {ValidatedInput} from "#remix_app/components/ValidatedInput";
+import {
+  EmailInput,
+  FullNameInput,
+  LoginNameInput,
+  PasswordInput,
+  PreferredNameInput
+} from "~/components/InputFields";
 import {
   createProfileValidationSchema,
 } from "#validators/authenticationValidation";
@@ -81,35 +86,11 @@ export default function Page() {
           >
             Profile
           </h1>
-          <label>
-            Email
-            <ValidatedInput
-              fieldName="email"
-              validationErrors={validationErrors}
-            />
-          </label>
-          <label>
-            Login Name (optional)
-            <ValidatedInput
-              fieldName="username"
-              validationErrors={validationErrors}
-            />
-          </label>
+          <EmailInput validationErrors={validationErrors} />
           <PasswordInput validationErrors={validationErrors} />
-          <label>
-            Preferred Name (optional)
-            <ValidatedInput
-              fieldName="preferredName"
-              validationErrors={validationErrors}
-            />
-          </label>
-          <label>
-            Full Name (optional)
-            <ValidatedInput
-              fieldName="fullname"
-              validationErrors={validationErrors}
-            />
-          </label>
+          <LoginNameInput validationErrors={validationErrors} />
+          <PreferredNameInput validationErrors={validationErrors} />
+          <FullNameInput validationErrors={validationErrors} />
           <div
             style={{textAlign: "right"}}>
             <button

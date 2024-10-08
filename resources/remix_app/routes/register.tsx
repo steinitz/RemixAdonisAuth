@@ -3,28 +3,24 @@ import {
   json,
   type  LoaderFunctionArgs,
   redirect
-} from "@remix-run/node";
+} from "@remix-run/node"
 import {
   Form,
   isRouteErrorResponse,
   Link,
   useActionData,
   useRouteError
-} from "@remix-run/react";
+} from "@remix-run/react"
 import {
-  PasswordInput
-} from "~/components/PasswordInput";
-import {
+  EmailInput,
+  FullNameInput,
   LoginNameInput,
-  PreferredNameInput,
-  ValidatedInput
-} from "#remix_app/components/ValidatedInput";
+  PasswordInput,
+  PreferredNameInput
+} from "~/components/InputFields"
 import {
   createRegistrationValidationSchema
-} from "#validators/authenticationValidation";
-import {
-  fieldLabelSubtext
-} from "~/components/styles";
+} from "#validators/authenticationValidation"
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {
@@ -90,23 +86,11 @@ export default function Page() {
             style={{textAlign: "center"}}>Register</h1>
           <p>Already have an account? <Link to="/login">Log In</Link>
           </p>
-          <label>
-            Email
-            <ValidatedInput
-              fieldName="email"
-              validationErrors={validationErrors}
-            />
-          </label>
+          <EmailInput validationErrors={validationErrors} />
           <PasswordInput validationErrors={validationErrors} />
           <LoginNameInput validationErrors={validationErrors} />
           <PreferredNameInput validationErrors={validationErrors} />
-          <label>
-            Full Name <span style={fieldLabelSubtext}>(optional)</span>
-            <ValidatedInput
-              fieldName="fullName"
-              validationErrors={validationErrors}
-            />
-          </label>
+          <FullNameInput validationErrors={validationErrors} />
           <div
             style={{textAlign: "right"}}>
             <button
