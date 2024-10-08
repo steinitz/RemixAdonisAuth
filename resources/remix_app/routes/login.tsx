@@ -10,7 +10,7 @@ import {
   useRouteError
 } from '@remix-run/react'
 import {noValue} from '~/constants'
-import {PasswordInput} from "~/components/PasswordInput";
+import {PasswordInput} from "~/components/InputFields";
 import {
   createIsEmailValidationSchema,
   createLoginValidationSchema

@@ -31,27 +31,27 @@
 .tooltip {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+  /*border-bottom: 1px dotted black; !* If you want dots under the hoverable text *!*/
   width: 100%;
 }
 
 /* Tooltip text */
 .tooltip .tooltiptext {
   visibility: hidden;
-  width: 100%;
-  background-color: black;
-  color: #fff;
+  width: 80%;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   text-align: center;
   padding: 5px 0;
   border-radius: 6px;
   font-size: 0.8rem;
 
-  /* Position the tooltip text - see examples below! */
+  /* Position the tooltip text over the field, to the right */
   position: absolute;
   z-index: 1;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+  bottom: 34%;
+  left: -8%;
+  margin-left: 30%;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
