@@ -28,9 +28,10 @@ export function UserBlock(props: {email: string}) {
         </p>
       </div>
       <div>
-        <Link style={{
+        <Link
+          style={{
             ...adjustVerticalLocationStyle,
-marginRight: '21px',
+            marginRight: '21px',
           }}
           to="/profile"
         >

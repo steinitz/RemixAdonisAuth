@@ -44,12 +44,14 @@ const InputField = ({
   fieldLabel,
   subtext,
   fieldName,
+  defaultValue,
   validationErrors,
-  tooltip
+  tooltip,
 }: {
   fieldLabel: string,
   subtext?: string,
   fieldName: string,
+  defaultValue?: string
   validationErrors: any
   tooltip?: string
 }) => {
@@ -60,6 +62,7 @@ const InputField = ({
       <ValidatedInput
         fieldName={fieldName}
         validationErrors={validationErrors}
+        defaultValue={defaultValue}
       />
     </label>
     <span className={hasTooltip ? 'tooltiptext' : ''}>
@@ -68,47 +71,51 @@ const InputField = ({
   </div>;
 }
 
-export const EmailInput = ({validationErrors}: {
-  validationErrors: any[] | undefined
+export const EmailInput = ({validationErrors, defaultValue}: {
+  validationErrors: any[] | undefined, defaultValue?: string
 }) => {
   return <InputField
     fieldLabel="Email"
     fieldName="email"
+    defaultValue={defaultValue}
     validationErrors={validationErrors}
    />
 }
 
-export const LoginNameInput = ({validationErrors}: {
-  validationErrors: any[] | undefined
+export const UsernameInput = ({validationErrors, defaultValue}: {
+  validationErrors: any[] | undefined, defaultValue?: string
 }) => {
   return <InputField
     fieldLabel="Login Name"
     subtext="(recommended)"
     fieldName="username"
+    defaultValue={defaultValue}
     validationErrors={validationErrors}
     tooltip="Useful if you lose access to your email."
   />
 }
 
-export const PreferredNameInput = ({validationErrors}: {
-  validationErrors: any[] | undefined
+export const PreferredNameInput = ({validationErrors, defaultValue}: {
+  validationErrors: any[] | undefined, defaultValue?: string
 }) => {
   return <InputField
     fieldLabel="Preferred Name"
     subtext="(optional)"
     fieldName="preferredName"
+    defaultValue={defaultValue}
     validationErrors={validationErrors}
     tooltip="examples: Bob, Grace, Dr. Smith"
    />
 }
 
-export const FullNameInput = ({validationErrors}: {
-  validationErrors: any[] | undefined
+export const FullNameInput = ({validationErrors, defaultValue}: {
+  validationErrors: any[] | undefined, defaultValue?: string
 }) => {
   return <InputField
     fieldLabel="Full Name"
     subtext="(optional)"
     fieldName="fullName"
+    defaultValue={defaultValue}
     validationErrors={validationErrors}
    />
 }

@@ -7,7 +7,6 @@ import { wildcardCompare } from '#remix_app/utilities/wildcardCompare'
  * access to unauthenticated users.
  */
 
-
 export default class AuthMiddleware {
   loginRoute = '/login'
 

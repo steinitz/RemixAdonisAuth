@@ -15,7 +15,7 @@ export const meta: MetaFunction = () => {
 export const action = async ({context}: ActionFunctionArgs) => {
   const {http} = context
   const {intent} = http.request.only(['intent'])
-  console.log({intent})
+  // console.log({intent})
   if (intent === 'log_out') {
     await http.auth.use('web').logout()
     return redirect('/')

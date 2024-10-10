@@ -25,13 +25,14 @@ const isUnique = async (
   // Adocast example, but the query fails without 'like'.
   // The 'like' seems fraught, especially the whereNot
 
+  console.log ({field})
   const user = await db
     .from('users')
-    .whereNot('id', 'like', field.meta.userId)
+    .whereNot('id', field.meta.userId || 0) // we assume no id of '0'
 
     // field.name gives a type error, but field.wildCardPath
     // seems odd and maybe fragile.  What is it?
-    .where(field.wildCardPath, 'like', value)
+    .where(field.wildCardPath, value)
     .first()
   return !user
 }

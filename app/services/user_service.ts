@@ -42,6 +42,46 @@ export default class UserService {
     return user
   }
 
+updateUser({
+    user,
+    email,
+    username,
+    fullName,
+    preferredName,
+    password,
+ }: {
+    user: User
+    email: string
+    username?: string
+    fullName?: string
+    preferredName?: string
+    password?: string
+  }): User {
+    if(email) {
+      user.email = email
+    }
+    if (password) {
+      user.password = password
+    }
+    if (username) {
+      user.username = username
+    }
+    if (preferredName) {
+      user.preferred_name = preferredName
+    }
+    if (fullName) {
+      user.full_name = fullName
+    }
+
+    user.save()
+
+    return user
+  }
+
+  deleteUser(user: User) {
+    user.delete()
+  }
+
   async getUserForEmail(email: string) {
     return await User.findByOrFail('email', email)
   }
@@ -149,6 +189,31 @@ export default class UserService {
       user,
       tokenHasExpired
     }
+  }
+
+  // bestNameForAddressingUser
+
+  async bestNameForAddressingUser(user: User) {
+
+    let result = 'Valued User'
+    let extractedFromEmail
+
+    if (user.preferred_name) {
+       result = user.preferred_name
+    }
+    else if (user.full_name) {
+      result = user.full_name.replace(/ .*/,'')
+    }
+    else if (user.username) {
+      result = user.username
+    }
+    // note: this is not a comparison, it sets the value of extractedFromEmail
+    // eslint-disable-next-line no-cond-assign
+    else if (extractedFromEmail = user.email?.split('@')[0]) {
+      result = extractedFromEmail
+    }
+
+    return result
   }
 
 
