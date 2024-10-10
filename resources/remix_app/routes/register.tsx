@@ -14,7 +14,7 @@ import {
 import {
   EmailInput,
   FullNameInput,
-  LoginNameInput,
+  UsernameInput,
   PasswordInput,
   PreferredNameInput
 } from "~/components/InputFields"
@@ -46,7 +46,9 @@ export const action = async ({context}: ActionFunctionArgs) => {
   try {
     // vine can sanitize what the user typed
     // here we just want the errors when vine throws
-    await validationSchema.validate ({email, password, username, fullName, preferredName});
+    await validationSchema.validate ({
+      email, password, username, fullName, preferredName
+    });
   }
   catch (error) {
     validationErrors = error.messages
@@ -88,7 +90,7 @@ export default function Page() {
           </p>
           <EmailInput validationErrors={validationErrors} />
           <PasswordInput validationErrors={validationErrors} />
-          <LoginNameInput validationErrors={validationErrors} />
+          <UsernameInput validationErrors={validationErrors} />
           <PreferredNameInput validationErrors={validationErrors} />
           <FullNameInput validationErrors={validationErrors} />
           <div

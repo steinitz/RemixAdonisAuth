@@ -8,16 +8,22 @@ export async function sendSupportEmail(
 ) {
   await mail.send((message) => {
       message
-        .to(supportEmail)
-        // .from('info@example.org')
-        .subject(`Contact Form`)
-        // .htmlView('emails/verify_email', {user})
+      .to(supportEmail)
 
-        // HTML contents
-        .html(userMessageHtml)
+      // we don't need .from because it defaults
+      // to the value in config/mail.ts
+      // .from('info@example.org')
 
-        // Plain text contents
-        .text(userMessageText);
+      .subject(`Contact Form`)
+
+      // what is this?
+      // .htmlView('emails/verify_email', {user})
+
+      // HTML contents
+      .html(userMessageHtml)
+
+      // Plain text contents
+      .text(userMessageText);
     }
   );
   return redirect(`/contact-sent`);

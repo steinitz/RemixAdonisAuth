@@ -19,14 +19,21 @@ export async function sendPasswordResetEmail(
 
   await mail.send((message) => {
       message
-        .to(email)
-        // .from('info@example.org')
-        .subject(`Reset Your ${companyName} Password\n\n`)
-        // .htmlView('emails/verify_email', {user})
-        // HTML contents
-        .html(`
-        <p>We understand that you’ve requested to reset your password for your ${companyName} account.</>
+      .to(email)
 
+      // we don't need .from because it defaults
+      // to the value in config/mail.ts
+      // .from('info@example.org')
+
+      .subject(`Reset Your ${companyName} Password\n\n`)
+
+      // what is this?
+      // .htmlView('emails/verify_email', {user})
+
+      // HTML contents
+      .html(`
+        <p>We understand that you’ve requested to reset your password for your ${companyName} account.</>
+  
         <p>Click this link to reset your password page: ${passwordResetUrl}</p>
 
       `)

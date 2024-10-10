@@ -126,7 +126,8 @@ export default function Page() {
             <p>Forgot Password?
               <Link to={`/reset-password-request/${noValue}`}>
                 Reset Password
-              </Link></p>
+              </Link>
+            </p>
             <p>Get Help <Link to="/contact">Contact Support</Link></p>
           </details>
         </Form>
