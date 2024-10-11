@@ -25,7 +25,7 @@ const isUnique = async (
   // Adocast example, but the query fails without 'like'.
   // The 'like' seems fraught, especially the whereNot
 
-  console.log ({field})
+  // console.log ({field})
   const user = await db
     .from('users')
     .whereNot('id', field.meta.userId || 0) // we assume no id of '0'

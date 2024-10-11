@@ -3,24 +3,29 @@ import {
   json,
   type  LoaderFunctionArgs,
   redirect
-} from "@remix-run/node"
+} from "@remix-run/node";
 import {
   Form,
   isRouteErrorResponse,
   Link,
   useActionData,
   useRouteError
-} from "@remix-run/react"
+} from "@remix-run/react";
 import {
   EmailInput,
   FullNameInput,
-  UsernameInput,
   PasswordInput,
-  PreferredNameInput
-} from "~/components/InputFields"
+  PreferredNameInput,
+  UsernameInput
+} from "~/components/InputFields";
 import {
   createRegistrationValidationSchema
-} from "#validators/authenticationValidation"
+} from "#validators/authenticationValidation";
+import {getDomainUrl} from "~/utilities/getDomainUrl";
+import {
+  sendEmailAddressConfirmationEmail
+} from "#remix_app/emails/sendEmailAddressConfirmationEmail";
+import {registrationCookie} from "~/cookies.server";
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {
@@ -69,23 +74,50 @@ export const action = async ({context}: ActionFunctionArgs) => {
     password,
   })
 
-  // log in the user after successful registration
-  await http.auth.use('web').login(user)
+  // save the unconfirmed email address for two minutes
+  // so we can show it on the index page
+  const cookieHeader = context.http.request.request.headers.cookie;
+  const cookie =
+    await registrationCookie.parse(cookieHeader ?? '' ) || {};
+  console.log('register action', {cookie})
+  cookie.email = email
 
-  return redirect(`/home`)
+  sendEmailAddressConfirmationEmail(
+    getDomainUrl(http.request),
+    userService,
+    user
+  )
+
+  // log in the user after successful registration
+  // await http.auth.use('web').login(user)
+
+  return redirect(
+    `/`,
+    // Easy step to forget with Adonis cookie creation.
+    // Might be easier to remember if I understood what
+    // the hell it's doing.
+    {
+      headers: {
+        'Set-Cookie': await registrationCookie.serialize(cookie)
+      }
+    }
+  )
 }
 
 export default function Page() {
-  const {validationErrors} = useActionData<typeof action>() ?? []
+
+  const actionData: Record<string, any> | undefined = useActionData<typeof action>()
+  const validationErrors = actionData?.validationErrors ?? []
+
   validationErrors && console.log('register page', {validationErrors})
 
   return (
     <main>
       <section> {/* gives it a nice width */}
         <Form
-          method="post">
+            method="post">
           <h1
-            style={{textAlign: "center"}}>Register</h1>
+              style={{textAlign: "center"}}>Register</h1>
           <p>Already have an account? <Link to="/login">Log In</Link>
           </p>
           <EmailInput validationErrors={validationErrors} />
@@ -100,6 +132,7 @@ export default function Page() {
             </button>
           </div>
         </Form>
+        {/*}*/}
       </section>
     </main>
   )

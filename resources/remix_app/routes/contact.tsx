@@ -54,7 +54,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
     (await contactFormCookie.parse(cookieHeader ?? '' )) || {};
   cookie.message = message
 
-  // 2. send the support emai
+  // 2. send the support email
   const textMessage = `sent from ${name}, ${email}, \n\n${message}`
   const htmlMessage = `<p>sent from ${name} - ${email}</p> ${convertTextMessageToHtml(message)}`
   // console.log(htmlMessage)
@@ -73,8 +73,8 @@ export const action = async ({context}: ActionFunctionArgs) => {
 export const loader = async ({context}: LoaderFunctionArgs) => {
   const email = context.http.auth.user?.email
 
-  // we save the user's message in the action function and retrieve
-  // it here, from the cookie
+  // we save the user's message in the action function
+  // and retrieve it here, from the cookie
   const cookieHeader = context.http.request.request.headers.cookie;
   const cookie =
     (await contactFormCookie.parse(cookieHeader ?? '' )) || {};

@@ -23,3 +23,15 @@ export const fieldLabelSubtext: React.CSSProperties = {
   // marginBottom: '30px',
   // paddingBottom: '30px'
 }
+
+// copied from mvp.css -- see the stylesheet link in remix_app/root.tsx
+export const repurposedFormBoxStyle = {
+  border: "1px solid var(--color-bg-secondary)",
+  borderRadius: "var(--border-radius)",
+  boxShadow: "var(--box-shadow) var(--color-shadow)",
+  display: "block",
+  maxWidth: "var(--width-card-wide)",
+  minWidth: "var(--width-card)",
+  padding: "1.5rem",
+  // textAlign: "var(--justify-normal)" // typescript doesn't like this ??
+};

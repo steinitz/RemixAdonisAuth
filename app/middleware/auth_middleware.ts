@@ -19,9 +19,10 @@ export default class AuthMiddleware {
     '/contact',
     '/contact-sent',
     '/register',
+    '/email-address-confirmed/*',
     '/reset-password-request/*',
     '/reset-password-email-sent',
-    '/reset-password/*'
+    '/reset-password/*',
   ]
 
   isOpenRoute (route: string | undefined | null) {

@@ -1,9 +1,18 @@
 import {
   type ActionFunctionArgs, json, type LoaderFunctionArgs, type MetaFunction, redirect,
 } from '@remix-run/node'
-import {Form, useLoaderData} from '@remix-run/react'
-import {hideFormBorder} from "~/components/styles";
+import {
+  Form,
+  useLoaderData
+} from "@remix-run/react";
+import {
+  hideFormBorder,
+  repurposedFormBoxStyle
+} from "~/components/styles";
 import {UserBlock} from "~/components/userBlock";
+import {
+  registrationCookie
+} from "~/cookies.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -42,14 +51,36 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
   // now we can get the email of the logged-in user, if any
   const email = auth.user?.email
 
-  return json({
-    email,
-  })
+  if (email) {
+    return json({
+      email,
+    })
+  }
+  else {
+    // registration saves the user's unconfirmed email
+    // we retrieve it here, from the cookie
+    const cookieHeader = context.http.request.request.headers.cookie;
+    console.log('index loader', {cookieHeader})
+    const cookie =
+      (await registrationCookie.parse(cookieHeader ?? '' )) || {};
+    console.log('index loader', {cookie})
+    const unconfirmedEmail = cookie.email
+    if (cookie.email) {
+      return json({
+        unconfirmedEmail,
+      })
+    }
+    else {
+      return null
+    }
+  }
 }
 
-
 export default function Index() {
-  const {email} = useLoaderData<typeof loader>()
+  // const {email} = useLoaderData<typeof loader>()
+  const loaderData: Record<string, any> | null = useLoaderData<typeof loader>()
+  const email = loaderData?.email
+  const unconfirmedEmail = loaderData?.unconfirmedEmail
 
   // console.log('index page', {email})
   return (
@@ -78,8 +109,23 @@ export default function Index() {
         </div>
       </div>
       </nav>
+
+      {/*<button type="submit">Add Accounts and Wallets</button>*/}
+      { unconfirmedEmail &&
+        <section>
+        <div style={repurposedFormBoxStyle}>
+          <h1>We've sent you a confirmation email</h1>
+          <p style={{
+            textAlign: "center",
+            marginTop: "-13px"
+          }}>to {unconfirmedEmail}</p>
+          <p>Please</p>
+          <p>1. find our email in your inbox (or spam mailbox)</p>
+          <p>2. follow the instructions to activate your account</p>
+        </div>
+        </section>
+      }
       <section>
-        {/*<button type="submit">Add Accounts and Wallets</button>*/}
         <ul>
           <li>
             <a target="_blank" href="https://remix.run/docs" rel="noreferrer">

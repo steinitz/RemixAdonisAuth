@@ -36,7 +36,7 @@ export async function sendEmailAddressConfirmationEmail(
     console.warn(error);
   }
 
-  const emailConfirmationUrl = `${domain}/email-address-confirm/${token}`;
+  const emailConfirmationUrl = `${domain}/email-address-confirmed/${token}`;
   const bestName = userService.bestNameForAddressingUser(user)
 
   const plainText = plainTextMessage(bestName, emailConfirmationUrl)
