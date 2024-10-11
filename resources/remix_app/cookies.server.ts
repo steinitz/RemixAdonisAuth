@@ -15,3 +15,7 @@ const theMaxAge = 2 * 60 * 1000 // two minutes
 export const contactFormCookie = createCookie(
   'message', {maxAge: theMaxAge, secure: true}
 )
+
+export const registrationCookie = createCookie(
+  'email', {maxAge: theMaxAge, secure: true}
+)
