@@ -114,10 +114,10 @@ export default function Index() {
       { unconfirmedEmail &&
         <section>
         <div style={repurposedFormBoxStyle}>
-          <h1>We've sent you a confirmation email</h1>
+          <h1>We've sent a confirmation email</h1>
           <p style={{
             textAlign: "center",
-            marginTop: "-13px"
+            marginTop: "-8px"
           }}>to {unconfirmedEmail}</p>
           <p>Please</p>
           <p>1. find our email in your inbox (or spam mailbox)</p>

@@ -12,7 +12,6 @@ import {getDomainUrl} from "~/utilities/getDomainUrl";
 import {noValue} from "~/constants";
 import {createPasswordResetValidationSchema} from "#validators/authenticationValidation";
 import {ValidatedInput} from "~/components/ValidatedInput";
-// import * as sea from "node:sea";
 
 export const loader = ({params}: LoaderFunctionArgs) => {
   const email = params.email
@@ -46,11 +45,21 @@ export const action = async ({context}: ActionFunctionArgs) => {
     })
   }
 
+  // create a password reset token
+  let token;
+  try {
+    const userService = await make("user_service");
+    token = await userService.setPasswordResetTokenFor(email);
+    // console.log('reset-password-request action', {token})
+  } catch (error) {
+    console.warn(error);
+  }
+
   // send the password reset email
   sendPasswordResetEmail(
     email,
     getDomainUrl(http.request),
-    await make("user_service")
+    token || 'missing-token',
   )
   return redirect(`/reset-password-email-sent?email=${email}`)
 }

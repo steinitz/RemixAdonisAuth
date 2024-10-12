@@ -29,14 +29,16 @@ export default function Page() {
     <main>
       <section> {/* gives it a nice width */}
         <h1>Email Address Confirmation</h1>
-        <Form style={{
-                border: 'none',
-                boxShadow: 'none',
-                textAlign: 'right',
-                // marginTop: loggedInButtonFormTopMarginTweak,
-              }} method="POST">
-                <input type="hidden" name="intent" value={'log_in'} />
-                <button style={{}} type={'submit'}>Login</button>
+        <Form
+          style={{
+            border: 'none',
+            boxShadow: 'none',
+            textAlign: 'right',
+            // marginTop: loggedInButtonFormTopMarginTweak,
+          }}
+          method="POST">
+          <input type="hidden" name="intent" value={'log_in'} />
+          <button style={{}} type={'submit'}>Login</button>
       </Form>
       </section>
     </main>

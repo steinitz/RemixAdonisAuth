@@ -1,12 +1,19 @@
-import User from '#models/user';
-import hash from '@adonisjs/core/services/hash';
-import {DateTime} from 'luxon'
-import string from "@adonisjs/core/helpers/string";
+import User
+  from "#models/user";
+import hash
+  from "@adonisjs/core/services/hash";
+import {
+  DateTime
+} from "luxon";
+import string
+  from "@adonisjs/core/helpers/string";
 // import db from '@adonisjs/lucid/services/db'
 
 
 type TokenType = 'password_reset_token' | 'email_confirmation_token'
 type TokenExpiryType = 'password_reset_token_expiry' | 'email_confirmation_token_expiry'
+
+export const errorStringNoUserFoundForToken = "No User found for token";
 
 export default class UserService {
 
@@ -96,8 +103,7 @@ updateUser({
     return await this.setTokenFor(email, 'password_reset_token')
   }
 
-  async getUserWithPasswordResetToken(
-    token: string):
+  async getUserWithPasswordResetToken(token: string):
     Promise< {user: User | undefined, tokenHasExpired: boolean}> {
     return this.getUserWithToken(token, 'password_reset_token')
   }
@@ -155,6 +161,7 @@ updateUser({
     const user = await this.getUserForEmail(email)
     if (!user) {throw new Error('user not found')}
     const token = string.generateRandom(64)
+    console.log("user_service.setTokenFor", {token})
     user[tokenType] = token
 
     const tokenExpiryField: TokenExpiryType = `${tokenType}_expiry`

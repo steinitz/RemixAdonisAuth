@@ -4,15 +4,9 @@ import {companyName} from '#remix_app/constants'
 export async function sendPasswordResetEmail(
   email: string,
   domain: string,
-  userService: any,
+  token: string,
 ) {
   // const userService = await make("user_service");
-  let token;
-  try {
-    token = await userService.setPasswordResetTokenFor(email);
-  } catch (error) {
-    console.warn(error);
-  }
 
   const passwordResetUrl = `${domain}/reset-password/${token}`;
   // const passwordResetUrl = `${getDomainUrl(http.request)}/reset-password/${token}`;

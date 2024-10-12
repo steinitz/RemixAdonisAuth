@@ -49,6 +49,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
     await isEmailValidationSchema.validate ({email});
   }
   catch (error) {
+    console.log('login action', {email}, 'is not an email', {error})
     isEmail = false
   }
 
@@ -63,7 +64,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
       await userService.getUserForUsername(email)
   }
   catch (error) {
-    loginError = 'email or username not found'
+    loginError = `${isEmail ? 'email' : 'username'} not found`
   }
 
   // check if the password is correct
