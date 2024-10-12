@@ -14,31 +14,14 @@ import {
 import {PasswordInput} from "~/components/InputFields";
 import {createNewPasswordValidationSchema} from "#validators/authenticationValidation";
 
-const getUser =  async (token: any, make: (arg0: string) => any) => {
-  console.log('reset-password loader', {token})
-  if (!token) {
-    throw new Error(errorStringUserNotDefined)
-  }
-
-  const userService = await make('user_service')
-  let user
-  let tokenHasExpired
-  try {
-    ({user, tokenHasExpired} = await userService.getUserWithPasswordResetToken(token || ''))
-  }
-  catch (error) {
-    throw error
-  }
-  return {user, tokenHasExpired}
-}
-
 export const loader = async ({context, params}: LoaderFunctionArgs) => {
   const {
     // http,
     make
   } = context
   const token = params.token
-  const {user, tokenHasExpired} = await getUser(token, make)
+  const userService = await make('user_service')
+  const {user, tokenHasExpired} = await userService.getUserWithPasswordResetToken(token || '')
   return json({user, tokenHasExpired})
 }
 
@@ -63,8 +46,8 @@ export const action = async ({context, params}: ActionFunctionArgs) => {
   // if no validation errors update the password
   const userService = await make('user_service')
   try {
-    const {user} = await getUser(token, make)
-    userService.updatePassword(user, password)
+    const {user} = await userService.getUserWithPasswordResetToken(token || '')
+    user && userService.updatePassword(user, password)
   }
   catch (error) {
     throw error
@@ -147,7 +130,7 @@ export function ErrorBoundary() {
         </main>
 
       )
-    }
+     }
       else {
         result = (
         <div>

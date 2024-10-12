@@ -41,8 +41,7 @@ const isUnique = async (
 
 export const createRegistrationValidationSchema = () => vine.compile(
   vine.object({
-    email: isEmailValidationRule
-      .email
+    email: isEmailValidationRule.email
       .unique(isUnique),
     ...passwordValidationRule,
     username: vine.string().unique(isUnique).maxLength(64).optional(),
@@ -53,8 +52,7 @@ export const createRegistrationValidationSchema = () => vine.compile(
 
 export const createProfileValidationSchema = () => vine.compile(
   vine.object({
-    email: isEmailValidationRule
-      .email
+    email: isEmailValidationRule.email
       .unique(isUnique),
     ...passwordValidationRule,
     username: vine.string().unique(isUnique).maxLength(64).optional(),
@@ -81,7 +79,11 @@ export const createPasswordResetValidationSchema = () => vine.compile(
 // login uses this to determine whether the
 // user is logging in with an email or a username
 export const createIsEmailValidationSchema = () => vine.compile(
-  vine.object(isEmailValidationRule)
+  // this gives a validation system failure for some reason
+  // vine.object(isEmailValidationRule)
+  // but this works fine. The only difference is the maxLength
+  // which works elsewhere.
+  vine.object({email: vine.string().email()})
 )
 
 

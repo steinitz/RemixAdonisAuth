@@ -23,7 +23,6 @@ export function PasswordInput({validationErrors = []}: {validationErrors?: any[]
             className={shouldShowPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}
             onClick={
               () => {
-                console.log('shouldShowPassword', shouldShowPassword)
                 setShouldShowPassword(!shouldShowPassword);
               }
             }
