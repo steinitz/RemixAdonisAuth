@@ -10,12 +10,14 @@ import {createCookie} from "@remix-run/node";
 // contact form message, as a user convenience.
 
 // Quick expiry
-const theMaxAge = 2 * 60 * 1000 // two minutes
+const contactMaxAge = 2 * 60 * 1000 // two minutes
 
 export const contactFormCookie = createCookie(
-  'message', {maxAge: theMaxAge, secure: true}
+  'message', {maxAge: contactMaxAge, secure: true}
 )
 
+const registrationMaxAge = 24 *60 * 60 * 1000 // twenty-four hours
+
 export const registrationCookie = createCookie(
-  'email', {maxAge: theMaxAge, secure: true}
+  'email', {maxAge: registrationMaxAge, secure: true}
 )

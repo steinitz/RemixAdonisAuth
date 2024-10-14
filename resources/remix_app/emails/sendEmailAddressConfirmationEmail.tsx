@@ -1,14 +1,16 @@
-import mail from "@adonisjs/mail/services/main"
-import {companyName} from '#remix_app/constants'
-import User from "#models/user";
+import mail
+  from "@adonisjs/mail/services/main";
+import {
+  companyName
+} from "#remix_app/constants";
 import {
   convertTextMessageToHtml
 } from "~/utilities/convertTextMessageToHtml";
 
 const plainTextMessage = (
-  bestName: string,
+  greetingName: string,
   link: string,
-) => `Hello ${bestName}
+) => `Hello ${greetingName}
 Thanks for registering an account with ${companyName}
 
 Before we get started, for your security, please verify your email address to ensure it was really you who registered.  Please click the link below.
@@ -24,26 +26,16 @@ We’re glad you’re here,
 ${companyName}
 `
 
-export async function sendEmailAddressConfirmationEmail(
-  domain: string,
-  userService: any,
-  user: User,
-) {
-  let token;
-  try {
-    token = await userService.setEmailConfirmationTokenFor(user.email);
-  } catch (error) {
-    console.warn(error);
-  }
-
-  const emailConfirmationUrl = `${domain}/email-address-confirmed/${token}`;
-  const bestName = userService.bestNameForAddressingUser(user)
-
-  const plainText = plainTextMessage(bestName, emailConfirmationUrl)
+const  doSendEmailAddressConfirmationEmail = async(
+  link: string,
+  greetingName: string,
+  email: string
+) => {
+  const plainText = plainTextMessage(greetingName, link)
 
   await mail.send((message) => {
       message
-      .to(user.email)
+      .to(email)
 
       // we don't need .from because it defaults
       // to the value in config/mail.ts
@@ -67,3 +59,26 @@ export async function sendEmailAddressConfirmationEmail(
 
   // return redirect(`/reset-password-email-sent?email=${email}`)
 }
+
+export const sendEmailAddressConfirmationEmail = async (
+  userService: any, email: string, domainUrl: string
+) => {
+
+  let token;
+  try {
+    token = await userService.setEmailConfirmationTokenFor(email);
+  } catch (error) {
+    console.warn(error);
+  }
+
+  const user = await userService.getUserForEmail(email);
+
+  const greetingName = await userService.bestNameForAddressingUser(user);
+  const confirmationLink = `${domainUrl}/email-address-confirmed/${token}`;
+
+  doSendEmailAddressConfirmationEmail(
+    confirmationLink,
+    greetingName,
+    user.email
+  );
+};

@@ -60,12 +60,10 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
     // registration saves the user's unconfirmed email
     // we retrieve it here, from the cookie
     const cookieHeader = context.http.request.request.headers.cookie;
-    console.log('index loader', {cookieHeader})
     const cookie =
       (await registrationCookie.parse(cookieHeader ?? '' )) || {};
-    console.log('index loader', {cookie})
-    const unconfirmedEmail = cookie.email
-    if (cookie.email) {
+    const unconfirmedEmail = cookie?.email
+    if (unconfirmedEmail) {
       return json({
         unconfirmedEmail,
       })

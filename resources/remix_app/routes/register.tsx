@@ -21,11 +21,15 @@ import {
 import {
   createRegistrationValidationSchema
 } from "#validators/authenticationValidation";
-import {getDomainUrl} from "~/utilities/getDomainUrl";
+import {
+  getDomainUrl
+} from "~/utilities/getDomainUrl";
 import {
   sendEmailAddressConfirmationEmail
 } from "#remix_app/emails/sendEmailAddressConfirmationEmail";
-import {registrationCookie} from "~/cookies.server";
+import {
+  registrationCookie
+} from "~/cookies.server";
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {
@@ -66,7 +70,8 @@ export const action = async ({context}: ActionFunctionArgs) => {
   // get the UserService from the app container
   const userService = await make('user_service')
 
-  const user = await userService.createUser({
+  // const user =
+  await userService.createUser({
     email,
     username,
     fullName,
@@ -74,20 +79,18 @@ export const action = async ({context}: ActionFunctionArgs) => {
     password,
   })
 
-  // save the unconfirmed email address for two minutes
-  // so we can show it on the index page
+  // save the unconfirmed email address for 24 hours
+  // so we can show it on the index page or resend the
+  // confirmation link
   const cookieHeader = context.http.request.request.headers.cookie;
   const cookie =
     await registrationCookie.parse(cookieHeader ?? '' ) || {};
   console.log('register action', {cookie})
   cookie.email = email
 
-  sendEmailAddressConfirmationEmail(
-    getDomainUrl(http.request),
-    userService,
-    user
-  )
+  await sendEmailAddressConfirmationEmail(userService, email, getDomainUrl(http.request));
 
+  // No. Now we wait for the user to click the link in the email.
   // log in the user after successful registration
   // await http.auth.use('web').login(user)
 

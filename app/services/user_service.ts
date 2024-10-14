@@ -120,6 +120,15 @@ updateUser({
     return this.getUserWithToken(token, 'email_confirmation_token')
   }
 
+  setIsEmailConfirmed(user: User, isConfirmed: boolean) {
+    user.is_email_confirmed = isConfirmed
+    user.save()
+  }
+
+  getIsEmailConfirmed(user: User) {
+    return user.is_email_confirmed
+  }
+
   // Password
 
   async updatePassword(user: User, password: string)

@@ -1,18 +1,30 @@
 // The link in the pasword-reset email takes the user here
 
 import {
-  Link, useActionData, useLoaderData, useNavigate
+  Form,
+  isRouteErrorResponse,
+  Link,
+  useActionData,
+  useLoaderData,
+  useNavigate,
+  useRouteError
 } from "@remix-run/react";
 
 import {
-  LoaderFunctionArgs, json, ActionFunctionArgs, redirect} from "@remix-run/node";
+  ActionFunctionArgs,
+  json,
+  LoaderFunctionArgs,
+  redirect
+} from "@remix-run/node";
 import {
-  Form,
-  isRouteErrorResponse,
-  useRouteError
-} from "@remix-run/react";
-import {PasswordInput} from "~/components/InputFields";
-import {createNewPasswordValidationSchema} from "#validators/authenticationValidation";
+  PasswordInput
+} from "~/components/InputFields";
+import {
+  createNewPasswordValidationSchema
+} from "#validators/authenticationValidation";
+import {
+  errorStringUserNotDefined
+} from "~/constants";
 
 export const loader = async ({context, params}: LoaderFunctionArgs) => {
   const {
@@ -26,6 +38,7 @@ export const loader = async ({context, params}: LoaderFunctionArgs) => {
 }
 
 const validationSchema = createNewPasswordValidationSchema()
+
 export const action = async ({context, params}: ActionFunctionArgs) => {
   const {make, http} = context
   const token = params.token
@@ -99,8 +112,6 @@ export default function Page() {
   </main>
   )
 }
-
-const errorStringUserNotDefined = 'User is not defined'
 
 // https://remix.run/docs/en/main/route/error-boundary
 export function ErrorBoundary() {
