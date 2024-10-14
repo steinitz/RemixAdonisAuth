@@ -49,7 +49,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
     await isEmailValidationSchema.validate ({email});
   }
   catch (error) {
-    console.log('login action', {email}, 'is not an email', {error})
+    // console.log('login action', {email}, 'is not an email', {error})
     isEmail = false
   }
 
@@ -76,7 +76,12 @@ export const action = async ({context}: ActionFunctionArgs) => {
 
     if (verifyPasswordResult === true) {
      // credentials ok so log in user
-      await http.auth.use('web').login(user)
+      if (!userService.getIsEmailConfirmed(user)) {
+        loginError = "email not confirmed, please check your inbox";
+      }
+      else {
+        await http.auth.use('web').login(user)
+      }
     }
     else {
       // throw new Error('Invalid credentials')
@@ -116,7 +121,7 @@ export default function Page() {
           </label>
           <PasswordInput />
           <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-            <p style={{color: "var(--color-error)"}}>
+            <p style={{maxWidth: '180px', lineHeight: 1.2, color: 'var(--color-error)'}}>
               {loginError ?? ' '}
             </p>
             <button type="submit">Login</button>
