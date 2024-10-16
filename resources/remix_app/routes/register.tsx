@@ -30,6 +30,7 @@ import {
 import {
   registrationCookie
 } from "~/cookies.server";
+import { routeStrings } from "#remix_app/constants";
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {
@@ -121,7 +122,7 @@ export default function Page() {
             method="post">
           <h1
               style={{textAlign: "center"}}>Register</h1>
-          <p>Already have an account? <Link to="/login">Log In</Link>
+          <p>Already have an account? <Link to={routeStrings.login}>Log In</Link>
           </p>
           <EmailInput validationErrors={validationErrors} />
           <PasswordInput validationErrors={validationErrors} />

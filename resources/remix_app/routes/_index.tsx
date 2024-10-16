@@ -1,3 +1,4 @@
+import { routeStrings } from '#remix_app/constants';
 import {
   type ActionFunctionArgs, json, type LoaderFunctionArgs, type MetaFunction, redirect,
 } from '@remix-run/node'
@@ -30,7 +31,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
     return redirect('/')
   }
   if (intent === 'log_in') {
-    return redirect('/login')
+    return redirect(routeStrings.login)
   }
   return null
 }

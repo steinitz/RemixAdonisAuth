@@ -23,7 +23,8 @@ import {
   createNewPasswordValidationSchema
 } from "#validators/authenticationValidation";
 import {
-  errorStringUserNotDefined
+  errorStringUserNotDefined,
+  routeStrings
 } from "~/constants";
 
 export const loader = async ({context, params}: LoaderFunctionArgs) => {
@@ -68,7 +69,7 @@ export const action = async ({context, params}: ActionFunctionArgs) => {
 
   const returnValue = validationErrors ?
     json({validationErrors}) :
-    redirect(`/login`)
+    redirect(routeStrings.login)
 
   return returnValue
 }
@@ -94,7 +95,7 @@ export default function Page() {
               <p>You can request another password-reset from the Login page</p>
               <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                 <button onClick={() => navigate(`/contact`)}>Contact Support</button>
-                <button onClick={() => navigate(`/login`)}>Login Page</button>
+                <button onClick={() => navigate(routeStrings.login)}>Login Page</button>
               </div>
             </>) :
             (<>
@@ -135,7 +136,7 @@ export function ErrorBoundary() {
               <h1>Error</h1>
               <p>No valid password-reset token found</p>
               <p>Please initiate a password-reset request in the Login page</p>
-              <Link to="/login">Login</Link>
+              <Link to={routeStrings.login}>Login</Link>
             </Form>
           </section>
         </main>

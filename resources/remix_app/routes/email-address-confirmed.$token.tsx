@@ -7,7 +7,8 @@ import {
   useRouteError
 } from "@remix-run/react";
 import {
-  errorStringUserNotDefined
+  errorStringUserNotDefined,
+  routeStrings
 } from "~/constants";
 import {
   registrationCookie
@@ -53,7 +54,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
   const {intent} = http.request.only(['intent'])
 
   if (intent === intents.login) {
-    return redirect('/login')
+    return redirect(routeStrings.login)
   }
   else if (intent === intents.resendLink) {
     // get the email address from the cookie saved by the registration route
