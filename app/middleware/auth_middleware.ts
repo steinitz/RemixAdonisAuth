@@ -2,13 +2,14 @@ import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 import type { Authenticators } from '@adonisjs/auth/types'
 import { wildcardCompare } from '#remix_app/utilities/wildcardCompare'
+import { routeStrings } from '#remix_app/constants'
 /**
  * Auth middleware is used authenticate HTTP requests and deny
  * access to unauthenticated users.
  */
 
 export default class AuthMiddleware {
-  loginRoute = '/login'
+  loginRoute = routeStrings.login
 
   // Note that the Adonis string, ctx.route.pattern, used by matchesRoute(),
   // is always '/*' when we delegate the routing to Remix.  So we can't use

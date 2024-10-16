@@ -1,3 +1,4 @@
+import { routeStrings } from '#remix_app/constants';
 import {
   json,
   type LoaderFunctionArgs,
@@ -24,10 +25,10 @@ export const action = async ({context}: ActionFunctionArgs) => {
   console.log({intent})
   if (intent === 'log_out') {
     await http.auth.use('web').logout()
-    return redirect('/login')
+    return redirect(routeStrings.login)
   }
   if (intent === 'log_in') {
-    return redirect('/login')
+    return redirect(routeStrings.login)
   }
   return null
 }

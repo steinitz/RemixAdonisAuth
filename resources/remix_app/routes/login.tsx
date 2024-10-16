@@ -15,7 +15,7 @@ import {
   createIsEmailValidationSchema,
   createLoginValidationSchema
 } from "#validators/authenticationValidation";
-import {ValidatedInput} from "#remix_app/components/ValidatedInput";
+import {ValidatedInput} from "~/components/ValidatedInput";
 
 const validationSchema = createLoginValidationSchema()
 

@@ -12,3 +12,8 @@ export const noValue = '_'
 // email-address-confirmed and reset-password routes.
 // The idea name for the constant eludes me.
 export const errorStringUserNotDefined = "User is not defined";
+
+// route strings
+export const routeStrings = {
+  login: '/login',
+}
