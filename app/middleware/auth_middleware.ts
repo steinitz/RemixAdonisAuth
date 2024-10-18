@@ -12,8 +12,8 @@ export default class AuthMiddleware {
   loginRoute = routeStrings.login
 
   // Note that the Adonis string, ctx.route.pattern, used by matchesRoute(),
-  // is always '/*' when we delegate the routing to Remix.  So we can't use
-  // matchesRoute() here.
+  // is always '/*' when we delegate the routing to Remix (see start/routes).
+  // So we can't use Adonis' matchesRoute() here.
   openRoutes = [
     '/',
     `${this.loginRoute}`,

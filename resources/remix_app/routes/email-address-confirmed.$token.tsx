@@ -64,7 +64,10 @@ export const action = async ({context}: ActionFunctionArgs) => {
 
     const userService = await make('user_service')
 
-    await sendEmailAddressConfirmationEmail(userService, registeredEmail, getDomainUrl(http.request));
+    await sendEmailAddressConfirmationEmail(
+      userService,
+      registeredEmail,
+      getDomainUrl(http.request));
     return redirect(`/`)
   }
 

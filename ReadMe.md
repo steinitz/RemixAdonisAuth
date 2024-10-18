@@ -18,3 +18,20 @@ A good next step could be to follow [our guide on how to build a login flow](htt
 
 After following the above to create a project and build the  login flow, I began adding other athentication basics 
 such as reset password, email confirmation, contact support form.
+
+## A note on Unique Email Addresses
+
+The registration process might fail.
+So we might have to ask the user to register again but want to avoid the annoying case where the user's email is already in the
+database so the unique-ing fails... "contact support".
+
+We have to be careful overriding the unique-ing. It would have to be temporary.  Or would it?
+Maybe the whole unique-ing idea is flawed:
+Maybe any user who can get a message at an email address should be able to claim that account, provided the email is unconfirmed.
+That barely takes into consideration Adrian’s (security expert) story of people buying expired domains for sinister purposes e.g. claiming old accounts.
+
+For now, if the email is not confirmed, and the user is trying to register, we assume it’s a fresh account and let them register, providing they can get a message at that email address.  
+
+How would it get unconfirmed?  We currently never un-confirm the email.
+
+We treat username the same.

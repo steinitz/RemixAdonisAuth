@@ -30,7 +30,10 @@ import {
 import {
   registrationCookie
 } from "~/cookies.server";
-import { routeStrings } from "#remix_app/constants";
+import {
+  errorStringUserNotDefined,
+  routeStrings
+} from "#remix_app/constants";
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {
@@ -71,14 +74,39 @@ export const action = async ({context}: ActionFunctionArgs) => {
   // get the UserService from the app container
   const userService = await make('user_service')
 
-  // const user =
-  await userService.createUser({
-    email,
-    username,
-    fullName,
-    preferredName,
-    password,
-  })
+  // the user might exist already because over validation passes
+  // the unique test if the email address is unconfirmed
+  // However, since the database itself has a unique requirement
+  // on email addresses we need to avoid creating a new user,
+  // which will fail.
+  // Instead, we update the existing user.
+
+  try {
+    const user = await userService.getUserForEmail(email);
+    userService.updateUser({
+      user,
+      email,
+      username,
+      fullName,
+      preferredName,
+      password,
+    })
+  }
+  catch(error) {
+    console.log({error})
+    if (error.message.includes(errorStringUserNotDefined)) {
+      await userService.createUser({
+        email,
+        username,
+        fullName,
+        preferredName,
+        password
+      });
+    }
+    else {
+      throw error
+    }
+  }
 
   // save the unconfirmed email address for 24 hours
   // so we can show it on the index page or resend the
@@ -109,11 +137,10 @@ export const action = async ({context}: ActionFunctionArgs) => {
 }
 
 export default function Page() {
-
   const actionData: Record<string, any> | undefined = useActionData<typeof action>()
   const validationErrors = actionData?.validationErrors ?? []
 
-  validationErrors && console.log('register page', {validationErrors})
+  // validationErrors && console.log('register page', {validationErrors})
 
   return (
     <main>

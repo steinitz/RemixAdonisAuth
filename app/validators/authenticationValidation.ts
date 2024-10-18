@@ -16,6 +16,7 @@ export const isEmailValidationRule = {
 }
 
 // Unique test, shared by username and email. Kinda cool
+/*
 const isUnique = async (
   db: Database,
   value: string,
@@ -29,6 +30,33 @@ const isUnique = async (
   const user = await db
     .from('users')
     .whereNot('id', field.meta.userId || 0) // we assume no id of '0'
+
+    // field.name gives a type error, but field.wildCardPath
+    // seems odd and maybe fragile.  What is it?
+    .where(field.wildCardPath, value)
+    .first()
+  return !user
+}
+*/
+
+const isUnique = async (
+  db: Database,
+  value: string,
+  field: FieldContext,
+) => {
+  // Neither whereNot nor where clauses had 'like' in the
+  // Adocast example, but the query fails without 'like'.
+  // The 'like' seems fraught, especially the whereNot
+
+  // console.log ({field})
+  const user = await db
+    .from('users')
+    .whereNot('id', field.meta.userId || 0) // we assume no id of '0'
+
+    // if email never confirmed we let them claim it
+    // subject to being able to get an email at that
+    // address.
+    .where('is_email_confirmed', true)
 
     // field.name gives a type error, but field.wildCardPath
     // seems odd and maybe fragile.  What is it?
