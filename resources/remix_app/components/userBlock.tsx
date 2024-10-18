@@ -3,7 +3,6 @@ import {hideFormBorder} from "./styles";
 
 export function UserBlock(props: {email: string}) {
   const loggedInTextTopMarginTweak = 21
-  const loggedInButtonLeftMarginTweak = '-89px' // allows putting something close to the logout button
 
   const adjustVerticalLocationStyle = {
     // nasty tweaking to match the vertical position
@@ -31,7 +30,7 @@ export function UserBlock(props: {email: string}) {
         <Link
           style={{
             ...adjustVerticalLocationStyle,
-            marginRight: '21px',
+            marginRight: '8px',
           }}
           to="/profile"
         >
@@ -43,8 +42,6 @@ export function UserBlock(props: {email: string}) {
         style={{
           ...hideFormBorder,
           maxWidth: "100px",
-          // marginLeft: loggedInButtonLeftMarginTweak,
-          borderColor: "pink",
         }}
       >
         <input type="hidden" name="intent" value={"log_out"}/>
