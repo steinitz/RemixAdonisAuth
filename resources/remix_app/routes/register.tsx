@@ -17,19 +17,19 @@ import {
   PasswordInput,
   PreferredNameInput,
   UsernameInput
-} from "~/components/InputFields";
+} from "#remix_app/components/InputFields";
 import {
   createRegistrationValidationSchema
 } from "#validators/authenticationValidation";
 import {
   getDomainUrl
-} from "~/utilities/getDomainUrl";
+} from "#remix_app/utilities/getDomainUrl";
 import {
   sendEmailAddressConfirmationEmail
 } from "#remix_app/emails/sendEmailAddressConfirmationEmail";
 import {
   registrationCookie
-} from "~/cookies.server";
+} from "#remix_app/cookies.server";
 import {
   errorStringUserNotDefined,
   routeStrings

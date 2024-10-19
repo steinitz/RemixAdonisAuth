@@ -5,7 +5,7 @@ import {
 } from "#remix_app/constants";
 import {
   convertTextMessageToHtml
-} from "~/utilities/convertTextMessageToHtml";
+} from "#remix_app/utilities/convertTextMessageToHtml";
 
 const plainTextMessage = (
   greetingName: string,

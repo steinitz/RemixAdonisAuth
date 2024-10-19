@@ -14,10 +14,9 @@ The project follows the conventional AdonisJS structure, with the Remix applicat
 
 A good next step could be to follow [our guide on how to build a login flow](https://matstack.dev/remix-adonisjs/hands-on/building-a-login-flow) for your new application.
 
-## Then
+## Expanding Authentication
 
-After following the above to create a project and build the  login flow, I began adding other athentication basics 
-such as reset password, email confirmation, contact support form.
+After following the above to create a project and build the login flow, I added other athentication basics: validation/uniqueness, password reset, email confirmation, contact-support form.
 
 ## A note on Unique Email Addresses
 

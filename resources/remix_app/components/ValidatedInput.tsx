@@ -1,9 +1,9 @@
 import {
   noValue
-} from "~/constants";
+} from "#remix_app/constants";
 import {
   FormFieldError
-} from "~/components/FormFieldError";
+} from "#remix_app/components/FormFieldError";
 
 export const errorMessageFor = (fieldName: string, validationErrors: any[] | undefined) => {
   const {message} = validationErrors?.find(vError => vError.field === fieldName) ?? {};

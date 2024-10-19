@@ -10,7 +10,7 @@ import {
   useLoaderData,
   Form,
 } from "@remix-run/react";
-import {UserBlock} from "~/components/userBlock";
+import {UserBlock} from "#remix_app/components/userBlock";
 
 export const meta: MetaFunction = () => {
   return [

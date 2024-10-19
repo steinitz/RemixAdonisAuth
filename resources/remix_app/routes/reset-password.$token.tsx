@@ -18,14 +18,14 @@ import {
 } from "@remix-run/node";
 import {
   PasswordInput
-} from "~/components/InputFields";
+} from "#remix_app/components/InputFields";
 import {
   createNewPasswordValidationSchema
 } from "#validators/authenticationValidation";
 import {
   errorStringUserNotDefined,
   routeStrings
-} from "~/constants";
+} from "#remix_app/constants";
 
 export const loader = async ({context, params}: LoaderFunctionArgs) => {
   const {

@@ -3,14 +3,14 @@ import {
 } from "react";
 import {
   FormFieldError
-} from "~/components/FormFieldError";
+} from "#remix_app/components/FormFieldError";
 import {
   errorMessageFor,
   ValidatedInput
-} from "~/components/ValidatedInput";
+} from "#remix_app/components/ValidatedInput";
 import {
   fieldLabelSubtext
-} from "~/components/styles";
+} from "#remix_app/components/styles";
 
 export function PasswordInput({validationErrors = []}: {validationErrors?: any[]}) {
   const [shouldShowPassword, setShouldShowPassword] = useState(false)

@@ -8,7 +8,7 @@ import {
   useRouteError,
   useSearchParams
 } from "@remix-run/react";
-import {noValue} from "~/constants";
+import {noValue} from "#remix_app/constants";
 
 export const loader = ({context}: LoaderFunctionArgs) => {
   const {

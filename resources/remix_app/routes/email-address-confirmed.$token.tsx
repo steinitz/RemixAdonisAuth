@@ -9,16 +9,16 @@ import {
 import {
   errorStringUserNotDefined,
   routeStrings
-} from "~/constants";
+} from "#remix_app/constants";
 import {
   registrationCookie
-} from "~/cookies.server";
+} from "#remix_app/cookies.server";
 import {
   sendEmailAddressConfirmationEmail
-} from "~/emails/sendEmailAddressConfirmationEmail";
+} from "#remix_app/emails/sendEmailAddressConfirmationEmail";
 import {
   getDomainUrl
-} from "~/utilities/getDomainUrl";
+} from "#remix_app/utilities/getDomainUrl";
 
 export const loader = async ({context, params}: LoaderFunctionArgs) => {
   const {

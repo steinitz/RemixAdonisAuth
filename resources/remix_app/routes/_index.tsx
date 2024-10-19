@@ -9,11 +9,11 @@ import {
 import {
   hideFormBorder,
   repurposedFormBoxStyle
-} from "~/components/styles";
-import {UserBlock} from "~/components/userBlock";
+} from "#remix_app/components/styles";
+import {UserBlock} from "#remix_app/components/userBlock";
 import {
   registrationCookie
-} from "~/cookies.server";
+} from "#remix_app/cookies.server";
 
 export const meta: MetaFunction = () => {
   return [

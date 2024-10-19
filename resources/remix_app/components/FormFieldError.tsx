@@ -1,4 +1,4 @@
-import {noValue} from "~/constants";
+import {noValue} from "#remix_app/constants";
 
 // we expect either an error message or the noValue string - makes it easier to
 // format consistently between the error and no error state

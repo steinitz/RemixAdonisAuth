@@ -17,7 +17,7 @@ import {
   UsernameInput,
   PasswordInput,
   PreferredNameInput
-} from "~/components/InputFields";
+} from "#remix_app/components/InputFields";
 import {
   createProfileValidationSchema,
 } from "#validators/authenticationValidation";

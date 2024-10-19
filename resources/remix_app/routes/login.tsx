@@ -9,13 +9,13 @@ import {
   useActionData,
   useRouteError
 } from '@remix-run/react'
-import {noValue} from '~/constants'
-import {PasswordInput} from "~/components/InputFields";
+import {noValue} from '#remix_app/constants'
+import {PasswordInput} from "#remix_app/components/InputFields";
 import {
   createIsEmailValidationSchema,
   createLoginValidationSchema
 } from "#validators/authenticationValidation";
-import {ValidatedInput} from "~/components/ValidatedInput";
+import {ValidatedInput} from "#remix_app/components/ValidatedInput";
 
 const validationSchema = createLoginValidationSchema()
 

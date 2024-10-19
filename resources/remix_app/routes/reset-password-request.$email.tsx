@@ -7,11 +7,11 @@ import {
   useLoaderData,
   useRouteError
 } from "@remix-run/react";
-import {sendPasswordResetEmail} from "~/emails/sendPasswordResetEmail";
-import {getDomainUrl} from "~/utilities/getDomainUrl";
-import {noValue} from "~/constants";
+import {sendPasswordResetEmail} from "#remix_app/emails/sendPasswordResetEmail";
+import {getDomainUrl} from "#remix_app/utilities/getDomainUrl";
+import {noValue} from "#remix_app/constants";
 import {createPasswordResetValidationSchema} from "#validators/authenticationValidation";
-import {ValidatedInput} from "~/components/ValidatedInput";
+import {ValidatedInput} from "#remix_app/components/ValidatedInput";
 
 export const loader = ({params}: LoaderFunctionArgs) => {
   const email = params.email
