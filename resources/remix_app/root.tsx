@@ -1,6 +1,7 @@
 import {Links, Meta, Outlet, Scripts, ScrollRestoration} from '@remix-run/react'
+import type {ReactNode} from 'react';
 
-export function Layout({children}: {children: React.ReactNode}) {
+export function Layout({children}: {children: ReactNode}) {
   return (
     <html lang="en" color-mode="user">
     <head>

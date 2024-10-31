@@ -1,7 +1,8 @@
 // hack to get email address and login/logout buttons to line up
 const loggedInButtonFormTopMarginTweak = '-21px'
+import type {CSSProperties} from 'react'
 
-export const hideFormBorder: React.CSSProperties = {
+export const hideFormBorder: CSSProperties = {
   border: "none",
   boxShadow: "none",
   // textAlign: "right",
@@ -10,7 +11,7 @@ export const hideFormBorder: React.CSSProperties = {
   minWidth: 'auto',
 }
 
-export const fieldLabelSubtext: React.CSSProperties = {
+export const fieldLabelSubtext: CSSProperties = {
   fontSize: '0.8rem',
   fontWeight: 'lighter',
   paddingLeft: '0.3rem',

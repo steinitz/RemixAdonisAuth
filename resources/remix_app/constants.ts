@@ -17,6 +17,7 @@ export const noValue = '_'
 // avoidd the annoying case where the user's email is already in the
 // database so the unique-ing fails...
 export const errorStringUserNotDefined = "User is not defined";
+export const errorRowNotFound = "Row not found";
 
 // route strings
 export const routeStrings = {

@@ -31,6 +31,7 @@ import {
   registrationCookie
 } from "#remix_app/cookies.server";
 import {
+  errorRowNotFound,
   errorStringUserNotDefined,
   routeStrings
 } from "#remix_app/constants";
@@ -93,15 +94,24 @@ export const action = async ({context}: ActionFunctionArgs) => {
     })
   }
   catch(error) {
-    console.log({error})
-    if (error.message.includes(errorStringUserNotDefined)) {
-      await userService.createUser({
-        email,
-        username,
-        fullName,
-        preferredName,
-        password
-      });
+    if (
+      error.message.includes(errorStringUserNotDefined) ||
+      error.message.includes(errorRowNotFound)
+    ) {
+      console.log('creating new user with email', {email})
+      try {
+        await userService.createUser({
+          email,
+          username,
+          fullName,
+          preferredName,
+          password
+        })
+      }
+      catch(error) {
+        console.log({error})
+        throw error
+      }
     }
     else {
       throw error

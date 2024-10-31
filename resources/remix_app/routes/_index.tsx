@@ -64,10 +64,17 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
     const cookie =
       (await registrationCookie.parse(cookieHeader ?? '' )) || {};
     const unconfirmedEmail = cookie?.email
-    if (unconfirmedEmail) {
-      return json({
-        unconfirmedEmail,
-      })
+
+    if (unconfirmedEmail !== undefined && unconfirmedEmail !== '') {
+      // we only want this data on the first visit to this page
+      // after registration, so we clear the cookie
+      console.log({cookie})
+      return json({unconfirmedEmail},
+        {
+          headers: {
+            "Set-Cookie": await cookie?.serialize?.("", {maxAge: 1}),
+          },
+        })
     }
     else {
       return null
