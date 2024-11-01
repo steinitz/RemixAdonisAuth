@@ -9,7 +9,8 @@ import {
   isRouteErrorResponse,
   Link, useActionData,
   useLoaderData,
-  useRouteError
+  useRouteError,
+  useSubmit
 } from "@remix-run/react";
 import {
   EmailInput,
@@ -22,6 +23,10 @@ import {
   createProfileValidationSchema,
 } from "#validators/authenticationValidation";
 import User from '#models/user';
+import {
+  SyntheticEvent,
+  useRef, useState } from 'react';
+import Dialog from '#remix_app/components/Dialog';
 
 export const loader = async ({context}: LoaderFunctionArgs) => {
   const auth = context.http.auth
@@ -59,8 +64,12 @@ export const action = async ({context}: ActionFunctionArgs) => {
   const auth = context.http.auth
   const user = auth.user
   const userService = await make('user_service')
+
+  // the form uses the intent key to tell us whether to save changes or delete the account
   const {intent} = http.request.only(['intent'])
   console.log('logging intent', {intent})
+
+  // two utility functions to save changes or delete the account
 
   const saveChanges = async () => {
     // get form data
@@ -85,18 +94,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
       return json({validationErrors})
     }
 
-    // if no validation errors create the user
-
-    // get the UserService from the app container
-
-    // const user = await userService.createUser({
-    //   email,
-    //   username,
-    //   preferredName,
-    //   fullName,
-    //   password,
-    // })
-    if (!user) {
+     if (!user) {
       throw new Error('no user')
     }
     userService.updateUser({user, email, username, preferredName, fullName, password})
@@ -112,6 +110,8 @@ export const action = async ({context}: ActionFunctionArgs) => {
     userService.deleteUser(user)
   }
 
+  // do it
+
   if (intent === intents.save) {
     return saveChanges()
   }
@@ -121,20 +121,73 @@ export const action = async ({context}: ActionFunctionArgs) => {
     return redirect('/')
   }
   else {
-    console.warn("invalid intent - expected save or delete", {intent})
+    console.error("invalid intent - expected save or delete", {intent})
   }
 }
 
 export default function Page() {
   const {validationErrors} = useActionData<typeof action>() ?? []
-  console.log('profile page', {validationErrors})
+  const [shouldShowConfirmation, setShouldShowConfirmation] = useState(false)
+  // console.log('profile page', {validationErrors})
   const {email, username, preferredName, fullName} = useLoaderData<typeof loader>()
-  console.log('profile page', {email, username, preferredName, fullName})
+  // console.log('profile page', {email, username, preferredName, fullName})
+  const submit = useSubmit()
+  const formRef = useRef(null)
+
+  const handleDeleteAccountRequest = (event: SyntheticEvent) => {
+    // prevent this button from submitting the form
+    event.preventDefault();
+    event.stopPropagation();
+
+    // show the confirmation dialog
+    setShouldShowConfirmation(true)
+  }
+
+  const handleDeleteConfirmation = () => {
+    const formData = new FormData(formRef?.current || undefined)
+    formData.set("intent", intents.delete)
+    submit(formData, {
+      method: "post"
+    })
+  }
+
   return (
     <main>
-      <section > {/* gives it a nice width */}
+      <section> {/* gives it a nice width */}
         <Form
-          method="post">
+          method="post"
+          ref={formRef}
+        >
+            <Dialog
+              isOpen={shouldShowConfirmation}
+              onClose={
+                () => setShouldShowConfirmation(false)
+              }
+            >
+              <h3>Delete Account? Can't be undone</h3>
+              <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between"
+                  }}
+              >
+                <button
+                  type="submit"
+                  name="intent" value={intents.delete}
+                  onClick={handleDeleteConfirmation}
+                  style={{
+                    backgroundColor: "var(--color-error)",
+                    borderColor: "var(--color-error)"
+                  }}
+                >
+                  Delete
+                </button>
+                <button onClick={() => setShouldShowConfirmation(false)}>
+                  Cancel
+                </button>
+              </div>
+            </Dialog>
           <h1
             style={{textAlign: "center"}}
           >
@@ -165,8 +218,7 @@ export default function Page() {
             }}
           >
             <button
-              type="submit"
-              name="intent" value={intents.delete}
+              onClick={handleDeleteAccountRequest}
               style={{
                 backgroundColor: 'var(--color-error)',
                 borderColor: 'var(--color-error)'
