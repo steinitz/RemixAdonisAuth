@@ -12,7 +12,8 @@ import {
 } from "#remix_app/components/styles";
 import {UserBlock} from "#remix_app/components/userBlock";
 import {
-  registrationCookie
+  registrationCookie,
+  registrationCookieClear
 } from "#remix_app/cookies.server";
 
 export const meta: MetaFunction = () => {
@@ -63,6 +64,7 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
     const cookieHeader = context.http.request.request.headers.cookie;
     const cookie =
       (await registrationCookie.parse(cookieHeader ?? '' )) || {};
+    console.log('_index loader', {cookie})
     const unconfirmedEmail = cookie?.email
 
     if (unconfirmedEmail !== undefined && unconfirmedEmail !== '') {
@@ -72,7 +74,7 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
       return json({unconfirmedEmail},
         {
           headers: {
-            "Set-Cookie": await cookie?.serialize?.("", {maxAge: 1}),
+            ...registrationCookieClear
           },
         })
     }

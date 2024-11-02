@@ -21,3 +21,12 @@ const registrationMaxAge = 24 *60 * 60 * 1000 // twenty-four hours
 export const registrationCookie = createCookie(
   'email', {maxAge: registrationMaxAge, secure: true}
 )
+
+// registrationCookie helpers
+
+// add this to the headers of the response - see profile.tsx and _index.tsx
+export const registrationCookieClear = {
+  // Is this the best way to delete the cookie?
+  // The move fine-grained deletion, of just the email, doesn't seem to work
+  "Set-Cookie": await registrationCookie?.serialize?.('', {maxAge: 1}),
+}

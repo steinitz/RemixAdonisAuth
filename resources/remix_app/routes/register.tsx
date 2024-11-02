@@ -124,7 +124,6 @@ export const action = async ({context}: ActionFunctionArgs) => {
   const cookieHeader = context.http.request.request.headers.cookie;
   const cookie =
     await registrationCookie.parse(cookieHeader ?? '' ) || {};
-  console.log('register action', {cookie})
   cookie.email = email
 
   await sendEmailAddressConfirmationEmail(userService, email, getDomainUrl(http.request));

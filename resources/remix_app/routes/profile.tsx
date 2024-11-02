@@ -2,8 +2,9 @@ import {
   type ActionFunctionArgs,
   type  LoaderFunctionArgs,
   json,
-  redirect
-} from '@remix-run/node'
+  redirect,
+  TypedResponse
+} from "@remix-run/node";
 import {
   Form,
   isRouteErrorResponse,
@@ -27,6 +28,10 @@ import {
   SyntheticEvent,
   useRef, useState } from 'react';
 import Dialog from '#remix_app/components/Dialog';
+import {
+  registrationCookieClear
+} from "#remix_app/cookies.server";
+
 
 export const loader = async ({context}: LoaderFunctionArgs) => {
   const auth = context.http.auth
@@ -69,6 +74,8 @@ export const action = async ({context}: ActionFunctionArgs) => {
   const {intent} = http.request.only(['intent'])
   console.log('logging intent', {intent})
 
+  let result: ReturnType<typeof redirect> | string | TypedResponse<any> = redirect('/')
+
   // two utility functions to save changes or delete the account
 
   const saveChanges = async () => {
@@ -91,14 +98,13 @@ export const action = async ({context}: ActionFunctionArgs) => {
     catch (error) {
       validationErrors = error.messages
       console.log({validationErrors})
-      return json({validationErrors})
+      result = json({validationErrors})
     }
-
-     if (!user) {
+    if (!user) {
       throw new Error('no user')
     }
     userService.updateUser({user, email, username, preferredName, fullName, password})
-    return redirect('/home')
+    // return redirect('/home')
   }
 
   const deleteUser = async () => {
@@ -108,21 +114,31 @@ export const action = async ({context}: ActionFunctionArgs) => {
       throw new Error('no user')
     }
     userService.deleteUser(user)
+    // delete any registration cookie which might be hanging around
   }
 
   // do it
 
   if (intent === intents.save) {
-    return saveChanges()
+    saveChanges()
+    result = redirect('/home')
   }
   else if (intent === intents.delete) {
     await http.auth.use('web').logout()
     await deleteUser()
-    return redirect('/')
+    // delete any registration cookie which might be hanging around
+
+    result = redirect(
+      '/',
+      {headers: {...registrationCookieClear}}
+    )
   }
   else {
     console.error("invalid intent - expected save or delete", {intent})
   }
+
+  console.log('profile action return value', {result})
+  return result
 }
 
 export default function Page() {
@@ -164,7 +180,7 @@ export default function Page() {
                 () => setShouldShowConfirmation(false)
               }
             >
-              <h3>Delete Account? Can't be undone</h3>
+              <h3>Delete Account? &nbsp;Can't be undone.</h3>
               <div
                   style={{
                     display: "flex",
