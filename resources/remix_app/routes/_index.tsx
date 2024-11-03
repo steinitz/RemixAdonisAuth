@@ -4,13 +4,14 @@ import {
 } from '@remix-run/node'
 import {
   Form,
+  Link,
   useLoaderData
 } from "@remix-run/react";
 import {
   hideFormBorder,
   repurposedFormBoxStyle
 } from "#remix_app/components/styles";
-import {UserBlock} from "#remix_app/components/userBlock";
+import {adjustVerticalLocationStyle, UserBlock} from "#remix_app/components/userBlock";
 import {
   registrationCookie,
   registrationCookieClear
@@ -106,38 +107,54 @@ export default function Index() {
           <div>
           {
             email ?
-            // some nasty tweaks to align the login button and loggedin text
-            <UserBlock email={email}/>
-            :
-            <Form method="POST" style={hideFormBorder} >
-              <input type="hidden" name="intent" value={'log_in'}/>
-              <button style={{}} type={'submit'}>Login</button>
-            </Form>
+              <UserBlock email={email} />
+              :
+              <div style={{
+                display: "flex"
+                // justifyContent: 'stretch',
+              }}
+              >
+                 <div>
+                  <Link
+                    style={{
+                      ...adjustVerticalLocationStyle,
+                      marginRight: '34px'
+                    }}
+                    to="/contact"
+                  >
+                    Support
+                  </Link>
+                </div>
+                <Form method="POST" style={hideFormBorder}>
+                  <input type="hidden" name="intent" value={"log_in"} />
+                  <button style={{}} type={"submit"}>Login</button>
+                </Form>
+              </div>
           }
+          </div>
         </div>
-      </div>
-      </nav>
+          </nav>
 
-      {/*<button type="submit">Add Accounts and Wallets</button>*/}
-      { unconfirmedEmail &&
-        <section>
-        <div style={repurposedFormBoxStyle}>
-          <h1>We've sent a confirmation email</h1>
-          <p style={{
-            textAlign: "center",
-            marginTop: "-8px"
-          }}>to {unconfirmedEmail}</p>
-          <p>Please</p>
-          <p>1. find our email in your inbox (or spam mailbox)</p>
-          <p>2. follow the instructions to activate your account</p>
-        </div>
-        </section>
-      }
-      <section>
-        <ul>
-          <li>
-            <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-              Remix Docs
+          {/*<button type="submit">Add Accounts and Wallets</button>*/}
+            {unconfirmedEmail &&
+              <section>
+                <div style={repurposedFormBoxStyle}>
+                  <h1>We've sent a confirmation email</h1>
+                  <p style={{
+                    textAlign: "center",
+                    marginTop: "-8px"
+                  }}>to {unconfirmedEmail}</p>
+                  <p>Please</p>
+                  <p>1. find our email in your inbox (or spam mailbox)</p>
+                  <p>2. follow the instructions to activate your account</p>
+                </div>
+              </section>
+            }
+            <section>
+              <ul>
+                <li>
+                  <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
+                  Remix Docs
             </a>
           </li>
           <li>
