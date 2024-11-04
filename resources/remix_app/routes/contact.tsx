@@ -8,6 +8,9 @@ import {sendSupportEmail} from "#remix_app/emails/sendSupportEmail";
 import {FormFieldError} from "#remix_app/components/FormFieldError";
 import {errorMessageFor, ValidatedInput} from "#remix_app/components/ValidatedInput";
 import {contactFormCookie} from "#remix_app/cookies.server";
+import {
+  getAuthenticatedUser
+} from "#remix_app/utilities/adonisHelpers";
 
 const validationSchema = vine.object({
   email: vine.string().email(),
@@ -71,7 +74,14 @@ export const action = async ({context}: ActionFunctionArgs) => {
 }
 
 export const loader = async ({context}: LoaderFunctionArgs) => {
-  const email = context.http.auth.user?.email
+  const user = await getAuthenticatedUser(context);
+
+  // I would prefer not to have to use snake for the attributes.
+  // But how?  Something with the UserService?
+  const {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    preferred_name, full_name, email
+  } = user
 
   // we save the user's message in the action function
   // and retrieve it here, from the cookie
@@ -81,13 +91,15 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
 
   return json({
     email,
-    message: cookie.message,
+    name: full_name || preferred_name,
+    message: cookie.message
   })
 }
 
 export default function Page() {
   const {
     email = '',
+    name = '',
     message // the saved previous message for user convenience
   } = useLoaderData<typeof loader>()
   const {validationErrors} = useActionData<typeof action>() ?? []
@@ -101,6 +113,7 @@ export default function Page() {
             Name
             <ValidatedInput
               fieldName='name'
+              defaultValue={name}
               validationErrors={validationErrors}
             />
           </label>

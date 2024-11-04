@@ -8,7 +8,7 @@ import {
   useRouteError
 } from "@remix-run/react";
 import {sendPasswordResetEmail} from "#remix_app/emails/sendPasswordResetEmail";
-import {getDomainUrl} from "#remix_app/utilities/getDomainUrl";
+import {getDomainUrl} from "#remix_app/utilities/adonisHelpers";
 import {noValue} from "#remix_app/constants";
 import {createPasswordResetValidationSchema} from "#validators/authenticationValidation";
 import {ValidatedInput} from "#remix_app/components/ValidatedInput";

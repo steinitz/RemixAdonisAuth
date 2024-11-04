@@ -5,9 +5,17 @@ import {
 import {
   useLoaderData, isRouteErrorResponse, useRouteError, Form
 } from "@remix-run/react";
+import {
+  getAuthenticatedUser
+} from "#remix_app/utilities/adonisHelpers";
 
 export const loader = async ({context}: LoaderFunctionArgs) => {
-  const email = context.http.auth.user?.email
+  const user = await getAuthenticatedUser(context);
+
+  // I would prefer not to have to use snake for the attributes.
+  // But how?  Something with the UserService?
+  const {email} = user
+
   console.log("index loader", {email})
 
   return json({

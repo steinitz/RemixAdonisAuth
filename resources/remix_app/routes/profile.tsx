@@ -1,14 +1,15 @@
 import {
   type ActionFunctionArgs,
-  type  LoaderFunctionArgs,
   json,
+  type  LoaderFunctionArgs,
   redirect,
   TypedResponse
 } from "@remix-run/node";
 import {
   Form,
   isRouteErrorResponse,
-  Link, useActionData,
+  Link,
+  useActionData,
   useLoaderData,
   useRouteError,
   useSubmit
@@ -16,33 +17,30 @@ import {
 import {
   EmailInput,
   FullNameInput,
-  UsernameInput,
   PasswordInput,
-  PreferredNameInput
+  PreferredNameInput,
+  UsernameInput
 } from "#remix_app/components/InputFields";
 import {
-  createProfileValidationSchema,
+  createProfileValidationSchema
 } from "#validators/authenticationValidation";
-import User from '#models/user';
 import {
   SyntheticEvent,
-  useRef, useState } from 'react';
-import Dialog from '#remix_app/components/Dialog';
+  useRef,
+  useState
+} from "react";
+import Dialog
+  from "#remix_app/components/Dialog";
 import {
   registrationCookieClear
 } from "#remix_app/cookies.server";
+import {
+  getAuthenticatedUser
+} from "#remix_app/utilities/adonisHelpers";
 
 
 export const loader = async ({context}: LoaderFunctionArgs) => {
-  const auth = context.http.auth
-
-  // for non-authenticated routes the logged-in user won't
-  // be available until we call auth.check()
-  await auth.check()
-
-  // Now we can get attributes of the logged-in user, if any.
-  const user: Record<string, any> = auth.user as User
-  // console.log('profile loader', {user})
+  const user = await getAuthenticatedUser(context);
 
   // I would prefer not to have to use snake for the attributes.
   // But how?  Something with the UserService?

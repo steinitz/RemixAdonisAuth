@@ -18,7 +18,7 @@ import {
 } from "#remix_app/emails/sendEmailAddressConfirmationEmail";
 import {
   getDomainUrl
-} from "#remix_app/utilities/getDomainUrl";
+} from "#remix_app/utilities/adonisHelpers";
 
 export const loader = async ({context, params}: LoaderFunctionArgs) => {
   const {

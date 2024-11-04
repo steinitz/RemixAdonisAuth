@@ -23,7 +23,7 @@ import {
 } from "#validators/authenticationValidation";
 import {
   getDomainUrl
-} from "#remix_app/utilities/getDomainUrl";
+} from "#remix_app/utilities/adonisHelpers";
 import {
   sendEmailAddressConfirmationEmail
 } from "#remix_app/emails/sendEmailAddressConfirmationEmail";
