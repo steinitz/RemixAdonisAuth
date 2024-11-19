@@ -4,7 +4,7 @@ import {createCookie} from "@remix-run/node";
 // in a .server file prevent the code from being
 // unnecesarily on the browser
 
-// I'm not clear if I can but multiple cookie values
+// I'm not clear if I can put multiple cookie values
 // into a single cookie.  Currently only the contact
 // form uses this and only to temporarily store the
 // contact form message, as a user convenience.
@@ -25,8 +25,8 @@ export const registrationCookie = createCookie(
 // registrationCookie helpers
 
 // add this to the headers of the response - see profile.tsx and _index.tsx
-export const registrationCookieClear = {
+export const registrationCookieClear = async () => {
   // Is this the best way to delete the cookie?
   // The move fine-grained deletion, of just the email, doesn't seem to work
-  "Set-Cookie": await registrationCookie?.serialize?.('', {maxAge: 1}),
+  return {"Set-Cookie": await registrationCookie?.serialize?.('', {maxAge: 1})}
 }

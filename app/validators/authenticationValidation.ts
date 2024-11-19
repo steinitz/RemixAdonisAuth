@@ -1,20 +1,14 @@
-import vine from '@vinejs/vine'
+import vine, {VineString} from '@vinejs/vine'
+import {OptionalModifier} from '@vinejs/vine/schema/base/literal'
 import {Database} from '@adonisjs/lucid/database'
 import {FieldContext} from '@vinejs/vine/types'
 
-// console.log('authenticationValidation',{vine})
-
-// Shared uniqueness check
+// Shared uniqueness check, Used by Vine's (actually Lucid's) unique macro
 const isUnique = async (
   db: Database,
   value: string,
   field: FieldContext,
 ) => {
-  // Neither whereNot nor where clauses had 'like' in the
-  // Adocast example, but the query fails without 'like'.
-  // The 'like' seems fraught, especially the whereNot
-
-  // console.log ({field})
   const user = await db
     .from('users')
     .whereNot('id', field.meta.userId || 0) // we assume no id of '0'
@@ -30,25 +24,20 @@ const isUnique = async (
   return !user
 }
 
-// Two shared validation rules: password and email
+//
+// Shared validation rules
+//
 
-export const passwordValidationRule = (isOptional = false) => {
-  // the gratuious lines of code below appease TypeScript
-  // which doesn't like the type of the rule to change
-
+export const passwordValidationRule = (isOptional = false): VineString | OptionalModifier<VineString>  => {
   let passwordBaseRule = vine
     .string()
     .minLength(8)
     .maxLength(255)
 
-  let result
-
+  // let result: VineString | OptionalModifier<VineString> = passwordBaseRule
+  let result: VineString | OptionalModifier<VineString>  = passwordBaseRule
   if (isOptional) {
-    const optionalRule= passwordBaseRule.optional()
-    result = {password: optionalRule}
-  }
-  else {
-    result = {password : passwordBaseRule}
+    result = passwordBaseRule.optional()
   }
 
   return result;
@@ -56,39 +45,49 @@ export const passwordValidationRule = (isOptional = false) => {
 
 const usernameValidationRule = vine
     .string()
-    .unique(isUnique)
     .maxLength(64)
+    .unique(isUnique)
     .optional()
 
-// login also uses this to determine whether the
-// user is logging in with an email or a username
-// Also see createIsEmailValidationSchema, below
+// Login also uses this, indirectly, to determine whether
+// the user is logging in with an email or a username.
+// See createIsEmailValidationSchema, below.
 export const isEmailValidationRule = vine
   .string()
   .email()
   .maxLength(254)
 
+export const fullNameValidationRule = vine
+  .string()
+  .maxLength(255)
+  .optional()
+
+export const preferredNameValidationRule = vine
+  .string()
+  .maxLength(64)
+  .optional()
+
+//
 // Validation functions
+//
 
 export const createRegistrationValidationSchema = () => vine.compile(
   vine.object({
-    email: isEmailValidationRule.unique(isUnique),
-    // email: vine.string().unique(isUnique).email().maxLength(254),
-    ...passwordValidationRule(),
+    email: isEmailValidationRule,
+    password: passwordValidationRule(),
     username: usernameValidationRule,
-    fullName: vine.string().maxLength(255).optional(),
-    preferredName: vine.string().maxLength(64).optional(),
+    fullName: fullNameValidationRule,
+    preferredName: preferredNameValidationRule,
   })
 )
 
 export const createProfileValidationSchema = () => vine.compile(
   vine.object({
     email: isEmailValidationRule.unique(isUnique),
-    ...passwordValidationRule(true),
-    //// ...usernameValidationRule,
-    username: vine.string().unique(isUnique).maxLength(64).optional(),
-    fullName: vine.string().maxLength(255).optional(),
-    preferredName: vine.string().maxLength(64).optional(),
+    password: passwordValidationRule(true),
+    username: usernameValidationRule,
+    fullName: fullNameValidationRule,
+    preferredName: preferredNameValidationRule,
   })
 )
 
@@ -100,22 +99,18 @@ export const createLoginValidationSchema = () => vine.compile(
 )
 
 export const createNewPasswordValidationSchema = () => vine.compile(
-  vine.object(passwordValidationRule())
+  vine.object({password: passwordValidationRule()})
 )
 
 export const createPasswordResetValidationSchema = () => vine.compile(
-// we don't check for exists - no information to hackers
+  // we don't check for exists - no information to hackers
   vine.object({email: isEmailValidationRule})
 )
 
 // login uses this to determine whether the
 // user is logging in with an email or a username
 export const createIsEmailValidationSchema = () => vine.compile(
-  // this gives a validation system failure for some reason
-  // vine.object(isEmailValidationRule)
-  // but this works fine. The only difference is the maxLength
-  // which works elsewhere.  Why?
-  vine.object({email: vine.string().email()})
+  vine.object({email: isEmailValidationRule})
 )
 
 

@@ -1,3 +1,4 @@
+import env from '#start/env'
 import { routeStrings } from '#remix_app/constants';
 import {
   type ActionFunctionArgs, json, type LoaderFunctionArgs, type MetaFunction, redirect,
@@ -38,14 +39,10 @@ export const action = async ({context}: ActionFunctionArgs) => {
   return null
 }
 
-// export const loader = async ({context}: LoaderFunctionArgs) => {//   const service = await context.make('hello_service')
-
-//   return json({//     message: service.getMessage(),
-//   })
-//}
-
 export const loader = async ({context}: LoaderFunctionArgs) => {
   const auth = context.http.auth
+
+  console.log('NODE_ENV', env.get('NODE_ENV'))
 
   // for non-authenticated routes the logged-in user won't
   // be available until we call auth.check()
@@ -75,7 +72,7 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
       return json({unconfirmedEmail},
         {
           headers: {
-            ...registrationCookieClear
+            ... await registrationCookieClear()
           },
         })
     }
@@ -86,7 +83,6 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
 }
 
 export default function Index() {
-  // const {email} = useLoaderData<typeof loader>()
   const loaderData: Record<string, any> | null = useLoaderData<typeof loader>()
   const email = loaderData?.email
   const unconfirmedEmail = loaderData?.unconfirmedEmail
@@ -135,7 +131,7 @@ export default function Index() {
         </div>
           </nav>
 
-          {/*<button type="submit">Add Accounts and Wallets</button>*/}
+            {/*<button type="submit">Add Accounts and Wallets</button>*/}
             {unconfirmedEmail &&
               <section>
                 <div style={repurposedFormBoxStyle}>

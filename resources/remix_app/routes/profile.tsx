@@ -38,7 +38,6 @@ import {
   getAuthenticatedUser
 } from "#remix_app/utilities/adonisHelpers";
 
-
 export const loader = async ({context}: LoaderFunctionArgs) => {
   const user = await getAuthenticatedUser(context);
 
@@ -90,6 +89,9 @@ export const action = async ({context}: ActionFunctionArgs) => {
       // here we just want the errors when vine throws
       await validationSchema.validate (
         {email, password},
+        // Vine validation will use the user Id to avoid
+        // reporting a uniqueness issue for the email
+        // address owned by this user.  Understand?
         {meta: {userId: user?.id}}
       )
     }
@@ -102,7 +104,6 @@ export const action = async ({context}: ActionFunctionArgs) => {
       throw new Error('no user')
     }
     userService.updateUser({user, email, username, preferredName, fullName, password})
-    // return redirect('/home')
   }
 
   const deleteUser = async () => {
@@ -112,7 +113,6 @@ export const action = async ({context}: ActionFunctionArgs) => {
       throw new Error('no user')
     }
     userService.deleteUser(user)
-    // delete any registration cookie which might be hanging around
   }
 
   // do it
@@ -128,7 +128,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
 
     result = redirect(
       '/',
-      {headers: {...registrationCookieClear}}
+      {headers: {...await registrationCookieClear()}}
     )
   }
   else {

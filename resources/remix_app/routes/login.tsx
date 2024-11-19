@@ -27,6 +27,15 @@ const isEmailValidationSchema = createIsEmailValidationSchema()
 
 // called on form submission
 export const action = async ({context}: ActionFunctionArgs) => {
+
+  // This solves a problem where the Login page crashes with
+  // no-context error immediately after clicking the link in
+  // the confirm email message.  Does seem dubious though.
+  if (!context) {
+    console.warn('Login page - no context, returning')
+    return
+  }
+
   const {http, make} = context
 
   // get email (or username) and password from the form submission
@@ -75,7 +84,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
     verifyPasswordResult = await userService.verifyPassword(user, password);
 
     if (verifyPasswordResult === true) {
-     // credentials ok so log in user
+      // credentials ok so log in user
       if (!userService.getIsEmailConfirmed(user)) {
         loginError = "email not confirmed, please check your inbox";
       }

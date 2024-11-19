@@ -39,9 +39,12 @@ export default defineConfig({
     () => import('@adonisjs/shield/shield_provider'),
     () => import('@adonisjs/static/static_provider'),
     () => import('@adonisjs/vite/vite_provider'),
-    () => import('@matstack/remix-adonisjs/remix_provider'),
-    () => import('#providers/service_provider'),
+    // database_provider must be imported before remix_provider or
+    // vine.string().unique remains undefined in production builds
     () => import('@adonisjs/lucid/database_provider'),
+    () => import('@matstack/remix-adonisjs/remix_provider'),
+
+    () => import('#providers/service_provider'),
     () => import('@adonisjs/auth/auth_provider'),
     () => import('@adonisjs/mail/mail_provider'),
   ],
