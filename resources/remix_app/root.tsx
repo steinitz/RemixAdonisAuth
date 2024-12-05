@@ -9,12 +9,13 @@ export function Layout({children}: {children: ReactNode}) {
       <meta name="viewport" content="width=device-width, initial-scale=1" />
 
       {/* simple styling via MVP.css */}
-      <link rel="stylesheet" href="https://unpkg.com/mvp.css" />
-      <link rel="stylesheet" href="/resources/remix_app/mvp-css-override.css" />
-      <link rel="stylesheet" href="/resources/remix_app/styles.css" />
+      <link rel="stylesheet" type="text/css" href="https://unpkg.com/mvp.css" />
+      <link rel="stylesheet" type="text/css" href="/resources/remix_app/mvp-css-override.css" />
+      <link rel="stylesheet" type="text/css" href="/resources/remix_app/styles.css" />
       {/* fonts */}
       <link
         rel="stylesheet"
+        type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
       />
 

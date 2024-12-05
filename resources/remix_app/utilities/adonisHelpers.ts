@@ -23,8 +23,17 @@ export async function getAuthenticatedUser(context: AppLoadContext) {
   // be available until we call auth.check()
   await auth.check();
 
-  // Now we can get attributes of the logged-in user, if any.
+  // Now we can the logged-in user, if any.
   const user: Record<string, any> = auth.user as User;
-  // console.log('profile loader', {user})
-  return user;
+
+  // localize adonis' linting complaints about snake case
+  if (user) {
+    user.preferredName = user.preferred_name;
+    user.fullName = user.full_name;
+  }
+  else {
+    console.log('getAuthenticatedUser - no authenticated user')
+  }
+
+  return user ?? {};
 }

@@ -80,7 +80,7 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
   // But how?  Something with the UserService?
   const {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    preferred_name, full_name, email
+    preferredName, fullName, email
   } = user
 
   // we save the user's message in the action function
@@ -91,7 +91,7 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
 
   return json({
     email,
-    name: full_name || preferred_name,
+    name: fullName || preferredName,
     message: cookie.message
   })
 }

@@ -66,11 +66,18 @@ export const action = async ({context}: ActionFunctionArgs) => {
   }
   catch (error) {
     validationErrors = error.messages
-    console.log({validationErrors})
-    return json({validationErrors})
+    if (validationErrors) {
+      console.log({validationErrors})
+      return json({validationErrors})
+    }
+    else {
+      console.log({error})
+      return json(error)
+    }
+    // return json({validationErrors})
   }
 
-  // if no validation errors create the user
+  // if no error validation or otherwise, create the user
 
   // get the UserService from the app container
   const userService = await make('user_service')

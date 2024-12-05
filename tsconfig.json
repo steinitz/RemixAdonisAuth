@@ -10,5 +10,9 @@
     "paths": {
       "#remix_app/*": ["./resources/remix_app/*"]
     }
+  },
+  // SJS - to allow node to recognize .ts files
+  "ts-node": {
+      "esm": true
   }
 }

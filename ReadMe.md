@@ -1,4 +1,6 @@
-[Official Remix-Adonis Docuementation](https://matstack.dev/remix-adonisjs/)
+[Official Remix-Adonis Documentation](https://matstack.dev/remix-adonisjs/)
+
+This project is based on Jarle's excellent [Remix starter kit](https://github.com/jarle/remix-starter-kit).
 
 ## Here's how I started the project
 
@@ -6,17 +8,21 @@ Create a fresh remix-adonisjs project using the Remix starter template:
 
 `npm init adonisjs@latest -- -K="github:jarle/remix-starter-kit"`
 
-You should now be able to start building! Just jump into your new folder and start the dev server with 
+You should now be able to start building. cd into your new directory and start the dev server with 
 
-`npm run dev`.
+`npm run dev`
 
-The project follows the conventional AdonisJS structure, with the Remix application being placed in resources/remix_app.
+According to Jarle, the project follows a conventional AdonisJS structure, with the Remix application being placed in resources/remix_app. 
 
-A good next step could be to follow [our guide on how to build a login flow](https://matstack.dev/remix-adonisjs/hands-on/building-a-login-flow) for your new application.
+The alternative would be to use Adonis Inertia.  The current solution is more immediate, tactile and hands-off -- more set-and-forget.
+
+Next I followed Jarle's helpful guide to adding authentication to the project: [Adding Authentication](https://matstack.dev/remix-adonisjs/adding-authentication)
 
 ## Expanding Authentication
 
-After following the above to create a project and build the login flow, I added other athentication basics: validation/uniqueness, password reset, email confirmation, contact-support form.
+The point of this project is to add additional, familiar features of an authentication system and then use it as a basis for other projects.
+
+After following the above steps to create a project and build the login flow, I added other athentication basics: validation/uniqueness, password reset, email confirmation, contact-support form, user profile.
 
 ## A note on Unique Email Addresses
 

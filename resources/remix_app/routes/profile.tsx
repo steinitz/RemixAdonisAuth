@@ -45,15 +45,14 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
   // But how?  Something with the UserService?
   const {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    username, preferred_name, full_name, email
+    username, preferredName, fullName, email
   } = user
-
 
   return json({
     email,
     username,
-    preferredName: preferred_name,
-    fullName: full_name,
+    preferredName,
+    fullName,
   })
 }
 
