@@ -8,10 +8,13 @@ export function Layout({children}: {children: ReactNode}) {
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      {/* simple styling via MVP.css */}
+      {/* simple styling via MVP.css - element styles only, no classes*/}
       <link rel="stylesheet" type="text/css" href="https://unpkg.com/mvp.css" />
-      <link rel="stylesheet" type="text/css" href="/resources/remix_app/mvp-css-override.css" />
-      <link rel="stylesheet" type="text/css" href="/resources/remix_app/styles.css" />
+      <link rel="stylesheet" type="text/css" href="/public/mvp-css-override.css" />
+
+      {/* additional styles including classes*/}
+      <link rel="stylesheet" type="text/css" href="/public/styles.css" />
+
       {/* fonts */}
       <link
         rel="stylesheet"

@@ -1,5 +1,6 @@
 import {
-  ActionFunctionArgs, json,
+  ActionFunctionArgs,
+  json,
   redirect
 } from "@remix-run/node";
 import {
@@ -42,6 +43,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
   const {email, password} = http.request.only(['email', 'password'])
 
   let validationErrors
+  let loginError
   try {
     // vine can sanitize what the user typed
     // here we just want the errors when vine throws
@@ -52,49 +54,51 @@ export const action = async ({context}: ActionFunctionArgs) => {
     console.log({validationErrors})
   }
 
-  let isEmail = true // logging in with email or username?
-  // determine whether the user is logging in with an email or a username
-  try {
-    await isEmailValidationSchema.validate ({email});
-  }
-  catch (error) {
-    // console.log('login action', {email}, 'is not an email', {error})
-    isEmail = false
-  }
+  if (!validationErrors) {
 
-  let loginError
-  // look up the user by email
-  // return an error message if not found
-  let user
-  const userService = await make('user_service')
-  try {
-    user = isEmail ?
-      await userService.getUserForEmail(email) :
-      await userService.getUserForUsername(email)
-  }
-  catch (error) {
-    loginError = `${isEmail ? 'email' : 'username'} not found`
-  }
+    let isEmail = true // logging in with email or username?
+    // determine whether the user is logging in with an email or a username
+    try {
+      await isEmailValidationSchema.validate ({email});
+    }
+    catch (error) {
+      // console.log('login action', {email}, 'is not an email', {error})
+      isEmail = false
+    }
 
-  // check if the password is correct
-  // if not, return an error message
+    // look up the user by email
+    // return an error message if not found
+    let user
+    const userService = await make('user_service')
+    try {
+      user = isEmail ?
+        await userService.getUserForEmail(email) :
+        await userService.getUserForUsername(email)
+    }
+    catch (error) {
+      loginError = `${isEmail ? 'email' : 'username'} not found`
+    }
 
-  let verifyPasswordResult
-  if (!loginError && user) {
-    verifyPasswordResult = await userService.verifyPassword(user, password);
+    // check if the password is correct
+    // if not, return an error message
 
-    if (verifyPasswordResult === true) {
-      // credentials ok so log in user
-      if (!userService.getIsEmailConfirmed(user)) {
-        loginError = "email not confirmed, please check your inbox";
+    let verifyPasswordResult
+    if (!loginError && user) {
+      verifyPasswordResult = await userService.verifyPassword(user, password);
+
+      if (verifyPasswordResult === true) {
+        // credentials ok so log in user
+        if (!userService.getIsEmailConfirmed(user)) {
+          loginError = "email not confirmed, please check your inbox";
+        }
+        else {
+          await http.auth.use('web').login(user)
+        }
       }
       else {
-        await http.auth.use('web').login(user)
+        // throw new Error('Invalid credentials')
+        loginError = "invalid credentials";
       }
-    }
-    else {
-      // throw new Error('Invalid credentials')
-      loginError = "invalid credentials";
     }
   }
 
