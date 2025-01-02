@@ -43,7 +43,7 @@ export const passwordValidationRule = (isOptional = false): VineString | Optiona
   return result;
 }
 
-const usernameValidationRule = vine
+const usernameValidationRule = () => vine
     .string()
     .maxLength(64)
     .unique(isUnique)
@@ -52,17 +52,18 @@ const usernameValidationRule = vine
 // Login also uses this, indirectly, to determine whether
 // the user is logging in with an email or a username.
 // See createIsEmailValidationSchema, below.
-export const isEmailValidationRule = vine
+// Note this has to be a function or it fails on createIsEmailValidationSchema, below.
+export const isEmailValidationRule = () => vine
   .string()
   .email()
   .maxLength(254)
 
-export const fullNameValidationRule = vine
+export const fullNameValidationRule = () => vine
   .string()
   .maxLength(255)
   .optional()
 
-export const preferredNameValidationRule = vine
+export const preferredNameValidationRule = () => vine
   .string()
   .maxLength(64)
   .optional()
@@ -73,21 +74,21 @@ export const preferredNameValidationRule = vine
 
 export const createRegistrationValidationSchema = () => vine.compile(
   vine.object({
-    email: isEmailValidationRule,
+    email: isEmailValidationRule(),
     password: passwordValidationRule(),
-    username: usernameValidationRule,
-    fullName: fullNameValidationRule,
-    preferredName: preferredNameValidationRule,
+    username: usernameValidationRule(),
+    fullName: fullNameValidationRule(),
+    preferredName: preferredNameValidationRule(),
   })
 )
 
 export const createProfileValidationSchema = () => vine.compile(
   vine.object({
-    email: isEmailValidationRule.unique(isUnique),
+    email: isEmailValidationRule().unique(isUnique),
     password: passwordValidationRule(true),
-    username: usernameValidationRule,
-    fullName: fullNameValidationRule,
-    preferredName: preferredNameValidationRule,
+    username: usernameValidationRule(),
+    fullName: fullNameValidationRule(),
+    preferredName: preferredNameValidationRule(),
   })
 )
 
@@ -104,13 +105,13 @@ export const createNewPasswordValidationSchema = () => vine.compile(
 
 export const createPasswordResetValidationSchema = () => vine.compile(
   // we don't check for exists - no information to hackers
-  vine.object({email: isEmailValidationRule})
+  vine.object({email: isEmailValidationRule()})
 )
 
 // login uses this to determine whether the
 // user is logging in with an email or a username
-export const createIsEmailValidationSchema = () => vine.compile(
-  vine.object({email: isEmailValidationRule})
+export const createIsEmailValidationSchema = ()=> vine.compile(
+    vine.object({email: isEmailValidationRule()})
 )
 
 

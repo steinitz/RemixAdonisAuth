@@ -129,28 +129,28 @@ export default function Index() {
           }
           </div>
         </div>
-          </nav>
+      </nav>
 
-            {/*<button type="submit">Add Accounts and Wallets</button>*/}
-            {unconfirmedEmail &&
-              <section>
-                <div style={repurposedFormBoxStyle}>
-                  <h1>We've sent a confirmation email</h1>
-                  <p style={{
-                    textAlign: "center",
-                    marginTop: "-8px"
-                  }}>to {unconfirmedEmail}</p>
-                  <p>Please</p>
-                  <p>1. find our email in your inbox (or spam mailbox)</p>
-                  <p>2. follow the instructions to activate your account</p>
-                </div>
-              </section>
-            }
-            <section>
-              <ul>
-                <li>
-                  <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-                  Remix Docs
+      {/*<button type="submit">Add Accounts and Wallets</button>*/}
+      {unconfirmedEmail &&
+        <section>
+          <div style={repurposedFormBoxStyle}>
+            <h1>We've sent a confirmation email</h1>
+            <p style={{
+              textAlign: "center",
+              marginTop: "-8px"
+            }}>to {unconfirmedEmail}</p>
+            <p>Please</p>
+            <p>1. find our email in your inbox (or spam mailbox)</p>
+            <p>2. follow the instructions to activate your account</p>
+          </div>
+        </section>
+      }
+      <section>
+        <ul>
+          <li>
+            <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
+              Remix Docs
             </a>
           </li>
           <li>
@@ -189,6 +189,11 @@ export default function Index() {
           <li>
             <a target="_blank" href="https://andybrewer.github.io/mvp/" rel="noreferrer">
               MVP.CSS - class-less CSS file to style semantic HTML
+            </a>
+          </li>
+          <li>
+            <a target="_blank" href="style-test" rel="noreferrer">
+              Utility Page for Testing CSS and Components
             </a>
           </li>
         </ul>

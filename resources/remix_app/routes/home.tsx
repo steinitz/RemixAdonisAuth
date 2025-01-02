@@ -34,25 +34,25 @@ export const action = async ({context}: ActionFunctionArgs) => {
 }
 
 export const loader = async ({context}: LoaderFunctionArgs) => {
-  const auth = context.http.auth
+  const {http: {auth}} = context
 
-  // The doc says I only have to do this on unauthenticated routes
-  await auth.check()
+  // The doc says I only have to do this on unauthenticated routes if I want to
+  // display user data, e.g. email on those pages.
+  // await auth.check()
 
   const user = auth.user
   const email = user?.email
 
-  return json({
-    email,
-  })
+  return json({email})
 }
 
 export default function Page() {
   const {email} = useLoaderData<typeof loader>()
+
   // dubious tweak to align the login button and loggedin text
   const loggedInButtonFormTopMarginTweak = '-21px'
 
-  // console.log('index page', {email})
+  console.log('home page', {email})
   return (
     <main>
       <nav>

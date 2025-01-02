@@ -24,6 +24,7 @@ export default class AuthMiddleware {
     '/reset-password-request/*',
     '/reset-password-email-sent',
     '/reset-password/*',
+    '/style-test'
   ]
 
   isOpenRoute (route: string | undefined | null) {
@@ -42,16 +43,31 @@ export default class AuthMiddleware {
       guards?: (keyof Authenticators)[]
     } = {}
   ) {
+    console.log('auth_middleware', {options})
     const pathname = ctx.request.parsedUrl.pathname
     const isOpenRoute = this.isOpenRoute(pathname)
+
+    // Calling next here causes the authenticated user to
+    // not be available to, for example, the home page.
+    // This is because calling next() interrupts the middleware flow.
+    // let result = next()
+
     if (isOpenRoute) {
-      // console.log(`auth_middleware: found ${pathname} in openRoutes`)
+      console.log(`auth_middleware: found ${pathname} in openRoutes`)
     }
     else {
-      // console.log(`auth_middleware: did not find ${pathname} in openRoutes`)
-      await ctx.auth.authenticateUsing(options.guards, {loginRoute: this.loginRoute})
+      console.log(`auth_middleware: did not find ${pathname} in openRoutes`)
+      try {
+        const authenticatedUser = await ctx.auth.authenticateUsing(
+          options.guards,
+          {loginRoute: this.loginRoute}
+        )
+        console.log('auth_middleware', {authenticatedUserEmail: authenticatedUser?.email})
+      }
+      catch (e) {
+        console.error('auth_middleware - authenticateUsing failed with', {e})
+      }
     }
-
     return next()
   }
 }

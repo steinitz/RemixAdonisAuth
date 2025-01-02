@@ -12,18 +12,12 @@ export function Layout({children}: {children: ReactNode}) {
 
       {/* simple styling via MVP.css - element styles only, no classes*/}
       <link rel="stylesheet" type="text/css" href="https://unpkg.com/mvp.css" />
-      {/*
-      not needed now that the stylesheet lives in /public
-      and also fixes a mysterious CSS MIME error
-      <link rel="stylesheet" type="text/css" href="/public/mvp-css-override.css" />
-      */}
+
+      {/* overrides for the above */}
+      <link rel="stylesheet" type="text/css" href="/mvp-css-override.css" />
 
       {/* additional styles including classes*/}
-      {/*
-      not needed now that the stylesheet lives in /public
-      and also fixes a mysterious CSS MIME error
-      <link rel="stylesheet" type="text/css" href="/public/styles.css" />
-      */}
+      <link rel="stylesheet" type="text/css" href="/styles.css" />
 
       {/* fonts */}
       <link

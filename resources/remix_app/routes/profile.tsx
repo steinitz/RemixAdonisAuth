@@ -62,7 +62,7 @@ const intents = {save: 'save', delete: 'delete'}
 
 export const action = async ({context}: ActionFunctionArgs) => {
   const {http, make} = context
-  const auth = context.http.auth
+  const auth = http.auth
   const user = auth.user
   const userService = await make('user_service')
 
@@ -74,6 +74,8 @@ export const action = async ({context}: ActionFunctionArgs) => {
 
   // two utility functions to save changes or delete the account
 
+  let validationErrors: any[] | undefined
+
   const saveChanges = async () => {
     // get form data
     const {
@@ -82,7 +84,6 @@ export const action = async ({context}: ActionFunctionArgs) => {
       ['email', 'username', 'preferredName', 'fullName', 'password']
     )
 
-    let validationErrors
     try {
       // vine can sanitize what the user typed
       // here we just want the errors when vine throws
@@ -99,10 +100,20 @@ export const action = async ({context}: ActionFunctionArgs) => {
       console.log({validationErrors})
       result = json({validationErrors})
     }
-    if (!user) {
-      throw new Error('no user')
+    if (!validationErrors) {
+      if (!user) {
+        throw new Error("no user");
+      }
+      userService.updateUser({
+        user,
+        email,
+        username,
+        preferredName,
+        fullName,
+        password
+      });
+
     }
-    userService.updateUser({user, email, username, preferredName, fullName, password})
   }
 
   const deleteUser = async () => {
@@ -118,19 +129,17 @@ export const action = async ({context}: ActionFunctionArgs) => {
 
   if (intent === intents.save) {
     saveChanges()
-    result = redirect('/home')
-  }
-  else if (intent === intents.delete) {
-    await http.auth.use('web').logout()
+    if (!validationErrors) result = redirect("/home");
+  } else if (intent === intents.delete) {
+    await http.auth.use("web").logout()
     await deleteUser()
     // delete any registration cookie which might be hanging around
 
     result = redirect(
-      '/',
+      "/",
       {headers: {...await registrationCookieClear()}}
     )
-  }
-  else {
+  } else {
     console.error("invalid intent - expected save or delete", {intent})
   }
 

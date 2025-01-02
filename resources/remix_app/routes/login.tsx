@@ -47,7 +47,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
   try {
     // vine can sanitize what the user typed
     // here we just want the errors when vine throws
-    await validationSchema.validate ({email, password});
+    await validationSchema.validate ({email, password})
   }
   catch (error) {
     validationErrors = error.messages
@@ -56,13 +56,13 @@ export const action = async ({context}: ActionFunctionArgs) => {
 
   if (!validationErrors) {
 
-    let isEmail = true // logging in with email or username?
     // determine whether the user is logging in with an email or a username
+    let isEmail = true // assume email
     try {
-      await isEmailValidationSchema.validate ({email});
+      await isEmailValidationSchema.validate ({email})
     }
     catch (error) {
-      // console.log('login action', {email}, 'is not an email', {error})
+      // console.log('login action', {email}, 'is not an email address', {error})
       isEmail = false
     }
 
@@ -71,9 +71,14 @@ export const action = async ({context}: ActionFunctionArgs) => {
     let user
     const userService = await make('user_service')
     try {
-      user = isEmail ?
-        await userService.getUserForEmail(email) :
-        await userService.getUserForUsername(email)
+      if (isEmail) {
+        // console.log('login action - user supplied an email address')
+        user = await userService.getUserForEmail(email)
+      }
+      else {
+        // console.log('login action - user supplied a username')
+        user = await userService.getUserForUsername(email);
+      }
     }
     catch (error) {
       loginError = `${isEmail ? 'email' : 'username'} not found`
@@ -84,6 +89,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
 
     let verifyPasswordResult
     if (!loginError && user) {
+      // console.log('login action - verifying password')
       verifyPasswordResult = await userService.verifyPassword(user, password);
 
       if (verifyPasswordResult === true) {
@@ -92,6 +98,7 @@ export const action = async ({context}: ActionFunctionArgs) => {
           loginError = "email not confirmed, please check your inbox";
         }
         else {
+          // console.log('login action - attempting login')
           await http.auth.use('web').login(user)
         }
       }
@@ -101,6 +108,8 @@ export const action = async ({context}: ActionFunctionArgs) => {
       }
     }
   }
+
+  console.log('login action', {validationErrors, loginError})
 
   const returnValue = validationErrors || loginError ?
     json({

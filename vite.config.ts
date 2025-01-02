@@ -2,7 +2,7 @@ import {vitePlugin as remix} from '@remix-run/dev'
 import {defineConfig} from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
-export default defineConfig((/*{ isSsrBuild }*/) => {
+export default defineConfig(({ isSsrBuild }) => {
   const result = {
 
     // base: '/', Not needed; temporarily added to troubleshoot the CSS MIME error
@@ -16,11 +16,10 @@ export default defineConfig((/*{ isSsrBuild }*/) => {
       tsconfigPaths(),
     ],
     optimizeDeps: {
-      esbuildOptions: // isSsrBuild ?
+      esbuildOptions: isSsrBuild ?
         {
-          // target: 'esnext',
-          target: 'ES2022',
-        //}
+          target: 'esnext',
+        } :
 
         // SJS - added esnext target to allow top-level await but it might give
         // a runtime error in a production build.  I'll keep it here, commented
@@ -30,8 +29,8 @@ export default defineConfig((/*{ isSsrBuild }*/) => {
         // not messing with browser code."
 
         // This is now solved in the esbuild section below
-
-          // target: 'ES2022',
+        {
+          target: 'ES2022',
         },
     },
 
@@ -40,10 +39,11 @@ export default defineConfig((/*{ isSsrBuild }*/) => {
     // esbuildOptions, above, but it's fiddley because of the ternary
     esbuild: {
       supported: {
+        // needed with the above targets?
         'top-level-await': true // browsers can handle top-level-await features
       },
     },
-      css: {
+    css: {
       postcss: {
         plugins: [], // Add any PostCSS plugins here (optional)
       },
