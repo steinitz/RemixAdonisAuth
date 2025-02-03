@@ -60,7 +60,7 @@
     "@adonisjs/session": "^7.4.2",
     "@adonisjs/shield": "^8.1.1",
     "@adonisjs/static": "^1.1.1",
-    "@adonisjs/vite": "^3.0.0",
+    "@adonisjs/vite": "^4.0.0",
     "@matstack/remix-adonisjs": "^0.0.35",
     "@remix-run/css-bundle": "^2.11.0",
     "@remix-run/node": "^2.11.0",
