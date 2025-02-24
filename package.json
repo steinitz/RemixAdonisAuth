@@ -43,7 +43,7 @@
     "@swc/core": "^1.6.5",
     "@types/luxon": "^3.4.2",
     "@types/node": "^22.7.2",
-    "@types/react": "^18.3.3",
+    "@types/react": "^19.0.10",
     "@types/react-dom": "^18.3.0",
     "hot-hook": "^0.4.0",
     "eslint": "^9.11.1",
